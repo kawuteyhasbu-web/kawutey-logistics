@@ -17,32 +17,32 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
     body { background: #eef2f7; color: var(--dark); line-height: 1.5; }
-    .container { max-width: 980px; margin: 0 auto; padding: 20px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 16px; }
     header {
-      background: var(--white); padding: 14px 24px; border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(10, 47, 107, 0.1); margin-bottom: 24px;
-      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      background: var(--white); padding: 12px 16px; border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(10, 47, 107, 0.1); margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
     }
-    .logo-area { display: flex; align-items: center; gap: 14px; }
-    .logo-area img { height: 58px; width: auto; }
-    .logo-text h1 { font-size: 1.45rem; color: var(--primary); font-weight: 700; }
-    .logo-text span { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
-    .header-right { text-align: right; font-size: 0.85rem; color: #555; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-area img { height: 50px; width: auto; }
+    .logo-text h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; }
+    .logo-text span { font-size: 0.72rem; color: var(--accent); font-weight: 600; }
+    .header-right { text-align: right; font-size: 0.82rem; color: #555; }
     .header-right strong { color: var(--primary); }
-    .tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
     .tab-btn {
-      padding: 11px 22px; border: 2px solid var(--border); background: white; border-radius: 10px;
-      cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; color: var(--dark);
+      padding: 10px 16px; border: 2px solid var(--border); background: white; border-radius: 10px;
+      cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; color: var(--dark);
     }
     .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
     .tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
-    .card { background: white; border-radius: 14px; padding: 26px; box-shadow: 0 4px 14px rgba(10,47,107,0.07); margin-bottom: 20px; }
-    h2 { margin-bottom: 14px; font-size: 1.3rem; color: var(--primary); }
+    .card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 4px 14px rgba(10,47,107,0.07); margin-bottom: 16px; }
+    h2 { margin-bottom: 12px; font-size: 1.25rem; color: var(--primary); }
     h3 { color: var(--primary); margin-bottom: 8px; }
-    .form-group { margin-bottom: 16px; position: relative; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
+    .form-group { margin-bottom: 14px; position: relative; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.88rem; }
     input, select, textarea {
-      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 1rem;
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 1rem;
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,106,0,0.15); }
     .password-wrapper { position: relative; }
@@ -50,43 +50,48 @@
     .toggle-password {
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       background: none; border: none; color: var(--primary); font-weight: 600; font-size: 0.85rem;
-      cursor: pointer; padding: 4px 8px; border-radius: 6px;
+      cursor: pointer; padding: 6px 10px; border-radius: 6px;
     }
     .toggle-password:hover { background: #f0f4f8; }
-    .btn { display: inline-block; padding: 11px 24px; border: none; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 0.95rem; margin-right: 8px; margin-bottom: 8px; }
+    .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 0.95rem; margin-right: 8px; margin-bottom: 8px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-accent { background: var(--accent); color: white; }
     .btn-accent:hover { background: var(--accent-hover); }
     .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--dark); }
     .hidden { display: none !important; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 650px) { .grid-2 { grid-template-columns: 1fr; } header { flex-direction: column; text-align: center; } }
-    .package-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .package-row label { margin: 0; min-width: 140px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 650px) { 
+      .grid-2 { grid-template-columns: 1fr; } 
+      header { flex-direction: column; text-align: center; }
+      .header-right { text-align: center; }
+      .container { padding: 12px; }
+    }
+    .package-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .package-row label { margin: 0; min-width: 130px; }
     .package-row input { max-width: 120px; }
     .pickup-item, .assignment-item { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
-    .rider-card { border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; }
+    .rider-card { border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
     .rider-card img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--accent); }
     .status { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
     .status.verified { background: #d1e7dd; color: #0f5132; }
     .status.pending { background: #fff3cd; color: #664d03; }
-    .wallet-box { background: linear-gradient(135deg, var(--primary), #0d3d8a); color: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; }
-    .wallet-box .balance { font-size: 2.1rem; font-weight: 700; }
+    .wallet-box { background: linear-gradient(135deg, var(--primary), #0d3d8a); color: white; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .wallet-box .balance { font-size: 2rem; font-weight: 700; }
     .ref-code { background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-weight: 600; letter-spacing: 0.5px; }
-    .wallet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
+    .wallet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
     .stat-box { background: rgba(255,255,255,0.12); padding: 12px; border-radius: 10px; text-align: center; }
-    .stat-box .value { font-size: 1.4rem; font-weight: 700; }
-    .stat-box .label { font-size: 0.8rem; opacity: 0.9; }
-    .history-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .stat-box .value { font-size: 1.3rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.75rem; opacity: 0.9; }
+    .history-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
     .msg-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
-    .alert { padding: 13px 16px; border-radius: 9px; margin-bottom: 16px; font-size: 0.9rem; }
+    .alert { padding: 12px 14px; border-radius: 9px; margin-bottom: 14px; font-size: 0.88rem; }
     .alert-info { background: #e8f0fe; color: #0A2F6B; border-left: 4px solid var(--primary); }
     .alert-success { background: #d1e7dd; color: #0f5132; border-left: 4px solid #198754; }
     .alert-warning { background: #fff3cd; color: #664d03; border-left: 4px solid #ffc107; }
-    footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 0.85rem; }
+    footer { text-align: center; margin-top: 30px; padding: 16px; color: #666; font-size: 0.82rem; }
     footer strong { color: var(--primary); }
-    .contact-bar { background: var(--primary); color: white; text-align: center; padding: 12px; border-radius: 10px; margin-top: 10px; }
+    .contact-bar { background: var(--primary); color: white; text-align: center; padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -115,11 +120,11 @@
     <div id="home" class="section">
       <div class="card">
         <h2>Welcome to Kawutey Logistics</h2>
-        <p style="margin-bottom:18px;">A trusted platform connecting vendors and verified riders for fast, safe and reliable package delivery across Ghana.</p>
+        <p style="margin-bottom:16px;">A trusted platform connecting vendors and verified riders for fast, safe and reliable package delivery across Ghana.</p>
         <div class="grid-2">
           <div>
             <h3>For Vendors</h3>
-            <ul style="padding-left:20px; margin-bottom:18px;">
+            <ul style="padding-left:18px; margin-bottom:14px;">
               <li>Register and request package pickups</li>
               <li>Schedule preferred pickup times</li>
               <li>Specify Large, Medium & Small packages</li>
@@ -128,7 +133,7 @@
           </div>
           <div>
             <h3>For Riders</h3>
-            <ul style="padding-left:20px; margin-bottom:18px;">
+            <ul style="padding-left:18px; margin-bottom:14px;">
               <li>Register with Ghana Card & Photo</li>
               <li>Personal wallet + unique reference code</li>
               <li>GH₵5 commission per package</li>
@@ -163,8 +168,8 @@
             <div class="form-group"><label>Location *</label><input type="text" id="v-location" required placeholder="e.g. Accra, Kumasi, Tamale"></div>
             <button type="submit" class="btn btn-primary" id="vendorRegBtn">Create Vendor Account</button>
           </form>
-          <p style="margin-top:14px;">Already have an account? <a href="#" onclick="showVendorLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
-          <div id="vendorRegSuccess" class="alert alert-success hidden" style="margin-top:16px;"></div>
+          <p style="margin-top:12px;">Already have an account? <a href="#" onclick="showVendorLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
+          <div id="vendorRegSuccess" class="alert alert-success hidden" style="margin-top:14px;"></div>
         </div>
         <div id="vendorLoginSection" class="hidden">
           <h3>Vendor Login</h3>
@@ -179,20 +184,20 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
-          <p style="margin-top:14px;">New vendor? <a href="#" onclick="showVendorReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
+          <p style="margin-top:12px;">New vendor? <a href="#" onclick="showVendorReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
         <div id="vendorDashboard" class="hidden">
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
-          <p style="margin-bottom:16px;">Focus on growing your business while we take care of your packages.</p>
+          <p style="margin-bottom:14px;">Focus on growing your business while we take care of your packages.</p>
           <button class="btn btn-accent" onclick="togglePickupForm()">Request Package Pickup</button>
           <button class="btn btn-outline" onclick="logoutVendor()">Logout</button>
-          <div id="pickupFormArea" class="hidden" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+          <div id="pickupFormArea" class="hidden" style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
             <form id="pickupForm" onsubmit="requestPickup(event)">
               <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2"></textarea></div>
               <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
               <div class="form-group"><label>Total Number of Packages *</label><input type="number" id="total-packages" min="1" required></div>
-              <div style="margin:16px 0;">
+              <div style="margin:14px 0;">
                 <div class="package-row"><label>Large Packages</label><input type="number" id="large-packages" min="0" value="0"></div>
                 <div class="package-row"><label>Medium Packages</label><input type="number" id="medium-packages" min="0" value="0"></div>
                 <div class="package-row"><label>Small Packages</label><input type="number" id="small-packages" min="0" value="0"></div>
@@ -200,7 +205,7 @@
               <button type="submit" class="btn btn-primary">Submit Pickup Request</button>
             </form>
           </div>
-          <h4 style="margin-top:24px;">Your Pickup Requests</h4>
+          <h4 style="margin-top:20px;">Your Pickup Requests</h4>
           <div id="pickupHistory"></div>
         </div>
       </div>
@@ -212,7 +217,7 @@
         <h2>Rider Portal – Your Next Delivery Opportunity Starts Here</h2>
         <div id="riderRegSection">
           <h3>New Rider Registration</h3>
-          <div class="alert alert-warning">A unique reference code (e.g. KW-RD-0001) will be assigned automatically. GH₵5 commission per package.</div>
+          <div class="alert alert-warning">A unique reference code will be assigned automatically. Use it only when making payments.</div>
           <form id="riderRegForm" onsubmit="registerRider(event)">
             <div class="form-group"><label>Full Name *</label><input type="text" id="r-name" required></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="r-phone" required></div>
@@ -229,8 +234,8 @@
             <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/*" required onchange="previewPhoto(event)"><div id="photoPreview" style="margin-top:10px;"></div></div>
             <button type="submit" class="btn btn-accent" id="riderRegBtn">Create Rider Account</button>
           </form>
-          <p style="margin-top:14px;">Already have an account? <a href="#" onclick="showRiderLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
-          <div id="riderRegSuccess" class="alert alert-success hidden" style="margin-top:16px;"></div>
+          <p style="margin-top:12px;">Already have an account? <a href="#" onclick="showRiderLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
+          <div id="riderRegSuccess" class="alert alert-success hidden" style="margin-top:14px;"></div>
         </div>
         <div id="riderLoginSection" class="hidden">
           <h3>Rider Login</h3>
@@ -245,7 +250,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
-          <p style="margin-top:14px;">New rider? <a href="#" onclick="showRiderReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
+          <p style="margin-top:12px;">New rider? <a href="#" onclick="showRiderReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
       </div>
 
@@ -260,14 +265,13 @@
         <div class="wallet-box">
           <h3>Wallet Dashboard</h3>
           <div class="balance" id="walletBalance">GHS 0.00</div>
-          <div class="ref-code">Unique Reference Code: <span id="riderRefCode">—</span></div>
           <div class="wallet-stats">
             <div class="stat-box"><div class="value" id="eligiblePackages">0</div><div class="label">Packages Eligible</div></div>
             <div class="stat-box"><div class="value" id="totalDeposits">GHS 0</div><div class="label">Total Deposits</div></div>
             <div class="stat-box"><div class="value" id="totalCommission">GHS 0</div><div class="label">Commission Deducted</div></div>
             <div class="stat-box"><div class="value" id="remainingEligibility">0</div><div class="label">Remaining Eligibility</div></div>
           </div>
-          <div style="margin-top:16px;">
+          <div style="margin-top:14px;">
             <button class="btn btn-accent" onclick="showDepositForm()">Deposit Money</button>
             <button class="btn btn-primary" onclick="showTransactionHistory()">Transaction History</button>
             <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4);" onclick="requestRefund()">Request Refund</button>
@@ -275,12 +279,25 @@
         </div>
 
         <div id="depositFormArea" class="card hidden">
-          <h3>Deposit Money</h3>
-          <div class="alert alert-info">Use your unique reference code. Wallet is only credited after payment verification.</div>
-          <div class="form-group"><label>Amount (GHS)</label><input type="number" id="depositAmount" min="5" step="5" placeholder="e.g. 50, 100, 200"></div>
-          <div class="form-group"><label>Your Reference Code</label><input type="text" id="depositRef" placeholder="e.g. KW-RD-0001" required></div>
-          <div class="form-group"><label>Payment Reference / Transaction ID</label><input type="text" id="paymentRef" placeholder="From Mobile Money or bank" required></div>
-          <button class="btn btn-accent" onclick="requestDeposit()">Submit Deposit Request</button>
+          <h3>Deposit via Mobile Money</h3>
+          <div class="alert alert-info">
+            Supported: MTN Mobile Money, Telecel Cash, AT Money.<br>
+            <strong>USE THIS UNIQUE REFERENCE CODE IN YOUR REFERENCE WHEN MAKING PAYMENT</strong>
+          </div>
+          <div class="ref-code" style="margin-bottom:16px; background:#0A2F6B; color:white;">
+            Your Unique Reference Code: <span id="depositRefDisplay">—</span>
+          </div>
+          <div class="form-group"><label>Amount (GHS) *</label><input type="number" id="depositAmount" min="5" step="5" placeholder="e.g. 50, 100, 200" required></div>
+          <div class="form-group"><label>Mobile Money Number *</label><input type="tel" id="momoNumber" placeholder="e.g. 024XXXXXXX" required></div>
+          <div class="form-group"><label>Network</label>
+            <select id="momoNetwork">
+              <option value="MTN">MTN Mobile Money</option>
+              <option value="Telecel">Telecel Cash</option>
+              <option value="AT">AT Money</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Confirm Reference Code *</label><input type="text" id="depositRef" placeholder="Enter your KW-RD-XXXX code" required></div>
+          <button class="btn btn-accent" onclick="submitDeposit()">Submit Deposit</button>
         </div>
 
         <div id="transactionHistoryArea" class="card hidden">
@@ -302,10 +319,10 @@
         <div class="card">
           <h3>Communication with Other Riders</h3>
           <div id="ridersList"></div>
-          <div class="form-group" style="margin-top:16px;"><label>Select Rider</label><select id="messageTo"><option value="">-- Choose a rider --</option></select></div>
+          <div class="form-group" style="margin-top:14px;"><label>Select Rider</label><select id="messageTo"><option value="">-- Choose a rider --</option></select></div>
           <div class="form-group"><label>Your Message</label><textarea id="messageText" rows="3"></textarea></div>
           <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
-          <div id="messagesArea" style="margin-top:20px;"></div>
+          <div id="messagesArea" style="margin-top:16px;"></div>
         </div>
       </div>
     </div>
@@ -340,7 +357,6 @@
       if (id === 'rider' && currentRider) showRiderDashboard();
     }
 
-    // Password toggle
     function togglePassword(inputId, btn) {
       const input = document.getElementById(inputId);
       if (input.type === "password") {
@@ -547,7 +563,7 @@
       try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
 
       document.getElementById('riderRegSuccess').classList.remove('hidden');
-      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created!<br>Your permanent Reference Code is: <strong>${refCode}</strong><br>Status: Pending Approval`;
+      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created!<br>Your permanent Reference Code is: <strong>${refCode}</strong><br>Use it only when making payments.`;
       document.getElementById('riderRegForm').reset();
       document.getElementById('photoPreview').innerHTML = '';
       photoData = null;
@@ -583,7 +599,6 @@
       statusEl.className = "status " + (currentRider.status === "Approved" ? "verified" : "pending");
 
       document.getElementById('walletBalance').textContent = `GHS ${currentRider.wallet.toFixed(2)}`;
-      document.getElementById('riderRefCode').textContent = currentRider.refCode;
 
       const eligible = Math.floor(currentRider.wallet / COMMISSION);
       document.getElementById('eligiblePackages').textContent = eligible;
@@ -654,6 +669,9 @@
     function showDepositForm() {
       document.getElementById('depositFormArea').classList.remove('hidden');
       document.getElementById('transactionHistoryArea').classList.add('hidden');
+      if (currentRider) {
+        document.getElementById('depositRefDisplay').textContent = currentRider.refCode;
+      }
     }
     function showTransactionHistory() {
       document.getElementById('transactionHistoryArea').classList.remove('hidden');
@@ -665,12 +683,46 @@
           <div>
             <strong>${d.type}</strong> – ${d.status}<br>
             <small>${d.date}</small><br>
-            Ref: ${d.refCode || '—'} | Payment: ${d.paymentRef || '—'}
+            Ref: ${d.refCode || '—'} | Network: ${d.network || '—'} | Txn: ${d.paymentRef || '—'}
           </div>
           <div style="color:${d.amount >= 0 ? '#198754' : '#dc3545'}; font-weight:700;">
             ${d.amount >= 0 ? '+' : ''} GHS ${Math.abs(d.amount).toFixed(2)}
           </div>
         </div>`).join('');
+    }
+
+    function submitDeposit() {
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      const number = document.getElementById('momoNumber').value.trim();
+      const ref = document.getElementById('depositRef').value.trim().toUpperCase();
+      const network = document.getElementById('momoNetwork').value;
+
+      if (!amount || amount < 5) { alert("Minimum deposit is GH₵5"); return; }
+      if (!number || number.length < 10) { alert("Please enter a valid Mobile Money number"); return; }
+      if (ref !== currentRider.refCode) { alert("Reference code does not match your account."); return; }
+
+      const txnId = "TXN" + Date.now().toString().slice(-8);
+
+      deposits.unshift({
+        id: Date.now(),
+        riderId: currentRider.id,
+        amount: amount,
+        type: "Deposit",
+        status: "Pending Verification",
+        refCode: ref,
+        network: network,
+        momoNumber: number,
+        paymentRef: txnId,
+        date: new Date().toLocaleString()
+      });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+
+      document.getElementById('depositAmount').value = '';
+      document.getElementById('momoNumber').value = '';
+      document.getElementById('depositRef').value = '';
+      document.getElementById('depositFormArea').classList.add('hidden');
+      updateRiderDashboard();
+      alert(`Deposit submitted!\nTransaction Reference: ${txnId}\nStatus: Pending Verification\n\nWallet will be credited only after successful verification.`);
     }
 
     function requestRefund() {
@@ -730,35 +782,6 @@
 
       updateRiderDashboard();
       alert(`Delivery accepted! GH₵${cost} commission deducted.`);
-    }
-
-    function requestDeposit() {
-      const amount = parseFloat(document.getElementById('depositAmount').value);
-      const ref = document.getElementById('depositRef').value.trim().toUpperCase();
-      const paymentRef = document.getElementById('paymentRef').value.trim();
-
-      if (!amount || amount < 5) { alert("Minimum deposit is GH₵5"); return; }
-      if (ref !== currentRider.refCode) { alert("Reference code does not match your account."); return; }
-      if (!paymentRef) { alert("Please enter the payment transaction ID."); return; }
-
-      deposits.unshift({
-        id: Date.now(),
-        riderId: currentRider.id,
-        amount: amount,
-        type: "Deposit",
-        status: "Pending Verification",
-        refCode: ref,
-        paymentRef: paymentRef,
-        date: new Date().toLocaleString()
-      });
-      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
-
-      document.getElementById('depositAmount').value = '';
-      document.getElementById('depositRef').value = '';
-      document.getElementById('paymentRef').value = '';
-      document.getElementById('depositFormArea').classList.add('hidden');
-      updateRiderDashboard();
-      alert("Deposit request submitted. It will be credited after payment verification.");
     }
 
     function logoutRider() {
