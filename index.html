@@ -12,7 +12,6 @@
       --accent-hover: #e55d00;
       --success: #198754;
       --dark: #0A1F44;
-      --light: #f0f4f8;
       --border: #d0d7e2;
       --white: #ffffff;
     }
@@ -41,7 +40,7 @@
     h2 { margin-bottom: 14px; font-size: 1.3rem; color: var(--primary); }
     h3 { color: var(--primary); margin-bottom: 8px; }
     .form-group { margin-bottom: 16px; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #333; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
     input, select, textarea {
       width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 1rem;
     }
@@ -51,16 +50,29 @@
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-accent { background: var(--accent); color: white; }
     .btn-accent:hover { background: var(--accent-hover); }
+    .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--dark); }
     .hidden { display: none !important; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 650px) { .grid-2 { grid-template-columns: 1fr; } header { flex-direction: column; text-align: center; } }
+    .package-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .package-row label { margin: 0; min-width: 140px; }
+    .package-row input { max-width: 120px; }
+    .pickup-item { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
+    .rider-card { border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; }
+    .rider-card img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--accent); }
+    .status { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .status.verified { background: #d1e7dd; color: #0f5132; }
+    .wallet-box { background: linear-gradient(135deg, var(--primary), #0d3d8a); color: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+    .wallet-box .balance { font-size: 2.1rem; font-weight: 700; }
+    .history-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .msg-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
     .alert { padding: 13px 16px; border-radius: 9px; margin-bottom: 16px; font-size: 0.9rem; }
     .alert-info { background: #e8f0fe; color: #0A2F6B; border-left: 4px solid var(--primary); }
     .alert-success { background: #d1e7dd; color: #0f5132; border-left: 4px solid #198754; }
     .alert-warning { background: #fff3cd; color: #664d03; border-left: 4px solid #ffc107; }
-    .pickup-item { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
     footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 0.85rem; }
     footer strong { color: var(--primary); }
+    .contact-bar { background: var(--primary); color: white; text-align: center; padding: 12px; border-radius: 10px; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -82,27 +94,38 @@
     <div class="tabs">
       <button class="tab-btn active" onclick="showSection('home')">Home</button>
       <button class="tab-btn" onclick="showSection('vendor')">Vendor Portal</button>
-      <button class="tab-btn" onclick="showSection('rider')">Rider Portal</button>
-      <button class="tab-btn" onclick="showSection('admin')">Admin (KAWUTEY)</button>
+      <button class="tab-btn" onclick="showSection('rider')">Rider Sign-up</button>
+      <button class="tab-btn" onclick="showSection('rider-dashboard')">Rider Dashboard</button>
     </div>
 
     <!-- HOME -->
     <div id="home" class="section">
       <div class="card">
-        <h2>Your Packages, Our Priority</h2>
-        <p style="margin-bottom:18px;">Reliable deliveries. Trusted riders. Peace of mind.<br>
-        At Kawutey Logistics, we make moving your packages easier, safer and more convenient.</p>
+        <h2>Welcome to Kawutey Logistics</h2>
+        <p style="margin-bottom:18px;">A trusted platform connecting vendors and verified riders for fast, safe and reliable package delivery across Ghana.</p>
         <div class="grid-2">
           <div>
-            <button class="btn btn-primary" onclick="showSection('vendor')">Register as a Vendor</button>
+            <h3>For Vendors</h3>
+            <ul style="padding-left:20px; margin-bottom:18px;">
+              <li>Register and request package pickups</li>
+              <li>Schedule preferred pickup times</li>
+              <li>Specify Large, Medium & Small packages</li>
+            </ul>
+            <button class="btn btn-primary" onclick="showSection('vendor')">Vendor Portal</button>
           </div>
           <div>
-            <button class="btn btn-accent" onclick="showSection('rider')">Join as a Rider</button>
+            <h3>For Riders</h3>
+            <ul style="padding-left:20px; margin-bottom:18px;">
+              <li>Full verification (Ghana Card + Photo)</li>
+              <li>Deposit system for package security</li>
+              <li>Contact other riders to exchange packages</li>
+            </ul>
+            <button class="btn btn-accent" onclick="showSection('rider')">Register as Rider</button>
           </div>
         </div>
-        <div style="margin-top:16px;">
-          <button class="btn btn-outline" onclick="alert('Tracking feature coming soon')">Track Your Package</button>
-        </div>
+      </div>
+      <div class="contact-bar">
+        Need help? Call us: <a href="tel:0242267974" style="color:#ffd700;">024 226 7974</a> | <a href="tel:0551040353" style="color:#ffd700;">055 104 0353</a>
       </div>
     </div>
 
@@ -110,101 +133,135 @@
     <div id="vendor" class="section hidden">
       <div class="card">
         <h2>Vendor Portal – Manage Your Deliveries With Ease</h2>
-        <div class="alert alert-info">Register or login to request package pickups and manage deliveries.</div>
 
-        <!-- Registration / Login Toggle -->
-        <div id="vendorAuth">
-          <h3>Vendor Registration</h3>
+        <!-- Registration Form -->
+        <div id="vendorRegSection">
+          <h3>New Vendor Registration</h3>
+          <div class="alert alert-info">Create an account to start requesting package pickups.</div>
           <form id="vendorRegForm" onsubmit="registerVendor(event)">
-            <div class="form-group"><label>Full Name or Business Name *</label><input type="text" id="v-name" required></div>
+            <div class="form-group"><label>Full Name *</label><input type="text" id="v-name" required></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="v-phone" required></div>
             <div class="form-group"><label>Email Address *</label><input type="email" id="v-email" required></div>
-            <div class="form-group"><label>Password *</label><input type="password" id="v-pass" required></div>
-            <button type="submit" class="btn btn-primary">Create Vendor Account</button>
+            <div class="form-group"><label>Password *</label><input type="password" id="v-pass" required minlength="4"></div>
+            <div class="form-group"><label>Location *</label><input type="text" id="v-location" required placeholder="e.g. Accra, Kumasi, Tamale"></div>
+            <button type="submit" class="btn btn-primary" id="vendorRegBtn">Create Vendor Account</button>
           </form>
-          <p style="margin-top:12px; font-size:0.9rem;">Already registered? <a href="#" onclick="showVendorLogin(); return false;">Login here</a></p>
+          <p style="margin-top:14px;">Already have an account? <a href="#" onclick="showVendorLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
+          <div id="vendorRegSuccess" class="alert alert-success hidden" style="margin-top:16px;"></div>
         </div>
 
         <!-- Login Form -->
-        <div id="vendorLogin" class="hidden">
+        <div id="vendorLoginSection" class="hidden">
           <h3>Vendor Login</h3>
           <form onsubmit="loginVendor(event)">
-            <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
+            <div class="form-group"><label>Email Address</label><input type="email" id="login-email" required></div>
             <div class="form-group"><label>Password</label><input type="password" id="login-pass" required></div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
+          <p style="margin-top:14px;">New vendor? <a href="#" onclick="showVendorReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
 
-        <!-- Vendor Dashboard (shown after login/register) -->
+        <!-- Vendor Dashboard -->
         <div id="vendorDashboard" class="hidden">
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
-          <p>Focus on growing your business while we take care of your packages.</p>
-          <button class="btn btn-accent" style="margin:12px 0;" onclick="showPickupForm()">Request Package Pickup</button>
-          <div id="pickupFormArea" class="hidden">
+          <p style="margin-bottom:16px;">Focus on growing your business while we take care of your packages.</p>
+          <button class="btn btn-accent" onclick="togglePickupForm()">Request Package Pickup</button>
+          <button class="btn btn-outline" style="margin-left:10px;" onclick="logoutVendor()">Logout</button>
+
+          <div id="pickupFormArea" class="hidden" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
             <form id="pickupForm" onsubmit="requestPickup(event)">
-              <div class="form-group"><label>Package Description</label><input type="text" id="pkg-desc" required></div>
-              <div class="form-group"><label>Customer Name</label><input type="text" id="cust-name" required></div>
-              <div class="form-group"><label>Customer Phone</label><input type="tel" id="cust-phone" required></div>
-              <div class="form-group"><label>Delivery Address</label><textarea id="cust-address" required></textarea></div>
-              <div class="form-group"><label>Preferred Pickup Date & Time</label><input type="datetime-local" id="pickup-time" required></div>
+              <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2" placeholder="Optional notes about the packages"></textarea></div>
+              <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
+              <div class="form-group">
+                <label>Total Number of Packages *</label>
+                <input type="number" id="total-packages" min="1" required placeholder="Enter total packages">
+              </div>
+              <div style="margin:16px 0;">
+                <div class="package-row">
+                  <label>Large Packages</label>
+                  <input type="number" id="large-packages" min="0" value="0">
+                </div>
+                <div class="package-row">
+                  <label>Medium Packages</label>
+                  <input type="number" id="medium-packages" min="0" value="0">
+                </div>
+                <div class="package-row">
+                  <label>Small Packages</label>
+                  <input type="number" id="small-packages" min="0" value="0">
+                </div>
+              </div>
               <button type="submit" class="btn btn-primary">Submit Pickup Request</button>
             </form>
           </div>
-          <h4 style="margin-top:20px;">Your Pickup Requests</h4>
+
+          <h4 style="margin-top:24px;">Your Pickup Requests</h4>
           <div id="pickupHistory"></div>
-          <button class="btn btn-outline" style="margin-top:16px;" onclick="logoutVendor()">Logout</button>
         </div>
       </div>
     </div>
 
-    <!-- RIDER PORTAL (simplified from previous) -->
+    <!-- RIDER SIGN-UP -->
     <div id="rider" class="section hidden">
       <div class="card">
-        <h2>Rider Portal</h2>
-        <p>Your Next Delivery Opportunity Starts Here.</p>
-        <div class="alert alert-warning">Full rider registration, Ghana Card, photo, and wallet features from previous version are still available. Expand as needed.</div>
-        <p>Use the previous full code for complete rider dashboard, wallet, and Rider Connect if required.</p>
+        <h2>Rider Registration</h2>
+        <div class="alert alert-warning">Riders must provide Ghana Card ID and a clear profile photo.</div>
+        <form id="riderForm" onsubmit="registerRider(event)">
+          <div class="form-group"><label>Full Name *</label><input type="text" id="r-name" required></div>
+          <div class="form-group"><label>Phone Number *</label><input type="tel" id="r-phone" required></div>
+          <div class="form-group"><label>Email Address *</label><input type="email" id="r-email" required></div>
+          <div class="form-group"><label>Ghana Card ID Number *</label><input type="text" id="r-ghana-card" required></div>
+          <div class="form-group"><label>Profile Picture *</label><input type="file" id="r-photo" accept="image/*" required onchange="previewPhoto(event)"><div id="photoPreview" style="margin-top:10px;"></div></div>
+          <button type="submit" class="btn btn-accent" id="riderBtn">Create Rider Account</button>
+        </form>
+        <div id="riderSuccess" class="alert alert-success hidden" style="margin-top:16px;"></div>
       </div>
     </div>
 
-    <!-- ADMIN TRIGGER (KAWUTEY) -->
-    <div id="admin" class="section hidden">
+    <!-- RIDER DASHBOARD -->
+    <div id="rider-dashboard" class="section hidden">
+      <div class="wallet-box">
+        <h3>Your Wallet Balance</h3>
+        <div class="balance" id="walletBalance">GHS 0.00</div>
+        <p style="font-size:0.85rem; opacity:0.85;">Deposit money before receiving packages</p>
+      </div>
       <div class="card">
-        <h2>Administration Dashboard</h2>
-        <div class="alert alert-info">Enter the trigger word to unlock full admin controls.</div>
-        <div class="form-group">
-          <label>Enter Trigger Word</label>
-          <input type="password" id="adminTrigger" placeholder="Enter KAWUTEY">
-        </div>
-        <button class="btn btn-primary" onclick="checkAdminTrigger()">Unlock Admin</button>
-        <div id="adminPanel" class="hidden" style="margin-top:20px;">
-          <h3>Admin Controls Unlocked (KAWUTEY)</h3>
-          <ul>
-            <li>View all vendors and riders</li>
-            <li>Approve / suspend accounts</li>
-            <li>Assign deliveries</li>
-            <li>Monitor wallets and deposits</li>
-            <li>Manage package exchanges</li>
-            <li>View complaints and reports</li>
-          </ul>
-          <p style="margin-top:12px; color:#198754;">Full admin features can be expanded here.</p>
-        </div>
+        <h2>Deposit Money</h2>
+        <div class="form-group"><label>Amount to Deposit (GHS)</label><input type="number" id="depositAmount" min="10" step="10"></div>
+        <button class="btn btn-accent" onclick="depositMoney()">Deposit Now</button>
+      </div>
+      <div class="card">
+        <h2>Deposit History</h2>
+        <div id="depositHistory"><p style="color:#6c757d;">No deposits yet.</p></div>
+      </div>
+      <div class="card">
+        <h2>Contact Other Riders</h2>
+        <div id="ridersList"></div>
+      </div>
+      <div class="card">
+        <h2>Send Message to Rider</h2>
+        <div class="form-group"><label>Select Rider</label><select id="messageTo"><option value="">-- Choose a rider --</option></select></div>
+        <div class="form-group"><label>Your Message</label><textarea id="messageText" rows="3"></textarea></div>
+        <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+        <div id="messagesArea" style="margin-top:20px;"></div>
       </div>
     </div>
 
     <footer>
       <strong>Kawutey Logistics</strong> • Fast. Safe. Delivered.<br>
-      024 226 7974 | 055 104 0353<br>
-      Trigger: KAWUTEY
+      024 226 7974 | 055 104 0353
     </footer>
   </div>
 
   <script>
-    const ACCESS_KEY = "414701a5-9bcf-4dc4-887f-08eeb27d280d"; // Your Web3Forms key
+    const ACCESS_KEY = "414701a5-9bcf-4dc4-887f-08eeb27d280d";
 
     let vendors = JSON.parse(localStorage.getItem('kl_vendors') || '[]');
+    let riders = JSON.parse(localStorage.getItem('kl_riders') || '[]');
+    let deposits = JSON.parse(localStorage.getItem('kl_deposits') || '[]');
+    let messages = JSON.parse(localStorage.getItem('kl_messages') || '[]');
     let pickups = JSON.parse(localStorage.getItem('kl_pickups') || '[]');
+    let currentBalance = parseFloat(localStorage.getItem('kl_wallet') || '0');
     let currentVendor = JSON.parse(localStorage.getItem('currentVendor') || 'null');
 
     function showSection(id) {
@@ -214,44 +271,61 @@
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.getAttribute('onclick')?.includes(id)) btn.classList.add('active');
       });
+      if (id === 'rider-dashboard') updateDashboard();
       if (id === 'vendor' && currentVendor) showVendorDashboard();
     }
 
     function showVendorLogin() {
-      document.getElementById('vendorAuth').classList.add('hidden');
-      document.getElementById('vendorLogin').classList.remove('hidden');
+      document.getElementById('vendorRegSection').classList.add('hidden');
+      document.getElementById('vendorLoginSection').classList.remove('hidden');
+    }
+    function showVendorReg() {
+      document.getElementById('vendorLoginSection').classList.add('hidden');
+      document.getElementById('vendorRegSection').classList.remove('hidden');
     }
 
     async function registerVendor(e) {
       e.preventDefault();
+      const btn = document.getElementById('vendorRegBtn');
+      btn.disabled = true; btn.textContent = "Creating...";
+
       const name = document.getElementById('v-name').value.trim();
       const phone = document.getElementById('v-phone').value.trim();
       const email = document.getElementById('v-email').value.trim();
       const pass = document.getElementById('v-pass').value;
+      const location = document.getElementById('v-location').value.trim();
 
-      const vendor = { id: Date.now(), name, phone, email, pass, registeredAt: new Date().toLocaleString() };
+      if (vendors.find(v => v.email === email)) {
+        alert("An account with this email already exists. Please login.");
+        btn.disabled = false; btn.textContent = "Create Vendor Account";
+        return;
+      }
+
+      const vendor = { id: Date.now(), name, phone, email, pass, location, registeredAt: new Date().toLocaleString() };
       vendors.push(vendor);
       localStorage.setItem('kl_vendors', JSON.stringify(vendors));
 
-      // Email notification
       const formData = new FormData();
       formData.append("access_key", ACCESS_KEY);
       formData.append("subject", "New Vendor Registration - Kawutey Logistics");
-      formData.append("Full Name / Business", name);
+      formData.append("Type", "Vendor Registration");
+      formData.append("Full Name", name);
       formData.append("Phone", phone);
       formData.append("Email", email);
-      formData.append("Type", "Vendor");
-      try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(e) {}
+      formData.append("Location", location);
+      try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
 
       currentVendor = vendor;
       localStorage.setItem('currentVendor', JSON.stringify(vendor));
       showVendorDashboard();
-      alert("Vendor account created! You are now logged in.");
+      document.getElementById('vendorRegSuccess').classList.remove('hidden');
+      document.getElementById('vendorRegSuccess').innerHTML = `✅ Account created successfully! Welcome, ${name}`;
+      btn.disabled = false; btn.textContent = "Create Vendor Account";
     }
 
     function loginVendor(e) {
       e.preventDefault();
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
       const vendor = vendors.find(v => v.email === email && v.pass === pass);
       if (vendor) {
@@ -259,19 +333,19 @@
         localStorage.setItem('currentVendor', JSON.stringify(vendor));
         showVendorDashboard();
       } else {
-        alert("Invalid email or password");
+        alert("Invalid email or password.");
       }
     }
 
     function showVendorDashboard() {
-      document.getElementById('vendorAuth').classList.add('hidden');
-      document.getElementById('vendorLogin').classList.add('hidden');
+      document.getElementById('vendorRegSection').classList.add('hidden');
+      document.getElementById('vendorLoginSection').classList.add('hidden');
       document.getElementById('vendorDashboard').classList.remove('hidden');
       document.getElementById('vendorNameDisplay').textContent = currentVendor.name;
       renderPickups();
     }
 
-    function showPickupForm() {
+    function togglePickupForm() {
       document.getElementById('pickupFormArea').classList.toggle('hidden');
     }
 
@@ -280,11 +354,13 @@
       const pickup = {
         id: Date.now(),
         vendorId: currentVendor.id,
-        desc: document.getElementById('pkg-desc').value,
-        custName: document.getElementById('cust-name').value,
-        custPhone: document.getElementById('cust-phone').value,
-        address: document.getElementById('cust-address').value,
+        vendorName: currentVendor.name,
+        desc: document.getElementById('pkg-desc').value.trim(),
         time: document.getElementById('pickup-time').value,
+        total: document.getElementById('total-packages').value,
+        large: document.getElementById('large-packages').value || 0,
+        medium: document.getElementById('medium-packages').value || 0,
+        small: document.getElementById('small-packages').value || 0,
         status: "Pickup Requested",
         created: new Date().toLocaleString()
       };
@@ -293,11 +369,12 @@
       document.getElementById('pickupForm').reset();
       document.getElementById('pickupFormArea').classList.add('hidden');
       renderPickups();
-      alert("Pickup request submitted!");
+      alert("Pickup request submitted successfully!");
     }
 
     function renderPickups() {
       const area = document.getElementById('pickupHistory');
+      if (!currentVendor) return;
       const mine = pickups.filter(p => p.vendorId === currentVendor.id);
       if (mine.length === 0) {
         area.innerHTML = "<p style='color:#666;'>No pickup requests yet.</p>";
@@ -305,10 +382,11 @@
       }
       area.innerHTML = mine.map(p => `
         <div class="pickup-item">
-          <strong>${p.desc}</strong> – ${p.status}<br>
-          Customer: ${p.custName} (${p.custPhone})<br>
-          Address: ${p.address}<br>
-          Preferred time: ${p.time}<br>
+          <strong>Status:</strong> ${p.status}<br>
+          <strong>Pickup Time:</strong> ${p.time}<br>
+          <strong>Total Packages:</strong> ${p.total}<br>
+          Large: ${p.large} | Medium: ${p.medium} | Small: ${p.small}<br>
+          ${p.desc ? `<strong>Notes:</strong> ${p.desc}<br>` : ''}
           <small>${p.created}</small>
         </div>
       `).join('');
@@ -318,24 +396,115 @@
       currentVendor = null;
       localStorage.removeItem('currentVendor');
       document.getElementById('vendorDashboard').classList.add('hidden');
-      document.getElementById('vendorAuth').classList.remove('hidden');
-      document.getElementById('vendorLogin').classList.add('hidden');
+      document.getElementById('vendorRegSection').classList.remove('hidden');
     }
 
-    function checkAdminTrigger() {
-      const word = document.getElementById('adminTrigger').value.trim().toUpperCase();
-      if (word === "KAWUTEY") {
-        document.getElementById('adminPanel').classList.remove('hidden');
-        alert("Admin panel unlocked with trigger word KAWUTEY");
-      } else {
-        alert("Incorrect trigger word");
+    // Rider functions (unchanged)
+    async function sendEmailNotification(formData) {
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData });
+        const result = await response.json();
+        return result.success;
+      } catch (error) { return false; }
+    }
+
+    let photoData = null;
+    function previewPhoto(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          photoData = ev.target.result;
+          document.getElementById('photoPreview').innerHTML = `<img src="${photoData}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #FF6A00;">`;
+        };
+        reader.readAsDataURL(file);
       }
     }
 
-    // Auto-show dashboard if already logged in
-    if (currentVendor) {
-      // Optional: you can auto-open vendor tab
+    async function registerRider(e) {
+      e.preventDefault();
+      if (!photoData) { alert('Please upload a profile picture.'); return; }
+      const btn = document.getElementById('riderBtn');
+      btn.disabled = true; btn.textContent = "Creating...";
+      const name = document.getElementById('r-name').value.trim();
+      const phone = document.getElementById('r-phone').value.trim();
+      const email = document.getElementById('r-email').value.trim();
+      const ghanaCard = document.getElementById('r-ghana-card').value.trim();
+      const rider = { id: Date.now(), name, phone, email, ghanaCard, photo: photoData, verified: true, registeredAt: new Date().toLocaleString() };
+      riders.push(rider);
+      localStorage.setItem('kl_riders', JSON.stringify(riders));
+      const formData = new FormData();
+      formData.append("access_key", ACCESS_KEY);
+      formData.append("subject", "New Rider Registration - Kawutey Logistics");
+      formData.append("Type", "Rider Registration");
+      formData.append("Full Name", name);
+      formData.append("Phone Number", phone);
+      formData.append("Email", email);
+      formData.append("Ghana Card ID", ghanaCard);
+      await sendEmailNotification(formData);
+      document.getElementById('riderSuccess').classList.remove('hidden');
+      document.getElementById('riderSuccess').innerHTML = `✅ Rider account created!<br><strong>${name}</strong><br>Ghana Card: ${ghanaCard}`;
+      document.getElementById('riderForm').reset();
+      document.getElementById('photoPreview').innerHTML = '';
+      photoData = null;
+      btn.disabled = false; btn.textContent = "Create Rider Account";
     }
+
+    function depositMoney() {
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      if (!amount || amount < 10) { alert('Minimum deposit is GHS 10'); return; }
+      currentBalance += amount;
+      localStorage.setItem('kl_wallet', currentBalance);
+      deposits.unshift({ id: Date.now(), amount, date: new Date().toLocaleString(), type: 'Deposit' });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+      document.getElementById('depositAmount').value = '';
+      updateDashboard();
+      alert(`Successfully deposited GHS ${amount.toFixed(2)}`);
+    }
+
+    function sendMessage() {
+      const toId = document.getElementById('messageTo').value;
+      const text = document.getElementById('messageText').value.trim();
+      if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
+      const toRider = riders.find(r => r.id == toId);
+      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: new Date().toLocaleString() });
+      localStorage.setItem('kl_messages', JSON.stringify(messages));
+      document.getElementById('messageText').value = '';
+      updateDashboard();
+      alert('Message sent successfully!');
+    }
+
+    function updateDashboard() {
+      document.getElementById('walletBalance').textContent = `GHS ${currentBalance.toFixed(2)}`;
+      const hist = document.getElementById('depositHistory');
+      hist.innerHTML = deposits.length === 0 ? '<p style="color:#6c757d;">No deposits yet.</p>' : deposits.map(d => `
+        <div class="history-item">
+          <div><strong>${d.type}</strong><br><small>${d.date}</small></div>
+          <div style="color:#198754; font-weight:700;">+ GHS ${d.amount.toFixed(2)}</div>
+        </div>`).join('');
+      const list = document.getElementById('ridersList');
+      const select = document.getElementById('messageTo');
+      if (riders.length === 0) {
+        list.innerHTML = '<p style="color:#6c757d;">No other riders registered yet.</p>';
+        select.innerHTML = '<option value="">-- No riders available --</option>';
+      } else {
+        list.innerHTML = riders.map(r => `
+          <div class="rider-card">
+            <img src="${r.photo}" alt="${r.name}">
+            <div><strong>${r.name}</strong> <span class="status verified">Verified</span><br><small>${r.phone} • ${r.ghanaCard}</small></div>
+          </div>`).join('');
+        select.innerHTML = '<option value="">-- Choose a rider --</option>' + riders.map(r => `<option value="${r.id}">${r.name} (${r.phone})</option>`).join('');
+      }
+      const msgArea = document.getElementById('messagesArea');
+      msgArea.innerHTML = messages.length === 0 ? '<p style="color:#6c757d;">No messages yet.</p>' : '<h3 style="margin:16px 0 8px;">Recent Messages</h3>' + messages.map(m => `
+        <div class="msg-box"><strong>To: ${m.to}</strong><br>${m.text}<br><small>${m.date}</small></div>`).join('');
+    }
+
+    // Auto-load dashboard if vendor is logged in
+    if (currentVendor) {
+      // Will show when they open the Vendor tab
+    }
+    updateDashboard();
   </script>
 </body>
 </html>
