@@ -45,7 +45,7 @@
       width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 1rem;
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,106,0,0.15); }
-    .btn { display: inline-block; padding: 11px 24px; border: none; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+    .btn { display: inline-block; padding: 11px 24px; border: none; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 0.95rem; margin-right: 8px; margin-bottom: 8px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-accent { background: var(--accent); color: white; }
@@ -66,6 +66,10 @@
     .wallet-box { background: linear-gradient(135deg, var(--primary), #0d3d8a); color: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; }
     .wallet-box .balance { font-size: 2.1rem; font-weight: 700; }
     .ref-code { background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-weight: 600; letter-spacing: 0.5px; }
+    .wallet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
+    .stat-box { background: rgba(255,255,255,0.12); padding: 12px; border-radius: 10px; text-align: center; }
+    .stat-box .value { font-size: 1.4rem; font-weight: 700; }
+    .stat-box .label { font-size: 0.8rem; opacity: 0.9; }
     .history-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
     .msg-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
     .alert { padding: 13px 16px; border-radius: 9px; margin-bottom: 16px; font-size: 0.9rem; }
@@ -97,7 +101,6 @@
       <button class="tab-btn active" onclick="showSection('home')">Home</button>
       <button class="tab-btn" onclick="showSection('vendor')">Vendor Portal</button>
       <button class="tab-btn" onclick="showSection('rider')">Rider Portal</button>
-      <button class="tab-btn" onclick="showSection('rider-dashboard')">Rider Dashboard</button>
     </div>
 
     <!-- HOME -->
@@ -131,7 +134,7 @@
       </div>
     </div>
 
-    <!-- VENDOR PORTAL (kept from previous version) -->
+    <!-- VENDOR PORTAL -->
     <div id="vendor" class="section hidden">
       <div class="card">
         <h2>Vendor Portal – Manage Your Deliveries With Ease</h2>
@@ -162,7 +165,7 @@
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
           <p style="margin-bottom:16px;">Focus on growing your business while we take care of your packages.</p>
           <button class="btn btn-accent" onclick="togglePickupForm()">Request Package Pickup</button>
-          <button class="btn btn-outline" style="margin-left:10px;" onclick="logoutVendor()">Logout</button>
+          <button class="btn btn-outline" onclick="logoutVendor()">Logout</button>
           <div id="pickupFormArea" class="hidden" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
             <form id="pickupForm" onsubmit="requestPickup(event)">
@@ -185,11 +188,11 @@
 
     <!-- RIDER PORTAL -->
     <div id="rider" class="section hidden">
-      <div class="card">
+      <div class="card" id="riderAuthCard">
         <h2>Rider Portal – Your Next Delivery Opportunity Starts Here</h2>
         <div id="riderRegSection">
           <h3>New Rider Registration</h3>
-          <div class="alert alert-warning">A unique reference code (e.g. KW-RD-0001) will be assigned automatically. You must deposit money before accepting packages (GH₵5 commission per package).</div>
+          <div class="alert alert-warning">A unique reference code (e.g. KW-RD-0001) will be assigned automatically. GH₵5 commission per package.</div>
           <form id="riderRegForm" onsubmit="registerRider(event)">
             <div class="form-group"><label>Full Name *</label><input type="text" id="r-name" required></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="r-phone" required></div>
@@ -213,37 +216,59 @@
           <p style="margin-top:14px;">New rider? <a href="#" onclick="showRiderReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
       </div>
-    </div>
 
-    <!-- RIDER DASHBOARD -->
-    <div id="rider-dashboard" class="section hidden">
-      <div id="riderDashContent" class="hidden">
+      <!-- RIDER DASHBOARD (shown after login) -->
+      <div id="riderDashboard" class="hidden">
         <div class="card">
           <h2>Rider Dashboard</h2>
           <p>Welcome, <strong id="riderNameDisplay"></strong> | Status: <span id="riderStatus" class="status"></span></p>
-          <p style="margin:8px 0;">Accepted Deliveries: <strong id="acceptedCount">0</strong></p>
           <button class="btn btn-outline" onclick="logoutRider()">Logout</button>
         </div>
 
+        <!-- WALLET DASHBOARD -->
         <div class="wallet-box">
-          <h3>Your Wallet</h3>
+          <h3>Wallet Dashboard</h3>
           <div class="balance" id="walletBalance">GHS 0.00</div>
-          <div class="ref-code">Reference Code: <span id="riderRefCode">—</span></div>
-          <p style="font-size:0.85rem; opacity:0.9; margin-top:8px;">Use your reference code when depositing. GH₵5 commission is deducted per accepted package.</p>
+          <div class="ref-code">Unique Reference Code: <span id="riderRefCode">—</span></div>
+
+          <div class="wallet-stats">
+            <div class="stat-box">
+              <div class="value" id="eligiblePackages">0</div>
+              <div class="label">Packages Eligible</div>
+            </div>
+            <div class="stat-box">
+              <div class="value" id="totalDeposits">GHS 0</div>
+              <div class="label">Total Deposits</div>
+            </div>
+            <div class="stat-box">
+              <div class="value" id="totalCommission">GHS 0</div>
+              <div class="label">Commission Deducted</div>
+            </div>
+            <div class="stat-box">
+              <div class="value" id="remainingEligibility">0</div>
+              <div class="label">Remaining Eligibility</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <button class="btn btn-accent" onclick="showDepositForm()">Deposit Money</button>
+            <button class="btn btn-primary" onclick="showTransactionHistory()">Transaction History</button>
+            <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4);" onclick="requestRefund()">Request Refund</button>
+          </div>
         </div>
 
-        <div class="card">
+        <div id="depositFormArea" class="card hidden">
           <h3>Deposit Money</h3>
-          <div class="alert alert-info">Always include your unique reference code when making a payment. Wallet is only credited after verification.</div>
+          <div class="alert alert-info">Use your unique reference code. Wallet is only credited after payment verification.</div>
           <div class="form-group"><label>Amount (GHS)</label><input type="number" id="depositAmount" min="5" step="5" placeholder="e.g. 50, 100, 200"></div>
           <div class="form-group"><label>Your Reference Code</label><input type="text" id="depositRef" placeholder="e.g. KW-RD-0001" required></div>
           <div class="form-group"><label>Payment Reference / Transaction ID</label><input type="text" id="paymentRef" placeholder="From Mobile Money or bank" required></div>
           <button class="btn btn-accent" onclick="requestDeposit()">Submit Deposit Request</button>
         </div>
 
-        <div class="card">
-          <h3>Deposit History</h3>
-          <div id="depositHistory"><p style="color:#6c757d;">No deposits yet.</p></div>
+        <div id="transactionHistoryArea" class="card hidden">
+          <h3>Transaction History</h3>
+          <div id="depositHistory"><p style="color:#6c757d;">No transactions yet.</p></div>
         </div>
 
         <div class="card">
@@ -253,6 +278,7 @@
 
         <div class="card">
           <h3>Your Accepted Deliveries / Packages</h3>
+          <p>Total Accepted: <strong id="acceptedCount">0</strong></p>
           <div id="acceptedAssignments"></div>
         </div>
 
@@ -265,10 +291,6 @@
           <div id="messagesArea" style="margin-top:20px;"></div>
         </div>
       </div>
-      <div id="riderNotLoggedIn" class="card">
-        <p>Please register or login as a rider to access the dashboard.</p>
-        <button class="btn btn-accent" onclick="showSection('rider')">Go to Rider Portal</button>
-      </div>
     </div>
 
     <footer>
@@ -279,7 +301,7 @@
 
   <script>
     const ACCESS_KEY = "414701a5-9bcf-4dc4-887f-08eeb27d280d";
-    const COMMISSION = 5; // GH₵5 per package
+    const COMMISSION = 5;
 
     let vendors = JSON.parse(localStorage.getItem('kl_vendors') || '[]');
     let riders = JSON.parse(localStorage.getItem('kl_riders') || '[]');
@@ -297,8 +319,8 @@
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.getAttribute('onclick')?.includes(id)) btn.classList.add('active');
       });
-      if (id === 'rider-dashboard') updateRiderDashboard();
       if (id === 'vendor' && currentVendor) showVendorDashboard();
+      if (id === 'rider' && currentRider) showRiderDashboard();
     }
 
     // ========== VENDOR FUNCTIONS ==========
@@ -505,4 +527,239 @@
 
     function loginRider(e) {
       e.preventDefault();
-      const email = 
+      const email = document.getElementById('r-login-email').value.trim();
+      const pass = document.getElementById('r-login-pass').value;
+      const rider = riders.find(r => r.email === email && r.pass === pass);
+      if (rider) {
+        currentRider = rider;
+        localStorage.setItem('currentRider', JSON.stringify(rider));
+        showRiderDashboard();
+      } else alert("Invalid email or password.");
+    }
+
+    function showRiderDashboard() {
+      document.getElementById('riderAuthCard').classList.add('hidden');
+      document.getElementById('riderDashboard').classList.remove('hidden');
+      updateRiderDashboard();
+    }
+
+    function updateRiderDashboard() {
+      if (!currentRider) return;
+      currentRider = riders.find(r => r.id === currentRider.id) || currentRider;
+      localStorage.setItem('currentRider', JSON.stringify(currentRider));
+
+      document.getElementById('riderNameDisplay').textContent = currentRider.name;
+      const statusEl = document.getElementById('riderStatus');
+      statusEl.textContent = currentRider.status;
+      statusEl.className = "status " + (currentRider.status === "Approved" ? "verified" : "pending");
+
+      document.getElementById('walletBalance').textContent = `GHS ${currentRider.wallet.toFixed(2)}`;
+      document.getElementById('riderRefCode').textContent = currentRider.refCode;
+
+      const eligible = Math.floor(currentRider.wallet / COMMISSION);
+      document.getElementById('eligiblePackages').textContent = eligible;
+      document.getElementById('remainingEligibility').textContent = eligible;
+
+      const myDeposits = deposits.filter(d => d.riderId === currentRider.id);
+      const totalDep = myDeposits.filter(d => d.type === "Deposit" && d.status === "Verified").reduce((s, d) => s + d.amount, 0);
+      const totalComm = myDeposits.filter(d => d.type === "Commission Deduction").reduce((s, d) => s + Math.abs(d.amount), 0);
+      document.getElementById('totalDeposits').textContent = `GHS ${totalDep.toFixed(2)}`;
+      document.getElementById('totalCommission').textContent = `GHS ${totalComm.toFixed(2)}`;
+
+      const accepted = assignments.filter(a => a.acceptedBy === currentRider.id);
+      document.getElementById('acceptedCount').textContent = accepted.length;
+
+      // Available assignments
+      const availArea = document.getElementById('availableAssignments');
+      const available = assignments.filter(a => a.status === "Available");
+      if (available.length === 0) {
+        availArea.innerHTML = "<p style='color:#666;'>No available assignments right now.</p>";
+      } else {
+        availArea.innerHTML = available.map(a => {
+          const cost = a.total * COMMISSION;
+          const canAccept = currentRider.status === "Approved" && currentRider.wallet >= cost;
+          return `
+            <div class="assignment-item">
+              <strong>${a.desc}</strong> from ${a.vendorName}<br>
+              Pickup Time: ${a.time} | Packages: ${a.total}<br>
+              Commission needed: GH₵${cost}<br>
+              ${canAccept 
+                ? `<button class="btn btn-accent" onclick="acceptAssignment(${a.id})">Accept</button>` 
+                : `<span style="color:#dc3545;">${currentRider.status !== "Approved" ? "Approval required" : "Insufficient wallet balance"}</span>`}
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Accepted
+      const accArea = document.getElementById('acceptedAssignments');
+      if (accepted.length === 0) {
+        accArea.innerHTML = "<p style='color:#666;'>You have no accepted deliveries yet.</p>";
+      } else {
+        accArea.innerHTML = accepted.map(a => `
+          <div class="assignment-item">
+            <strong>${a.desc}</strong> from ${a.vendorName}<br>
+            Pickup Time: ${a.time} | Packages: ${a.total}<br>
+            Commission deducted: GH₵${a.total * COMMISSION}
+          </div>
+        `).join('');
+      }
+
+      // Messaging
+      const list = document.getElementById('ridersList');
+      const select = document.getElementById('messageTo');
+      const otherRiders = riders.filter(r => r.id !== currentRider.id);
+      if (otherRiders.length === 0) {
+        list.innerHTML = '<p style="color:#6c757d;">No other riders registered yet.</p>';
+        select.innerHTML = '<option value="">-- No riders available --</option>';
+      } else {
+        list.innerHTML = otherRiders.map(r => `
+          <div class="rider-card">
+            <img src="${r.photo}" alt="${r.name}">
+            <div><strong>${r.name}</strong> <span class="status ${r.status === 'Approved' ? 'verified' : 'pending'}">${r.status}</span><br><small>${r.refCode} • ${r.location}</small></div>
+          </div>`).join('');
+        select.innerHTML = '<option value="">-- Choose a rider --</option>' + otherRiders.map(r => `<option value="${r.id}">${r.name} (${r.refCode})</option>`).join('');
+      }
+      const msgArea = document.getElementById('messagesArea');
+      msgArea.innerHTML = messages.length === 0 ? '<p style="color:#6c757d;">No messages yet.</p>' : '<h3 style="margin:16px 0 8px;">Recent Messages</h3>' + messages.map(m => `
+        <div class="msg-box"><strong>To: ${m.to}</strong><br>${m.text}<br><small>${m.date}</small></div>`).join('');
+    }
+
+    function showDepositForm() {
+      document.getElementById('depositFormArea').classList.remove('hidden');
+      document.getElementById('transactionHistoryArea').classList.add('hidden');
+    }
+    function showTransactionHistory() {
+      document.getElementById('transactionHistoryArea').classList.remove('hidden');
+      document.getElementById('depositFormArea').classList.add('hidden');
+      const hist = document.getElementById('depositHistory');
+      const myDeposits = deposits.filter(d => d.riderId === currentRider.id);
+      hist.innerHTML = myDeposits.length === 0 ? '<p style="color:#6c757d;">No transactions yet.</p>' : myDeposits.map(d => `
+        <div class="history-item">
+          <div>
+            <strong>${d.type}</strong> – ${d.status}<br>
+            <small>${d.date}</small><br>
+            Ref: ${d.refCode || '—'} | Payment: ${d.paymentRef || '—'}
+          </div>
+          <div style="color:${d.amount >= 0 ? '#198754' : '#dc3545'}; font-weight:700;">
+            ${d.amount >= 0 ? '+' : ''} GHS ${Math.abs(d.amount).toFixed(2)}
+          </div>
+        </div>`).join('');
+    }
+
+    function requestRefund() {
+      if (currentRider.wallet <= 0) {
+        alert("No balance available for refund.");
+        return;
+      }
+      if (confirm(`Request refund of GH₵${currentRider.wallet.toFixed(2)}? This will be reviewed by admin.`)) {
+        deposits.unshift({
+          id: Date.now(),
+          riderId: currentRider.id,
+          amount: -currentRider.wallet,
+          type: "Refund Request",
+          status: "Pending",
+          refCode: currentRider.refCode,
+          date: new Date().toLocaleString()
+        });
+        localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+        alert("Refund request submitted. It will be processed after review.");
+        updateRiderDashboard();
+      }
+    }
+
+    function acceptAssignment(id) {
+      if (currentRider.status !== "Approved") {
+        alert("Your account must be approved before you can accept deliveries.");
+        return;
+      }
+      const assignment = assignments.find(a => a.id === id);
+      if (!assignment || assignment.status !== "Available") return;
+
+      const cost = assignment.total * COMMISSION;
+      if (currentRider.wallet < cost) {
+        alert(`Insufficient balance. You need GH₵${cost} but have GH₵${currentRider.wallet.toFixed(2)}.`);
+        return;
+      }
+
+      currentRider.wallet -= cost;
+      riders = riders.map(r => r.id === currentRider.id ? currentRider : r);
+      localStorage.setItem('kl_riders', JSON.stringify(riders));
+
+      assignment.status = "Accepted";
+      assignment.acceptedBy = currentRider.id;
+      localStorage.setItem('kl_assignments', JSON.stringify(assignments));
+
+      deposits.unshift({
+        id: Date.now(),
+        riderId: currentRider.id,
+        amount: -cost,
+        type: "Commission Deduction",
+        status: "Completed",
+        refCode: currentRider.refCode,
+        date: new Date().toLocaleString(),
+        note: `Accepted ${assignment.total} package(s)`
+      });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+
+      updateRiderDashboard();
+      alert(`Delivery accepted! GH₵${cost} commission deducted.`);
+    }
+
+    function requestDeposit() {
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      const ref = document.getElementById('depositRef').value.trim().toUpperCase();
+      const paymentRef = document.getElementById('paymentRef').value.trim();
+
+      if (!amount || amount < 5) { alert("Minimum deposit is GH₵5"); return; }
+      if (ref !== currentRider.refCode) { alert("Reference code does not match your account."); return; }
+      if (!paymentRef) { alert("Please enter the payment transaction ID."); return; }
+
+      deposits.unshift({
+        id: Date.now(),
+        riderId: currentRider.id,
+        amount: amount,
+        type: "Deposit",
+        status: "Pending Verification",
+        refCode: ref,
+        paymentRef: paymentRef,
+        date: new Date().toLocaleString()
+      });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+
+      document.getElementById('depositAmount').value = '';
+      document.getElementById('depositRef').value = '';
+      document.getElementById('paymentRef').value = '';
+      document.getElementById('depositFormArea').classList.add('hidden');
+      updateRiderDashboard();
+      alert("Deposit request submitted. It will be credited after payment verification.");
+    }
+
+    function logoutRider() {
+      currentRider = null;
+      localStorage.removeItem('currentRider');
+      document.getElementById('riderDashboard').classList.add('hidden');
+      document.getElementById('riderAuthCard').classList.remove('hidden');
+      showRiderReg();
+    }
+
+    function sendMessage() {
+      if (!currentRider) return;
+      const toId = document.getElementById('messageTo').value;
+      const text = document.getElementById('messageText').value.trim();
+      if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
+      const toRider = riders.find(r => r.id == toId);
+      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: new Date().toLocaleString() });
+      localStorage.setItem('kl_messages', JSON.stringify(messages));
+      document.getElementById('messageText').value = '';
+      updateRiderDashboard();
+      alert('Message sent successfully!');
+    }
+
+    // Auto-show if already logged in
+    if (currentRider) {
+      // Will show when they open Rider Portal
+    }
+  </script>
+</body>
+</html>
