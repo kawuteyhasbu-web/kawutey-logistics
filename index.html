@@ -65,6 +65,7 @@
     .status.pending { background: #fff3cd; color: #664d03; }
     .wallet-box { background: linear-gradient(135deg, var(--primary), #0d3d8a); color: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; }
     .wallet-box .balance { font-size: 2.1rem; font-weight: 700; }
+    .ref-code { background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-weight: 600; letter-spacing: 0.5px; }
     .history-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
     .msg-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #f8fafc; }
     .alert { padding: 13px 16px; border-radius: 9px; margin-bottom: 16px; font-size: 0.9rem; }
@@ -118,8 +119,8 @@
             <h3>For Riders</h3>
             <ul style="padding-left:20px; margin-bottom:18px;">
               <li>Register with Ghana Card & Photo</li>
-              <li>Get approved to receive assignments</li>
-              <li>Accept deliveries and communicate with riders</li>
+              <li>Personal wallet + unique reference code</li>
+              <li>GH₵5 commission per package</li>
             </ul>
             <button class="btn btn-accent" onclick="showSection('rider')">Rider Portal</button>
           </div>
@@ -130,7 +131,7 @@
       </div>
     </div>
 
-    <!-- VENDOR PORTAL (unchanged from previous) -->
+    <!-- VENDOR PORTAL (kept from previous version) -->
     <div id="vendor" class="section hidden">
       <div class="card">
         <h2>Vendor Portal – Manage Your Deliveries With Ease</h2>
@@ -188,7 +189,7 @@
         <h2>Rider Portal – Your Next Delivery Opportunity Starts Here</h2>
         <div id="riderRegSection">
           <h3>New Rider Registration</h3>
-          <div class="alert alert-warning">Riders must provide Ghana Card ID, profile photo, and will be reviewed for approval before receiving assignments.</div>
+          <div class="alert alert-warning">A unique reference code (e.g. KW-RD-0001) will be assigned automatically. You must deposit money before accepting packages (GH₵5 commission per package).</div>
           <form id="riderRegForm" onsubmit="registerRider(event)">
             <div class="form-group"><label>Full Name *</label><input type="text" id="r-name" required></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="r-phone" required></div>
@@ -220,8 +221,29 @@
         <div class="card">
           <h2>Rider Dashboard</h2>
           <p>Welcome, <strong id="riderNameDisplay"></strong> | Status: <span id="riderStatus" class="status"></span></p>
-          <p style="margin:8px 0 16px;">Accepted Deliveries: <strong id="acceptedCount">0</strong></p>
+          <p style="margin:8px 0;">Accepted Deliveries: <strong id="acceptedCount">0</strong></p>
           <button class="btn btn-outline" onclick="logoutRider()">Logout</button>
+        </div>
+
+        <div class="wallet-box">
+          <h3>Your Wallet</h3>
+          <div class="balance" id="walletBalance">GHS 0.00</div>
+          <div class="ref-code">Reference Code: <span id="riderRefCode">—</span></div>
+          <p style="font-size:0.85rem; opacity:0.9; margin-top:8px;">Use your reference code when depositing. GH₵5 commission is deducted per accepted package.</p>
+        </div>
+
+        <div class="card">
+          <h3>Deposit Money</h3>
+          <div class="alert alert-info">Always include your unique reference code when making a payment. Wallet is only credited after verification.</div>
+          <div class="form-group"><label>Amount (GHS)</label><input type="number" id="depositAmount" min="5" step="5" placeholder="e.g. 50, 100, 200"></div>
+          <div class="form-group"><label>Your Reference Code</label><input type="text" id="depositRef" placeholder="e.g. KW-RD-0001" required></div>
+          <div class="form-group"><label>Payment Reference / Transaction ID</label><input type="text" id="paymentRef" placeholder="From Mobile Money or bank" required></div>
+          <button class="btn btn-accent" onclick="requestDeposit()">Submit Deposit Request</button>
+        </div>
+
+        <div class="card">
+          <h3>Deposit History</h3>
+          <div id="depositHistory"><p style="color:#6c757d;">No deposits yet.</p></div>
         </div>
 
         <div class="card">
@@ -234,22 +256,8 @@
           <div id="acceptedAssignments"></div>
         </div>
 
-        <div class="wallet-box">
-          <h3>Your Wallet Balance</h3>
-          <div class="balance" id="walletBalance">GHS 0.00</div>
-          <p style="font-size:0.85rem; opacity:0.85;">Deposit money before receiving packages</p>
-        </div>
         <div class="card">
-          <h2>Deposit Money</h2>
-          <div class="form-group"><label>Amount to Deposit (GHS)</label><input type="number" id="depositAmount" min="10" step="10"></div>
-          <button class="btn btn-accent" onclick="depositMoney()">Deposit Now</button>
-        </div>
-        <div class="card">
-          <h2>Deposit History</h2>
-          <div id="depositHistory"><p style="color:#6c757d;">No deposits yet.</p></div>
-        </div>
-        <div class="card">
-          <h2>Communication with Other Riders</h2>
+          <h3>Communication with Other Riders</h3>
           <div id="ridersList"></div>
           <div class="form-group" style="margin-top:16px;"><label>Select Rider</label><select id="messageTo"><option value="">-- Choose a rider --</option></select></div>
           <div class="form-group"><label>Your Message</label><textarea id="messageText" rows="3"></textarea></div>
@@ -271,6 +279,7 @@
 
   <script>
     const ACCESS_KEY = "414701a5-9bcf-4dc4-887f-08eeb27d280d";
+    const COMMISSION = 5; // GH₵5 per package
 
     let vendors = JSON.parse(localStorage.getItem('kl_vendors') || '[]');
     let riders = JSON.parse(localStorage.getItem('kl_riders') || '[]');
@@ -278,7 +287,6 @@
     let messages = JSON.parse(localStorage.getItem('kl_messages') || '[]');
     let pickups = JSON.parse(localStorage.getItem('kl_pickups') || '[]');
     let assignments = JSON.parse(localStorage.getItem('kl_assignments') || '[]');
-    let currentBalance = parseFloat(localStorage.getItem('kl_wallet') || '0');
     let currentVendor = JSON.parse(localStorage.getItem('currentVendor') || 'null');
     let currentRider = JSON.parse(localStorage.getItem('currentRider') || 'null');
 
@@ -293,7 +301,7 @@
       if (id === 'vendor' && currentVendor) showVendorDashboard();
     }
 
-    // ========== VENDOR FUNCTIONS (unchanged) ==========
+    // ========== VENDOR FUNCTIONS ==========
     function showVendorLogin() {
       document.getElementById('vendorRegSection').classList.add('hidden');
       document.getElementById('vendorLoginSection').classList.remove('hidden');
@@ -362,9 +370,9 @@
         id: Date.now(),
         vendorId: currentVendor.id,
         vendorName: currentVendor.name,
-        desc: document.getElementById('pkg-desc').value.trim(),
+        desc: document.getElementById('pkg-desc').value.trim() || "Package pickup",
         time: document.getElementById('pickup-time').value,
-        total: document.getElementById('total-packages').value,
+        total: parseInt(document.getElementById('total-packages').value) || 1,
         large: document.getElementById('large-packages').value || 0,
         medium: document.getElementById('medium-packages').value || 0,
         small: document.getElementById('small-packages').value || 0,
@@ -372,11 +380,10 @@
         created: new Date().toLocaleString()
       };
       pickups.unshift(pickup);
-      // Also create an assignment for riders
       assignments.unshift({
         id: pickup.id,
         vendorName: currentVendor.name,
-        desc: pickup.desc || "Package pickup",
+        desc: pickup.desc,
         time: pickup.time,
         total: pickup.total,
         status: "Available",
@@ -416,6 +423,11 @@
     }
 
     // ========== RIDER FUNCTIONS ==========
+    function generateRefCode() {
+      const num = (riders.length + 1).toString().padStart(4, '0');
+      return `KW-RD-${num}`;
+    }
+
     function showRiderLogin() {
       document.getElementById('riderRegSection').classList.add('hidden');
       document.getElementById('riderLoginSection').classList.remove('hidden');
@@ -457,11 +469,14 @@
         return;
       }
 
+      const refCode = generateRefCode();
       const rider = {
         id: Date.now(),
         name, phone, email, ghanaCard, pass, location,
         photo: photoData,
-        status: "Pending Approval", // Verification process
+        refCode: refCode,
+        wallet: 0,
+        status: "Pending Approval",
         registeredAt: new Date().toLocaleString()
       };
       riders.push(rider);
@@ -476,11 +491,12 @@
       formData.append("Email", email);
       formData.append("Ghana Card", ghanaCard);
       formData.append("Location", location);
+      formData.append("Reference Code", refCode);
       formData.append("Status", "Pending Approval");
       try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
 
       document.getElementById('riderRegSuccess').classList.remove('hidden');
-      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created! Your status is <strong>Pending Approval</strong>. You will be able to accept deliveries after verification.`;
+      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created!<br>Your permanent Reference Code is: <strong>${refCode}</strong><br>Status: Pending Approval`;
       document.getElementById('riderRegForm').reset();
       document.getElementById('photoPreview').innerHTML = '';
       photoData = null;
@@ -489,140 +505,4 @@
 
     function loginRider(e) {
       e.preventDefault();
-      const email = document.getElementById('r-login-email').value.trim();
-      const pass = document.getElementById('r-login-pass').value;
-      const rider = riders.find(r => r.email === email && r.pass === pass);
-      if (rider) {
-        currentRider = rider;
-        localStorage.setItem('currentRider', JSON.stringify(rider));
-        showSection('rider-dashboard');
-      } else alert("Invalid email or password.");
-    }
-
-    function updateRiderDashboard() {
-      if (!currentRider) {
-        document.getElementById('riderDashContent').classList.add('hidden');
-        document.getElementById('riderNotLoggedIn').classList.remove('hidden');
-        return;
-      }
-      document.getElementById('riderDashContent').classList.remove('hidden');
-      document.getElementById('riderNotLoggedIn').classList.add('hidden');
-
-      document.getElementById('riderNameDisplay').textContent = currentRider.name;
-      const statusEl = document.getElementById('riderStatus');
-      statusEl.textContent = currentRider.status;
-      statusEl.className = "status " + (currentRider.status === "Approved" ? "verified" : "pending");
-
-      const accepted = assignments.filter(a => a.acceptedBy === currentRider.id);
-      document.getElementById('acceptedCount').textContent = accepted.length;
-
-      // Available assignments
-      const availArea = document.getElementById('availableAssignments');
-      const available = assignments.filter(a => a.status === "Available");
-      if (available.length === 0) {
-        availArea.innerHTML = "<p style='color:#666;'>No available assignments right now.</p>";
-      } else {
-        availArea.innerHTML = available.map(a => `
-          <div class="assignment-item">
-            <strong>${a.desc}</strong> from ${a.vendorName}<br>
-            Pickup Time: ${a.time} | Packages: ${a.total}<br>
-            ${currentRider.status === "Approved" 
-              ? `<button class="btn btn-accent" style="margin-top:8px;" onclick="acceptAssignment(${a.id})">Accept</button>` 
-              : `<span style="color:#664d03;">Approval required to accept</span>`}
-          </div>
-        `).join('');
-      }
-
-      // Accepted
-      const accArea = document.getElementById('acceptedAssignments');
-      if (accepted.length === 0) {
-        accArea.innerHTML = "<p style='color:#666;'>You have no accepted deliveries yet.</p>";
-      } else {
-        accArea.innerHTML = accepted.map(a => `
-          <div class="assignment-item">
-            <strong>${a.desc}</strong> from ${a.vendorName}<br>
-            Pickup Time: ${a.time} | Packages: ${a.total}<br>
-            Status: Accepted
-          </div>
-        `).join('');
-      }
-
-      // Wallet & messaging (shared)
-      document.getElementById('walletBalance').textContent = `GHS ${currentBalance.toFixed(2)}`;
-      const hist = document.getElementById('depositHistory');
-      hist.innerHTML = deposits.length === 0 ? '<p style="color:#6c757d;">No deposits yet.</p>' : deposits.map(d => `
-        <div class="history-item">
-          <div><strong>${d.type}</strong><br><small>${d.date}</small></div>
-          <div style="color:#198754; font-weight:700;">+ GHS ${d.amount.toFixed(2)}</div>
-        </div>`).join('');
-
-      const list = document.getElementById('ridersList');
-      const select = document.getElementById('messageTo');
-      const otherRiders = riders.filter(r => r.id !== currentRider.id);
-      if (otherRiders.length === 0) {
-        list.innerHTML = '<p style="color:#6c757d;">No other riders registered yet.</p>';
-        select.innerHTML = '<option value="">-- No riders available --</option>';
-      } else {
-        list.innerHTML = otherRiders.map(r => `
-          <div class="rider-card">
-            <img src="${r.photo}" alt="${r.name}">
-            <div><strong>${r.name}</strong> <span class="status ${r.status === 'Approved' ? 'verified' : 'pending'}">${r.status}</span><br><small>${r.phone} • ${r.location}</small></div>
-          </div>`).join('');
-        select.innerHTML = '<option value="">-- Choose a rider --</option>' + otherRiders.map(r => `<option value="${r.id}">${r.name} (${r.phone})</option>`).join('');
-      }
-      const msgArea = document.getElementById('messagesArea');
-      msgArea.innerHTML = messages.length === 0 ? '<p style="color:#6c757d;">No messages yet.</p>' : '<h3 style="margin:16px 0 8px;">Recent Messages</h3>' + messages.map(m => `
-        <div class="msg-box"><strong>To: ${m.to}</strong><br>${m.text}<br><small>${m.date}</small></div>`).join('');
-    }
-
-    function acceptAssignment(id) {
-      if (currentRider.status !== "Approved") {
-        alert("Your account must be approved before you can accept deliveries.");
-        return;
-      }
-      const assignment = assignments.find(a => a.id === id);
-      if (assignment && assignment.status === "Available") {
-        assignment.status = "Accepted";
-        assignment.acceptedBy = currentRider.id;
-        localStorage.setItem('kl_assignments', JSON.stringify(assignments));
-        updateRiderDashboard();
-        alert("Delivery accepted!");
-      }
-    }
-
-    function logoutRider() {
-      currentRider = null;
-      localStorage.removeItem('currentRider');
-      updateRiderDashboard();
-    }
-
-    function depositMoney() {
-      const amount = parseFloat(document.getElementById('depositAmount').value);
-      if (!amount || amount < 10) { alert('Minimum deposit is GHS 10'); return; }
-      currentBalance += amount;
-      localStorage.setItem('kl_wallet', currentBalance);
-      deposits.unshift({ id: Date.now(), amount, date: new Date().toLocaleString(), type: 'Deposit' });
-      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
-      document.getElementById('depositAmount').value = '';
-      updateRiderDashboard();
-      alert(`Successfully deposited GHS ${amount.toFixed(2)}`);
-    }
-
-    function sendMessage() {
-      if (!currentRider) return;
-      const toId = document.getElementById('messageTo').value;
-      const text = document.getElementById('messageText').value.trim();
-      if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
-      const toRider = riders.find(r => r.id == toId);
-      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: new Date().toLocaleString() });
-      localStorage.setItem('kl_messages', JSON.stringify(messages));
-      document.getElementById('messageText').value = '';
-      updateRiderDashboard();
-      alert('Message sent successfully!');
-    }
-
-    // Initial load
-    updateRiderDashboard();
-  </script>
-</body>
-</html>
+      const email = 
