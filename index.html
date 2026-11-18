@@ -534,3 +534,253 @@
       localStorage.setItem('kl_riders', JSON.stringify(riders));
 
       const formData = new FormData();
+      formData.append("access_key", ACCESS_KEY);
+      formData.append("subject", "New Rider Registration - Kawutey Logistics");
+      formData.append("Type", "Rider Registration");
+      formData.append("Full Name", name);
+      formData.append("Phone", phone);
+      formData.append("Email", email);
+      formData.append("Ghana Card", ghanaCard);
+      formData.append("Location", location);
+      formData.append("Reference Code", refCode);
+      formData.append("Status", "Pending Approval");
+      try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
+
+      document.getElementById('riderRegSuccess').classList.remove('hidden');
+      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created!<br>Your permanent Reference Code is: <strong>${refCode}</strong><br>Status: Pending Approval`;
+      document.getElementById('riderRegForm').reset();
+      document.getElementById('photoPreview').innerHTML = '';
+      photoData = null;
+      btn.disabled = false; btn.textContent = "Create Rider Account";
+    }
+
+    function loginRider(e) {
+      e.preventDefault();
+      const email = document.getElementById('r-login-email').value.trim();
+      const pass = document.getElementById('r-login-pass').value;
+      const rider = riders.find(r => r.email === email && r.pass === pass);
+      if (rider) {
+        currentRider = rider;
+        localStorage.setItem('currentRider', JSON.stringify(rider));
+        showRiderDashboard();
+      } else alert("Invalid email or password.");
+    }
+
+    function showRiderDashboard() {
+      document.getElementById('riderAuthCard').classList.add('hidden');
+      document.getElementById('riderDashboard').classList.remove('hidden');
+      updateRiderDashboard();
+    }
+
+    function updateRiderDashboard() {
+      if (!currentRider) return;
+      currentRider = riders.find(r => r.id === currentRider.id) || currentRider;
+      localStorage.setItem('currentRider', JSON.stringify(currentRider));
+
+      document.getElementById('riderNameDisplay').textContent = currentRider.name;
+      const statusEl = document.getElementById('riderStatus');
+      statusEl.textContent = currentRider.status;
+      statusEl.className = "status " + (currentRider.status === "Approved" ? "verified" : "pending");
+
+      document.getElementById('walletBalance').textContent = `GHS ${currentRider.wallet.toFixed(2)}`;
+      document.getElementById('riderRefCode').textContent = currentRider.refCode;
+
+      const eligible = Math.floor(currentRider.wallet / COMMISSION);
+      document.getElementById('eligiblePackages').textContent = eligible;
+      document.getElementById('remainingEligibility').textContent = eligible;
+
+      const myDeposits = deposits.filter(d => d.riderId === currentRider.id);
+      const totalDep = myDeposits.filter(d => d.type === "Deposit" && d.status === "Verified").reduce((s, d) => s + d.amount, 0);
+      const totalComm = myDeposits.filter(d => d.type === "Commission Deduction").reduce((s, d) => s + Math.abs(d.amount), 0);
+      document.getElementById('totalDeposits').textContent = `GHS ${totalDep.toFixed(2)}`;
+      document.getElementById('totalCommission').textContent = `GHS ${totalComm.toFixed(2)}`;
+
+      const accepted = assignments.filter(a => a.acceptedBy === currentRider.id);
+      document.getElementById('acceptedCount').textContent = accepted.length;
+
+      const availArea = document.getElementById('availableAssignments');
+      const available = assignments.filter(a => a.status === "Available");
+      if (available.length === 0) {
+        availArea.innerHTML = "<p style='color:#666;'>No available assignments right now.</p>";
+      } else {
+        availArea.innerHTML = available.map(a => {
+          const cost = a.total * COMMISSION;
+          const canAccept = currentRider.status === "Approved" && currentRider.wallet >= cost;
+          return `
+            <div class="assignment-item">
+              <strong>${a.desc}</strong> from ${a.vendorName}<br>
+              Pickup Time: ${a.time} | Packages: ${a.total}<br>
+              Commission needed: GH₵${cost}<br>
+              ${canAccept 
+                ? `<button class="btn btn-accent" onclick="acceptAssignment(${a.id})">Accept</button>` 
+                : `<span style="color:#dc3545;">${currentRider.status !== "Approved" ? "Approval required" : "Insufficient wallet balance"}</span>`}
+            </div>
+          `;
+        }).join('');
+      }
+
+      const accArea = document.getElementById('acceptedAssignments');
+      if (accepted.length === 0) {
+        accArea.innerHTML = "<p style='color:#666;'>You have no accepted deliveries yet.</p>";
+      } else {
+        accArea.innerHTML = accepted.map(a => `
+          <div class="assignment-item">
+            <strong>${a.desc}</strong> from ${a.vendorName}<br>
+            Pickup Time: ${a.time} | Packages: ${a.total}<br>
+            Commission deducted: GH₵${a.total * COMMISSION}
+          </div>
+        `).join('');
+      }
+
+      const list = document.getElementById('ridersList');
+      const select = document.getElementById('messageTo');
+      const otherRiders = riders.filter(r => r.id !== currentRider.id);
+      if (otherRiders.length === 0) {
+        list.innerHTML = '<p style="color:#6c757d;">No other riders registered yet.</p>';
+        select.innerHTML = '<option value="">-- No riders available --</option>';
+      } else {
+        list.innerHTML = otherRiders.map(r => `
+          <div class="rider-card">
+            <img src="${r.photo}" alt="${r.name}">
+            <div><strong>${r.name}</strong> <span class="status ${r.status === 'Approved' ? 'verified' : 'pending'}">${r.status}</span><br><small>${r.refCode} • ${r.location}</small></div>
+          </div>`).join('');
+        select.innerHTML = '<option value="">-- Choose a rider --</option>' + otherRiders.map(r => `<option value="${r.id}">${r.name} (${r.refCode})</option>`).join('');
+      }
+      const msgArea = document.getElementById('messagesArea');
+      msgArea.innerHTML = messages.length === 0 ? '<p style="color:#6c757d;">No messages yet.</p>' : '<h3 style="margin:16px 0 8px;">Recent Messages</h3>' + messages.map(m => `
+        <div class="msg-box"><strong>To: ${m.to}</strong><br>${m.text}<br><small>${m.date}</small></div>`).join('');
+    }
+
+    function showDepositForm() {
+      document.getElementById('depositFormArea').classList.remove('hidden');
+      document.getElementById('transactionHistoryArea').classList.add('hidden');
+    }
+    function showTransactionHistory() {
+      document.getElementById('transactionHistoryArea').classList.remove('hidden');
+      document.getElementById('depositFormArea').classList.add('hidden');
+      const hist = document.getElementById('depositHistory');
+      const myDeposits = deposits.filter(d => d.riderId === currentRider.id);
+      hist.innerHTML = myDeposits.length === 0 ? '<p style="color:#6c757d;">No transactions yet.</p>' : myDeposits.map(d => `
+        <div class="history-item">
+          <div>
+            <strong>${d.type}</strong> – ${d.status}<br>
+            <small>${d.date}</small><br>
+            Ref: ${d.refCode || '—'} | Payment: ${d.paymentRef || '—'}
+          </div>
+          <div style="color:${d.amount >= 0 ? '#198754' : '#dc3545'}; font-weight:700;">
+            ${d.amount >= 0 ? '+' : ''} GHS ${Math.abs(d.amount).toFixed(2)}
+          </div>
+        </div>`).join('');
+    }
+
+    function requestRefund() {
+      if (currentRider.wallet <= 0) {
+        alert("No balance available for refund.");
+        return;
+      }
+      if (confirm(`Request refund of GH₵${currentRider.wallet.toFixed(2)}? This will be reviewed by admin.`)) {
+        deposits.unshift({
+          id: Date.now(),
+          riderId: currentRider.id,
+          amount: -currentRider.wallet,
+          type: "Refund Request",
+          status: "Pending",
+          refCode: currentRider.refCode,
+          date: new Date().toLocaleString()
+        });
+        localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+        alert("Refund request submitted. It will be processed after review.");
+        updateRiderDashboard();
+      }
+    }
+
+    function acceptAssignment(id) {
+      if (currentRider.status !== "Approved") {
+        alert("Your account must be approved before you can accept deliveries.");
+        return;
+      }
+      const assignment = assignments.find(a => a.id === id);
+      if (!assignment || assignment.status !== "Available") return;
+
+      const cost = assignment.total * COMMISSION;
+      if (currentRider.wallet < cost) {
+        alert(`Insufficient balance. You need GH₵${cost} but have GH₵${currentRider.wallet.toFixed(2)}.`);
+        return;
+      }
+
+      currentRider.wallet -= cost;
+      riders = riders.map(r => r.id === currentRider.id ? currentRider : r);
+      localStorage.setItem('kl_riders', JSON.stringify(riders));
+
+      assignment.status = "Accepted";
+      assignment.acceptedBy = currentRider.id;
+      localStorage.setItem('kl_assignments', JSON.stringify(assignments));
+
+      deposits.unshift({
+        id: Date.now(),
+        riderId: currentRider.id,
+        amount: -cost,
+        type: "Commission Deduction",
+        status: "Completed",
+        refCode: currentRider.refCode,
+        date: new Date().toLocaleString(),
+        note: `Accepted ${assignment.total} package(s)`
+      });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+
+      updateRiderDashboard();
+      alert(`Delivery accepted! GH₵${cost} commission deducted.`);
+    }
+
+    function requestDeposit() {
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      const ref = document.getElementById('depositRef').value.trim().toUpperCase();
+      const paymentRef = document.getElementById('paymentRef').value.trim();
+
+      if (!amount || amount < 5) { alert("Minimum deposit is GH₵5"); return; }
+      if (ref !== currentRider.refCode) { alert("Reference code does not match your account."); return; }
+      if (!paymentRef) { alert("Please enter the payment transaction ID."); return; }
+
+      deposits.unshift({
+        id: Date.now(),
+        riderId: currentRider.id,
+        amount: amount,
+        type: "Deposit",
+        status: "Pending Verification",
+        refCode: ref,
+        paymentRef: paymentRef,
+        date: new Date().toLocaleString()
+      });
+      localStorage.setItem('kl_deposits', JSON.stringify(deposits));
+
+      document.getElementById('depositAmount').value = '';
+      document.getElementById('depositRef').value = '';
+      document.getElementById('paymentRef').value = '';
+      document.getElementById('depositFormArea').classList.add('hidden');
+      updateRiderDashboard();
+      alert("Deposit request submitted. It will be credited after payment verification.");
+    }
+
+    function logoutRider() {
+      currentRider = null;
+      localStorage.removeItem('currentRider');
+      document.getElementById('riderDashboard').classList.add('hidden');
+      document.getElementById('riderAuthCard').classList.remove('hidden');
+      showRiderReg();
+    }
+
+    function sendMessage() {
+      if (!currentRider) return;
+      const toId = document.getElementById('messageTo').value;
+      const text = document.getElementById('messageText').value.trim();
+      if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
+      const toRider = riders.find(r => r.id == toId);
+      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: new Date().toLocaleString() });
+      localStorage.setItem('kl_messages', JSON.stringify(messages));
+      document.getElementById('messageText').value = '';
+      updateRiderDashboard();
+      alert('Message sent successfully!');
+    }
+  </script>
+</body>
+</html>
