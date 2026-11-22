@@ -189,6 +189,7 @@
         </div>
         <div id="vendorDashboard" class="hidden">
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
+          <p id="vendorBusinessDisplay" style="margin-top:-8px; margin-bottom:14px; color:var(--muted);"></p>
           <p style="margin-bottom:14px;">Focus on growing your business while we take care of your packages.</p>
           <button class="btn btn-accent" onclick="togglePickupForm()">Request Package Pickup</button>
           <button class="btn btn-outline" onclick="logoutVendor()">Logout</button>
@@ -430,6 +431,8 @@
       document.getElementById('vendorLoginSection').classList.add('hidden');
       document.getElementById('vendorDashboard').classList.remove('hidden');
       document.getElementById('vendorNameDisplay').textContent = currentVendor.name;
+      const businessDisplay = document.getElementById('vendorBusinessDisplay');
+      businessDisplay.textContent = currentVendor.businessName ? 'Business: ' + currentVendor.businessName : '';
       renderPickups();
     }
     function togglePickupForm() {
