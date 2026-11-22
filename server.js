@@ -21,7 +21,7 @@ if (!jwtSecret || jwtSecret.length < 32) {
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(cors({ origin: (process.env.CORS_ORIGIN || "").split(",").map(v => v.trim()).filter(Boolean), credentials: false }));
-app.use(express.json({ limit: "1mb" }));
+app.use((req, res, next) => req.path === "/api/payments/paystack/webhook" ? next() : express.json({ limit: "1mb" })(req, res, next));
 app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false }));
 
 const asyncRoute = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
