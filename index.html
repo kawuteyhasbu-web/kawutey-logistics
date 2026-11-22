@@ -161,7 +161,7 @@
             <div class="form-group">
               <label>Password *</label>
               <div class="password-wrapper">
-                <input type="password" id="v-pass" required minlength="4">
+                <input type="password" id="v-pass" required minlength="10">
                 <button type="button" class="toggle-password" onclick="togglePassword('v-pass', this)">Show</button>
               </div>
             </div>
@@ -335,7 +335,7 @@
 
   <script>
     // Set window.KAWUTEY_API_BASE to your deployed API address when frontend and API use different hosts.
-    const API_BASE = String(window.KAWUTEY_API_BASE || "").replace(/\\/+$/, "");
+    const API_BASE = String(window.KAWUTEY_API_BASE || "").replace(/\/+$/, "");
     const COMMISSION = 5;
     let vendors = [];
     let riders = JSON.parse(localStorage.getItem('kl_riders') || '[]');
