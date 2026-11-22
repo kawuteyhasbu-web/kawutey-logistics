@@ -95,6 +95,13 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
 
 app.get("/api/me", authenticate, (req, res) => res.json({ user: req.user }));
 
+app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
+  const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,a.status AS assignment_status
+    FROM pickups p LEFT JOIN assignments a ON a.pickup_id=p.id
+    WHERE p.vendor_id=$1 ORDER BY p.created_at DESC`, [req.user.id]);
+  res.json({ pickups: result.rows });
+}));
+
 app.post("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const { description, preferredAt, totalPackages, largePackages = 0, mediumPackages = 0, smallPackages = 0 } = req.body || {};
   const total = Number(totalPackages), large = Number(largePackages), medium = Number(mediumPackages), small = Number(smallPackages), when = new Date(preferredAt);
