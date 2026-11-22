@@ -72,3 +72,14 @@ CREATE TABLE IF NOT EXISTS exchange_requests (
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS admin_notifications (
+  id BIGSERIAL PRIMARY KEY,
+  account_type TEXT NOT NULL CHECK (account_type IN ('vendor','rider')),
+  details JSONB NOT NULL DEFAULT '{}'::jsonb,
+  email_status TEXT NOT NULL DEFAULT 'pending' CHECK (email_status IN ('pending','sent','failed','not_configured')),
+  email_error TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  read_at TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS admin_notifications_created_at_idx ON admin_notifications(created_at DESC);
