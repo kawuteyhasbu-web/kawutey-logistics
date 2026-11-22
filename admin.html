@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kawutey Logistics — Admin Dashboard</title>
+<style>
+:root{--primary:#0A2F6B;--dark:#071F4A;--accent:#FF6A00;--border:#d0d7e2}
+*{box-sizing:border-box}body{margin:0;background:#eef2f7;color:#0A1F44;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:18px}.head,.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(10,47,107,.07);margin-bottom:16px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.brand img{width:auto;height:48px}.brand h1{margin:0;color:var(--primary);font-size:1.25rem}.brand small{color:var(--accent);font-weight:700}
+h2{color:var(--primary);margin:0 0 12px}label{display:block;font-weight:650;margin:12px 0 6px}input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;font:inherit}
+button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);color:#fff;font-weight:650;cursor:pointer;margin:10px 8px 0 0}button.secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}button:disabled{opacity:.6;cursor:not-allowed}
+.notice{padding:12px;border-radius:9px;background:#e8f0fe;margin:12px 0}.error{background:#fce8e6;color:#8a1c13}.success{background:#d1e7dd;color:#0f5132}.hidden{display:none!important}
+.item{border:1px solid var(--border);border-radius:10px;padding:15px;margin:12px 0;background:#f9fbfd}.meta{color:#5d6675;font-size:.9rem}.tag{display:inline-block;padding:3px 9px;border-radius:20px;background:#fff3cd;color:#664d03;font-size:.78rem;font-weight:700}.tag.read{background:#d1e7dd;color:#0f5132}
+@media(max-width:600px){.wrap{padding:10px}.head{align-items:flex-start}.card{padding:15px}}
+</style></head>
+<body><main class="wrap">
+<header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" onerror="this.hidden=true"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
+<section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
+<section id="dashboard" class="hidden">
+<div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
+</section></main>
+<script>
+const API_BASE=(window.KAWUTEY_API_BASE||"").replace(/\\/$/,"");
+const tokenKey="kl_admin_token";
+const $=id=>document.getElementById(id);
+function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
+async function api(path,options={}){const headers={"Content-Type":"application/json",...(options.headers||{})};const token=sessionStorage.getItem(tokenKey);if(token)headers.Authorization="Bearer "+token;const response=await fetch(API_BASE+path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Request failed.");return data;}
+function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications(); }
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function loadNotifications(){const area=$("notifications");area.textContent="Loading notifications…";try{const data=await api("/api/admin/notifications");if(!data.notifications.length){area.textContent="No signup notifications yet.";return;}area.innerHTML=data.notifications.map(n=>{const d=n.details||{};return '<article class="item"><span class="tag '+(n.read_at?"read":"")+'">'+(n.read_at?"Reviewed":"New")+'</span> <strong>'+escapeHtml(n.account_type.toUpperCase())+' SIGNUP</strong><p><strong>Name:</strong> '+escapeHtml(d.fullName)+'</p><p><strong>Email:</strong> '+escapeHtml(d.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(d.phone)+'</p>'+(d.businessName?'<p><strong>Business:</strong> '+escapeHtml(d.businessName)+'</p>':'')+'<p class="meta">Registered: '+escapeHtml(new Date(n.created_at).toLocaleString())+'</p>'+(n.account_type==="rider"?'<p class="meta">Rider approval is required before assignments.</p>':'')+'<p class="meta">Email alert: '+escapeHtml(n.email_status)+'</p>'+(n.read_at?'':'<button data-read="'+Number(n.id)+'">Mark as reviewed</button>')+'</article>';}).join("");}catch(e){show($("status"),e.message,"error");area.textContent="Could not load notifications.";}}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("email").value,password:$("password").value})});if(data.user.role!=="admin")throw new Error("This account is not an administrator.");sessionStorage.setItem(tokenKey,data.token);$("password").value="";openDashboard();}catch(err){show($("loginMessage"),err.message,"error");}finally{$("loginButton").disabled=false;}});
+$("refreshButton").addEventListener("click",loadNotifications);
+$("logoutButton").addEventListener("click",()=>{sessionStorage.removeItem(tokenKey);$("dashboard").classList.add("hidden");$("loginCard").classList.remove("hidden");});
+$("notifications").addEventListener("click",async e=>{const btn=e.target.closest("[data-read]");if(!btn)return;btn.disabled=true;try{await api("/api/admin/notifications/"+btn.dataset.read+"/read",{method:"PATCH"});await loadNotifications();}catch(err){show($("status"),err.message,"error");btn.disabled=false;}});
+(async()=>{if(sessionStorage.getItem(tokenKey)){try{const d=await api("/api/me");if(d.user.role==="admin")openDashboard();else sessionStorage.removeItem(tokenKey);}catch{sessionStorage.removeItem(tokenKey);}}})();
+</script></body></html>
