@@ -196,7 +196,7 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - Never include passwords, full Ghana Card numbers, identity-document images, authentication tokens or other unnecessary sensitive information in notification messages.
 - Rider notifications should make clear that the rider still requires administrator verification/approval before receiving assignments.
 - Vendor and rider signup notifications should be distinguishable so the administrator can quickly identify which type of account needs attention.
-- Choose and configure a reliable notification channel (for example, administrator email; an in-dashboard notification can also be added). Any email service credentials must be stored as hosting environment secrets, not in frontend code or GitHub.
+- **Required delivery channels: both administrator email and an in-dashboard notification.** Send an email alert and create a persistent notification inside the Admin Dashboard for each successful vendor or rider signup. Any email service credentials must be stored as hosting environment secrets, not in frontend code or GitHub.
 - Handle notification-service failure safely: save the account first, log the notification failure securely, and allow retry or show the pending notification state to an administrator. A notification failure must not silently create duplicate accounts if the user retries signup.
 - Restrict notification recipients and administrative review links to authorised administrators.
 - Test both vendor and rider signup notifications, including failed signups, duplicate submissions and notification-provider outages, before launch.
@@ -204,5 +204,5 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 ## 13. Newly agreed requirements — 22 November 2026
 
 - Existing vendor and rider account preservation/migration is an official project requirement, subject to recoverability, safe password handling, verification and applicable law.
-- Administrator notification on every successful vendor or rider signup is an official project requirement.
+- Administrator notification on every successful vendor or rider signup is an official project requirement, delivered through **both email and the Admin Dashboard**.
 - These are requirements recorded in the plan; they are not yet implemented or tested.
