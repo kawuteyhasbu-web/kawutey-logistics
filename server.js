@@ -42,7 +42,7 @@ const authenticate = asyncRoute(async (req, res, next) => {
   let claims;
   try { claims = jwt.verify(token, jwtSecret, { issuer: "kawutey-logistics" }); }
   catch { return res.status(401).json({ error: "Your session has expired. Please log in again." }); }
-  const result = await pool.query("SELECT id, full_name, email, phone, role, status FROM users WHERE id=$1", [claims.sub]);
+  const result = await pool.query("SELECT id, full_name, email, phone, role, status, location FROM users WHERE id=$1", [claims.sub]);
   if (!result.rowCount || result.rows[0].status !== "active") return res.status(401).json({ error: "Account unavailable." });
   req.user = result.rows[0];
   next();
@@ -52,7 +52,7 @@ const roles = (...allowed) => (req, res, next) => allowed.includes(req.user.role
 app.get("/api/health", (req, res) => res.json({ ok: true, service: "Kawutey Logistics API" }));
 
 app.post("/api/auth/register", asyncRoute(async (req, res) => {
-  const { fullName, email, phone, password, role, ghanaCardNumber } = req.body || {};
+  const { fullName, email, phone, password, role, ghanaCardNumber, location } = req.body || {};
   const name = clean(fullName), mail = clean(email).toLowerCase(), tel = clean(phone);
   if (!name || !emailValid(mail) || !tel || !["vendor", "rider"].includes(role) || typeof password !== "string" || password.length < 10) {
     return res.status(400).json({ error: "Provide your name, valid email, phone, vendor/rider role and a password of at least 10 characters." });
@@ -63,8 +63,8 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     await client.query("BEGIN");
     const hash = await bcrypt.hash(password, 12);
     const userResult = await client.query(
-      "INSERT INTO users(full_name,email,phone,password_hash,role,status) VALUES($1,$2,$3,$4,$5,$6) RETURNING id,full_name,email,phone,role,status",
-      [name, mail, tel, hash, role, role === "rider" ? "pending" : "active"]
+      "INSERT INTO users(full_name,email,phone,password_hash,role,status,location) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id,full_name,email,phone,role,status,location",
+      [name, mail, tel, hash, role, role === "rider" ? "pending" : "active", clean(location) || null]
     );
     const user = userResult.rows[0];
     if (role === "rider") {
@@ -84,7 +84,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
 
 app.post("/api/auth/login", asyncRoute(async (req, res) => {
   const mail = clean(req.body?.email).toLowerCase(), password = req.body?.password;
-  const found = await pool.query("SELECT id,full_name,email,phone,password_hash,role,status FROM users WHERE email=$1", [mail]);
+  const found = await pool.query("SELECT id,full_name,email,phone,password_hash,role,status,location FROM users WHERE email=$1", [mail]);
   if (!found.rowCount || !(await bcrypt.compare(String(password || ""), found.rows[0].password_hash))) return res.status(401).json({ error: "Invalid email or password." });
   const user = found.rows[0];
   if (user.status === "suspended") return res.status(403).json({ error: "Your account is suspended. Contact Kawutey Logistics." });
