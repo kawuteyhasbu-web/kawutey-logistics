@@ -51,6 +51,15 @@ Keep these features out of the vendor dashboard for the current phase:
 - Submit complaints.
 
 ### Rider portal
+### Rider profile photograph — required display behaviour
+
+- The rider's uploaded and approved photograph is the official profile image.
+- Whenever a rider is logged in, display this photograph prominently on the rider dashboard, alongside the rider's name and unique rider reference code.
+- When a vendor views the rider assigned to a pickup/package handover, display that same photograph clearly beside the rider's name and relevant handover details. This helps the vendor recognise the rider receiving the package.
+- Use one consistent approved profile image in both places. If an administrator approves an updated photograph, both views must show the updated image.
+- Store the image securely and show it only to authenticated users with a legitimate role-based need to see it. Do not expose Ghana Card images or other identity documents as profile photographs.
+- If no approved photograph is available, show a clear neutral placeholder rather than a broken image or another rider's photograph.
+
 - Rider registration and login.
 - Collect name, phone, email, Ghana Card ID number, profile photograph and password.
 - Admin verification/approval before receiving assignments.
