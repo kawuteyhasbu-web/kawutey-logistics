@@ -268,4 +268,15 @@ app.use((err, req, res, next) => {
   console.error(err.message);
   res.status(err.status || 500).json({ error: err.status ? err.message : "Something went wrong. Please try again." });
 });
-app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
+async function startServer() {
+  try {
+    await pool.query("SELECT 1");
+    console.log("Database connection verified.");
+    app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+    process.exit(1);
+  }
+}
+
+startServer();
