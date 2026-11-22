@@ -206,3 +206,25 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - Existing vendor and rider account preservation/migration is an official project requirement, subject to recoverability, safe password handling, verification and applicable law.
 - Administrator notification on every successful vendor or rider signup is an official project requirement, delivered through **both email and the Admin Dashboard**.
 - These are requirements recorded in the plan; they are not yet implemented or tested.
+
+
+## 14. Implementation progress — signup notifications
+
+### Added to the development branch
+- Added a PostgreSQL `admin_notifications` table to store vendor/rider signup alerts, creation time, read time and email-delivery status.
+- Updated successful vendor and rider registration to create a persistent notification in the same database transaction as the new account.
+- Added admin-only API routes to list notifications and mark them as read.
+- Added SMTP email delivery support for signup alerts. Email content excludes passwords and Ghana Card details.
+- Added environment-variable placeholders for SMTP configuration. Real email credentials must be added privately to the hosting environment, never committed to GitHub.
+- Email failure does not undo a successful signup; the database notification remains and records the email status.
+
+### Still outstanding
+- Provision a secure administrator account and define its initial credential/reset process.
+- Build the Admin Dashboard login, notification list, unread indicator and mark-as-read interface.
+- Configure the administrator email address and SMTP provider credentials.
+- Apply the updated SQL schema to the development database.
+- Run syntax, database, functional and security tests for both vendor and rider signup notifications.
+- Rider registration remains paused until secure photo upload and identity-data handling are implemented.
+- Account migration remains a planned requirement; no old user accounts have yet been migrated.
+
+These changes are code additions only. They have not been deployed or verified against a running database or email service.
