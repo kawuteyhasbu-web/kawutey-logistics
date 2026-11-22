@@ -148,3 +148,26 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - The development branch contains `index.html`, `logo.png`, `server.js`, `schema.sql`, `package.json`, `.env.example`, `.gitignore` and `README.md`.
 - This plan has been added as a project reference. The presence of these files does not mean the backend has been fully audited, deployed or tested.
 - Hosting accounts, production database, live payment integration and launch readiness are not confirmed by this document.
+
+
+## 10. Progress update — 22 November 2026
+
+### Completed in the development branch
+- Added a vendor pickup-history API endpoint.
+- Added vendor location to account records, including a safe SQL migration for existing databases.
+- Connected vendor registration and login in the existing page to the backend API.
+- Connected vendor pickup submission and pickup-history display to PostgreSQL-backed API routes.
+- Vendor login tokens are held in session storage rather than saved as long-lived browser profile data.
+- Removed the exposed Web3Forms access key from the current page.
+- Updated the vendor password field to require at least 10 characters.
+- Preserved the existing page design and logo.
+
+### Temporarily paused for safety
+- Rider registration and login are hidden/paused until secure photograph storage and the required identity-data handling are implemented. The old browser-based rider flow must not be re-enabled.
+- Wallet, rider messaging, exchanges, refunds and administrator controls are not yet connected to the new backend.
+
+### Not yet verified
+- The code has not yet been run against a live PostgreSQL database or hosted API.
+- Cross-domain API address and CORS settings must be configured after hosting is selected.
+- No real deposits or real Ghana Card details should be used during this development stage.
+- Functional, security and payment tests remain outstanding.
