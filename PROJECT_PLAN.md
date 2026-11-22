@@ -228,3 +228,22 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - Account migration remains a planned requirement; no old user accounts have yet been migrated.
 
 These changes are code additions only. They have not been deployed or verified against a running database or email service.
+
+
+## 15. Implementation progress — administrator account and signup inbox
+
+### Added to the development branch
+- Added `create-admin.js`, a one-time administrator bootstrap script. It requires explicit confirmation, a strong password (minimum 14 characters), and refuses to create a second administrator if one already exists.
+- Added the `npm run create-admin` command.
+- Added `admin.html`, a separate administrator sign-in page and persistent signup-notification inbox.
+- The page authenticates through the existing login endpoint, checks the signed-in role, loads notifications through admin-protected APIs, and supports marking notifications as reviewed.
+- Admin login token is stored in session storage and removed on logout.
+- The existing public website design and `main` branch have not been changed.
+
+### Still outstanding
+- The bootstrap script has not been run. No administrator account has been created by this code change.
+- Configure private hosting/local environment secrets and apply `schema.sql` to a development database.
+- Configure SMTP and administrator email address.
+- Test admin creation, login, role restrictions, notification rendering, mark-as-reviewed, and email delivery.
+- The admin page is only the initial notification inbox; the full operational Admin Dashboard remains to be built.
+- Do not deploy or use this for real customer information until functional and security testing is completed.
