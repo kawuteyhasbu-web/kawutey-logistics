@@ -31,3 +31,15 @@ Rider registration and login are temporarily paused in the page because secure r
 This is a backend foundation, not a finished production deployment. The current static frontend still uses browser localStorage and must be connected to these API routes before it is used for real accounts, Ghana Card information, assignments or wallet balances. Do not accept real deposits until Paystack credentials, HTTPS webhook URL, merchant configuration and end-to-end payment tests are completed. File/photo upload, admin provisioning, rider messaging/exchange approval, refund processing, account recovery, audit logging and production database migrations still need implementation and testing.
 
 The rider registration endpoint only retains the last four digits of the Ghana Card number; full Ghana Card details should not be collected until a lawful, secure handling and retention process is agreed. Use HTTPS and review Ghana data-protection obligations before launch.
+
+
+## Administrator signup notifications (backend foundation)
+
+Successful vendor and rider registrations now create a persistent record in the `admin_notifications` table. Authenticated administrator API routes are available:
+
+- `GET /api/admin/notifications` — list recent notifications.
+- `PATCH /api/admin/notifications/:id/read` — mark a notification as read.
+
+Email alerts use SMTP when configured. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `ADMIN_EMAIL`, and optionally `MAIL_FROM` as private environment variables on the backend host. Do not commit real values to GitHub. If SMTP is not configured or email delivery fails, the signup notification remains saved in the database and its email status records the outcome.
+
+**Still required before this is usable by the administrator:** create/provision a secure admin account, build the Admin Dashboard login and notification interface, configure SMTP, apply the updated database schema, and test both registration types end to end. The API routes are not a substitute for the dashboard UI.
