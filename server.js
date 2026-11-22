@@ -49,6 +49,36 @@ const authenticate = asyncRoute(async (req, res, next) => {
 });
 const roles = (...allowed) => (req, res, next) => allowed.includes(req.user.role) ? next() : res.status(403).json({ error: "You are not allowed to perform this action." });
 
+async function sendSignupEmail(notification) {
+  const required = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "ADMIN_EMAIL"];
+  if (required.some(key => !process.env[key])) return { sent: false, reason: "SMTP is not configured." };
+  const nodemailer = require("nodemailer");
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: String(process.env.SMTP_SECURE || "false") === "true",
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+  });
+  const details = notification.details || {};
+  await transporter.sendMail({
+    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    to: process.env.ADMIN_EMAIL,
+    subject: `New ${notification.account_type} signup — Kawutey Logistics`,
+    text: [
+      `A new ${notification.account_type} account has registered.`,
+      `Name: ${details.fullName || "Not provided"}`,
+      details.businessName ? `Business: ${details.businessName}` : null,
+      `Email: ${details.email || "Not provided"}`,
+      `Phone: ${details.phone || "Not provided"}`,
+      `Registered: ${new Date(notification.created_at).toISOString()}`,
+      notification.account_type === "rider" ? "Approval required before the rider can receive assignments." : null,
+      "",
+      "For privacy, this message excludes passwords and Ghana Card details."
+    ].filter(Boolean).join("\n")
+  });
+  return { sent: true };
+}
+
 app.get("/api/health", (req, res) => res.json({ ok: true, service: "Kawutey Logistics API" }));
 
 app.post("/api/auth/register", asyncRoute(async (req, res) => {
@@ -73,7 +103,21 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
       await client.query("INSERT INTO rider_profiles(user_id,rider_code,ghana_card_last4) VALUES($1,$2,$3)", [user.id, code, digits.slice(-4)]);
       await client.query("INSERT INTO wallets(rider_id) VALUES($1)", [user.id]);
     }
+    const noticeResult = await client.query(
+      "INSERT INTO admin_notifications(account_type,details,email_status) VALUES($1,$2::jsonb,'pending') RETURNING id,account_type,details,created_at",
+      [role, JSON.stringify({ fullName: user.full_name, email: user.email, phone: user.phone, businessName: clean(req.body?.businessName) || null })]
+    );
     await client.query("COMMIT");
+    const notice = noticeResult.rows[0];
+    try {
+      const emailResult = await sendSignupEmail(notice);
+      await pool.query("UPDATE admin_notifications SET email_status=$1,email_error=$2 WHERE id=$3",
+        [emailResult.sent ? "sent" : "not_configured", emailResult.reason || null, notice.id]);
+    } catch (mailError) {
+      console.error("Admin signup email notification failed:", mailError.message);
+      await pool.query("UPDATE admin_notifications SET email_status='failed',email_error=$1 WHERE id=$2",
+        [String(mailError.message).slice(0,500), notice.id]).catch(() => {});
+    }
     res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user, token: role === "vendor" ? tokenFor(user) : undefined });
   } catch (error) {
     await client.query("ROLLBACK");
@@ -148,6 +192,16 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
     res.json({ message: "Delivery accepted. Commission deducted once.", commissionGhs: fee / 100 });
   } catch (error) { await client.query("ROLLBACK"); throw error; }
   finally { client.release(); }
+}));
+
+app.get("/api/admin/notifications", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT id,account_type,details,email_status,created_at,read_at FROM admin_notifications ORDER BY created_at DESC LIMIT 100");
+  res.json({ notifications: result.rows });
+}));
+app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("UPDATE admin_notifications SET read_at=COALESCE(read_at,NOW()) WHERE id=$1 RETURNING id,read_at", [req.params.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "Notification not found." });
+  res.json({ notification: result.rows[0] });
 }));
 
 app.get("/api/admin/riders/pending", authenticate, roles("admin"), asyncRoute(async (req, res) => {
