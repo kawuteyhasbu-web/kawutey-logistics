@@ -1,6 +1,3 @@
--- Safe migration for databases created before location was added.
-ALTER TABLE users ADD COLUMN IF NOT EXISTS location TEXT;
-
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL PRIMARY KEY,
   full_name TEXT NOT NULL,
@@ -12,6 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','pending','suspended')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Safe migration for databases created before location was added.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS location TEXT;
 CREATE TABLE IF NOT EXISTS rider_profiles (
   user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   rider_code TEXT NOT NULL UNIQUE,
