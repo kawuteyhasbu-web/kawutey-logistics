@@ -1,8 +1,12 @@
+-- Safe migration for databases created before location was added.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS location TEXT;
+
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL PRIMARY KEY,
   full_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   phone TEXT NOT NULL,
+  location TEXT,
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('vendor','rider','admin')),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','pending','suspended')),
