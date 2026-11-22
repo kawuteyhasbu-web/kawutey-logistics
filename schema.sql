@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Safe migration for databases created before location was added.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS location TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS business_name TEXT;
 CREATE TABLE IF NOT EXISTS rider_profiles (
   user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   rider_code TEXT NOT NULL UNIQUE,
