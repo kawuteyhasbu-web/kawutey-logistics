@@ -160,6 +160,9 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - Vendor login tokens are held in session storage rather than saved as long-lived browser profile data.
 - Removed the exposed Web3Forms access key from the current page.
 - Updated the vendor password field to require at least 10 characters.
+- Added a required business-name field to vendor registration and passed it to the API.
+- Added a nullable `business_name` database column and safe migration; the owner has run the migration successfully in Neon.
+- Updated registration, login and authenticated account lookup to save and return vendor business names; admin signup notification details use the saved business name.
 - Preserved the existing page design and logo.
 
 ### Temporarily paused for safety
@@ -167,8 +170,8 @@ Protect Ghana Card information and rider photographs. Do not expose them publicl
 - Wallet, rider messaging, exchanges, refunds and administrator controls are not yet connected to the new backend.
 
 ### Not yet verified
-- The code has not yet been run against a live PostgreSQL database or hosted API.
-- Cross-domain API address and CORS settings must be configured after hosting is selected.
+- The hosted API health endpoint and browser-to-API CORS reachability have been checked successfully. This does not prove vendor registration, login or pickup workflows are fully tested.
+- The new vendor business-name registration and database flow still needs a controlled functional test.
 - No real deposits or real Ghana Card details should be used during this development stage.
 - Functional, security and payment tests remain outstanding.
 
