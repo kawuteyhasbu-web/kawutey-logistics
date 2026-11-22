@@ -334,38 +334,39 @@
   </div>
 
   <script>
-    const ACCESS_KEY = "414701a5-9bcf-4dc4-887f-08eeb27d280d";
+    // Set window.KAWUTEY_API_BASE to your deployed API address when frontend and API use different hosts.
+    const API_BASE = String(window.KAWUTEY_API_BASE || "").replace(/\\/+$/, "");
     const COMMISSION = 5;
-
-    let vendors = JSON.parse(localStorage.getItem('kl_vendors') || '[]');
+    let vendors = [];
     let riders = JSON.parse(localStorage.getItem('kl_riders') || '[]');
     let deposits = JSON.parse(localStorage.getItem('kl_deposits') || '[]');
     let messages = JSON.parse(localStorage.getItem('kl_messages') || '[]');
-    let pickups = JSON.parse(localStorage.getItem('kl_pickups') || '[]');
-    let assignments = JSON.parse(localStorage.getItem('kl_assignments') || '[]');
-    let currentVendor = JSON.parse(localStorage.getItem('currentVendor') || 'null');
-    let currentRider = JSON.parse(localStorage.getItem('currentRider') || 'null');
+    let pickups = [];
+    let assignments = [];
+    let currentVendor = null;
+    let currentRider = null;
 
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        if (btn.getAttribute('onclick')?.includes(id)) btn.classList.add('active');
-      });
-      if (id === 'vendor' && currentVendor) showVendorDashboard();
-      if (id === 'rider' && currentRider) showRiderDashboard();
+    async function apiRequest(path, options = {}) {
+      const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+      const token = sessionStorage.getItem("kl_vendor_token");
+      if (token) headers.Authorization = "Bearer " + token;
+      const response = await fetch(API_BASE + path, { ...options, headers });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
+      return data;
     }
-
-    function togglePassword(inputId, btn) {
-      const input = document.getElementById(inputId);
-      if (input.type === "password") {
-        input.type = "text";
-        btn.textContent = "Hide";
-      } else {
-        input.type = "password";
-        btn.textContent = "Show";
-      }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+    }
+    function setVendorSession(data) {
+      currentVendor = {
+        id: data.user.id,
+        name: data.user.full_name,
+        email: data.user.email,
+        phone: data.user.phone,
+        location: data.user.location || ""
+      };
+      sessionStorage.setItem("kl_vendor_token", data.token);
     }
 
     // ========== VENDOR FUNCTIONS ==========
@@ -381,45 +382,45 @@
       e.preventDefault();
       const btn = document.getElementById('vendorRegBtn');
       btn.disabled = true; btn.textContent = "Creating...";
-      const name = document.getElementById('v-name').value.trim();
-      const phone = document.getElementById('v-phone').value.trim();
-      const email = document.getElementById('v-email').value.trim();
-      const pass = document.getElementById('v-pass').value;
-      const location = document.getElementById('v-location').value.trim();
-      if (vendors.find(v => v.email === email)) {
-        alert("An account with this email already exists. Please login.");
-        btn.disabled = false; btn.textContent = "Create Vendor Account";
-        return;
-      }
-      const vendor = { id: Date.now(), name, phone, email, pass, location, registeredAt: new Date().toLocaleString() };
-      vendors.push(vendor);
-      localStorage.setItem('kl_vendors', JSON.stringify(vendors));
-      const formData = new FormData();
-      formData.append("access_key", ACCESS_KEY);
-      formData.append("subject", "New Vendor Registration - Kawutey Logistics");
-      formData.append("Type", "Vendor Registration");
-      formData.append("Full Name", name);
-      formData.append("Phone", phone);
-      formData.append("Email", email);
-      formData.append("Location", location);
-      try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
-      currentVendor = vendor;
-      localStorage.setItem('currentVendor', JSON.stringify(vendor));
-      showVendorDashboard();
-      document.getElementById('vendorRegSuccess').classList.remove('hidden');
-      document.getElementById('vendorRegSuccess').innerHTML = `✅ Account created successfully! Welcome, ${name}`;
-      btn.disabled = false; btn.textContent = "Create Vendor Account";
-    }
-    function loginVendor(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value;
-      const vendor = vendors.find(v => v.email === email && v.pass === pass);
-      if (vendor) {
-        currentVendor = vendor;
-        localStorage.setItem('currentVendor', JSON.stringify(vendor));
+      try {
+        const data = await apiRequest("/api/auth/register", {
+          method: "POST",
+          body: JSON.stringify({
+            fullName: document.getElementById('v-name').value.trim(),
+            phone: document.getElementById('v-phone').value.trim(),
+            email: document.getElementById('v-email').value.trim(),
+            password: document.getElementById('v-pass').value,
+            location: document.getElementById('v-location').value.trim(),
+            role: "vendor"
+          })
+        });
+        setVendorSession(data);
         showVendorDashboard();
-      } else alert("Invalid email or password.");
+        const success = document.getElementById('vendorRegSuccess');
+        success.classList.remove('hidden');
+        success.textContent = "Account created successfully. Welcome, " + currentVendor.name + ".";
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        btn.disabled = false; btn.textContent = "Create Vendor Account";
+      }
+    }
+    async function loginVendor(e) {
+      e.preventDefault();
+      try {
+        const data = await apiRequest("/api/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: document.getElementById('login-email').value.trim(),
+            password: document.getElementById('login-pass').value
+          })
+        });
+        if (data.user.role !== "vendor") throw new Error("This login is for vendor accounts.");
+        setVendorSession(data);
+        showVendorDashboard();
+      } catch (error) {
+        alert(error.message);
+      }
     }
     function showVendorDashboard() {
       document.getElementById('vendorRegSection').classList.add('hidden');
@@ -431,60 +432,61 @@
     function togglePickupForm() {
       document.getElementById('pickupFormArea').classList.toggle('hidden');
     }
-    function requestPickup(e) {
+    async function requestPickup(e) {
       e.preventDefault();
-      const pickup = {
-        id: Date.now(),
-        vendorId: currentVendor.id,
-        vendorName: currentVendor.name,
-        desc: document.getElementById('pkg-desc').value.trim() || "Package pickup",
-        time: document.getElementById('pickup-time').value,
-        total: parseInt(document.getElementById('total-packages').value) || 1,
-        large: document.getElementById('large-packages').value || 0,
-        medium: document.getElementById('medium-packages').value || 0,
-        small: document.getElementById('small-packages').value || 0,
-        status: "Pickup Requested",
-        created: new Date().toLocaleString()
-      };
-      pickups.unshift(pickup);
-      assignments.unshift({
-        id: pickup.id,
-        vendorName: currentVendor.name,
-        desc: pickup.desc,
-        time: pickup.time,
-        total: pickup.total,
-        status: "Available",
-        acceptedBy: null
-      });
-      localStorage.setItem('kl_pickups', JSON.stringify(pickups));
-      localStorage.setItem('kl_assignments', JSON.stringify(assignments));
-      document.getElementById('pickupForm').reset();
-      document.getElementById('pickupFormArea').classList.add('hidden');
-      renderPickups();
-      alert("Pickup request submitted successfully!");
+      if (!currentVendor) return alert("Please log in again.");
+      try {
+        const data = await apiRequest("/api/vendor/pickups", {
+          method: "POST",
+          body: JSON.stringify({
+            description: document.getElementById('pkg-desc').value.trim() || "Package pickup",
+            preferredAt: new Date(document.getElementById('pickup-time').value).toISOString(),
+            totalPackages: Number(document.getElementById('total-packages').value),
+            largePackages: Number(document.getElementById('large-packages').value || 0),
+            mediumPackages: Number(document.getElementById('medium-packages').value || 0),
+            smallPackages: Number(document.getElementById('small-packages').value || 0)
+          })
+        });
+        document.getElementById('pickupForm').reset();
+        document.getElementById('pickupFormArea').classList.add('hidden');
+        await renderPickups();
+        alert("Pickup request submitted successfully.");
+      } catch (error) {
+        alert(error.message);
+      }
     }
-    function renderPickups() {
+    async function renderPickups() {
       const area = document.getElementById('pickupHistory');
       if (!currentVendor) return;
-      const mine = pickups.filter(p => p.vendorId === currentVendor.id);
-      if (mine.length === 0) {
-        area.innerHTML = "<p style='color:#666;'>No pickup requests yet.</p>";
-        return;
+      area.innerHTML = "<p style='color:#666;'>Loading your pickup requests...</p>";
+      try {
+        const data = await apiRequest("/api/vendor/pickups");
+        const mine = data.pickups || [];
+        if (!mine.length) {
+          area.innerHTML = "<p style='color:#666;'>No pickup requests yet.</p>";
+          return;
+        }
+        area.innerHTML = mine.map(p => {
+          const status = p.assignment_status === "accepted" ? "Rider accepted" :
+            p.assignment_status === "completed" ? "Completed" :
+            p.assignment_status === "cancelled" ? "Cancelled" : "Awaiting rider";
+          return `
+            <div class="pickup-item">
+              <strong>Status:</strong> ${status}<br>
+              <strong>Pickup Time:</strong> ${escapeHtml(new Date(p.preferred_at).toLocaleString())}<br>
+              <strong>Total Packages:</strong> ${Number(p.total_packages)}<br>
+              Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
+              ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
+              <small>${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
+            </div>`;
+        }).join("");
+      } catch (error) {
+        area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
       }
-      area.innerHTML = mine.map(p => `
-        <div class="pickup-item">
-          <strong>Status:</strong> ${p.status}<br>
-          <strong>Pickup Time:</strong> ${p.time}<br>
-          <strong>Total Packages:</strong> ${p.total}<br>
-          Large: ${p.large} | Medium: ${p.medium} | Small: ${p.small}<br>
-          ${p.desc ? `<strong>Notes:</strong> ${p.desc}<br>` : ''}
-          <small>${p.created}</small>
-        </div>
-      `).join('');
     }
     function logoutVendor() {
       currentVendor = null;
-      localStorage.removeItem('currentVendor');
+      sessionStorage.removeItem("kl_vendor_token");
       document.getElementById('vendorDashboard').classList.add('hidden');
       document.getElementById('vendorRegSection').classList.remove('hidden');
     }
@@ -519,67 +521,12 @@
 
     async function registerRider(e) {
       e.preventDefault();
-      if (!photoData) { alert('Please upload a profile picture.'); return; }
-      const btn = document.getElementById('riderRegBtn');
-      btn.disabled = true; btn.textContent = "Creating...";
-
-      const name = document.getElementById('r-name').value.trim();
-      const phone = document.getElementById('r-phone').value.trim();
-      const email = document.getElementById('r-email').value.trim();
-      const ghanaCard = document.getElementById('r-ghana-card').value.trim();
-      const pass = document.getElementById('r-pass').value;
-      const location = document.getElementById('r-location').value.trim();
-
-      if (riders.find(r => r.email === email)) {
-        alert("An account with this email already exists. Please login.");
-        btn.disabled = false; btn.textContent = "Create Rider Account";
-        return;
-      }
-
-      const refCode = generateRefCode();
-      const rider = {
-        id: Date.now(),
-        name, phone, email, ghanaCard, pass, location,
-        photo: photoData,
-        refCode: refCode,
-        wallet: 0,
-        status: "Pending Approval",
-        registeredAt: new Date().toLocaleString()
-      };
-      riders.push(rider);
-      localStorage.setItem('kl_riders', JSON.stringify(riders));
-
-      const formData = new FormData();
-      formData.append("access_key", ACCESS_KEY);
-      formData.append("subject", "New Rider Registration - Kawutey Logistics");
-      formData.append("Type", "Rider Registration");
-      formData.append("Full Name", name);
-      formData.append("Phone", phone);
-      formData.append("Email", email);
-      formData.append("Ghana Card", ghanaCard);
-      formData.append("Location", location);
-      formData.append("Reference Code", refCode);
-      formData.append("Status", "Pending Approval");
-      try { await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData }); } catch(err) {}
-
-      document.getElementById('riderRegSuccess').classList.remove('hidden');
-      document.getElementById('riderRegSuccess').innerHTML = `✅ Account created!<br>Your permanent Reference Code is: <strong>${refCode}</strong><br>Use it only when making payments.`;
-      document.getElementById('riderRegForm').reset();
-      document.getElementById('photoPreview').innerHTML = '';
-      photoData = null;
-      btn.disabled = false; btn.textContent = "Create Rider Account";
+      alert("Rider registration is temporarily paused while secure photograph storage and identity-data protection are completed. Please check back soon.");
     }
 
     function loginRider(e) {
       e.preventDefault();
-      const email = document.getElementById('r-login-email').value.trim();
-      const pass = document.getElementById('r-login-pass').value;
-      const rider = riders.find(r => r.email === email && r.pass === pass);
-      if (rider) {
-        currentRider = rider;
-        localStorage.setItem('currentRider', JSON.stringify(rider));
-        showRiderDashboard();
-      } else alert("Invalid email or password.");
+      alert("Rider login will be enabled after the secure rider account migration is completed. Please do not use the old browser-stored account system.");
     }
 
     function showRiderDashboard() {
@@ -804,6 +751,22 @@
       updateRiderDashboard();
       alert('Message sent successfully!');
     }
+    async function restoreVendorSession() {
+      if (!sessionStorage.getItem("kl_vendor_token")) return;
+      try {
+        const data = await apiRequest("/api/me");
+        if (data.user.role !== "vendor") throw new Error("Not a vendor account.");
+        currentVendor = {
+          id: data.user.id, name: data.user.full_name, email: data.user.email,
+          phone: data.user.phone, location: data.user.location || ""
+        };
+        if (!document.getElementById("vendor").classList.contains("hidden")) showVendorDashboard();
+      } catch (error) {
+        sessionStorage.removeItem("kl_vendor_token");
+        currentVendor = null;
+      }
+    }
+    restoreVendorSession();
   </script>
 </body>
 </html>
