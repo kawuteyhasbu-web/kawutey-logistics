@@ -43,3 +43,22 @@ Successful vendor and rider registrations now create a persistent record in the 
 Email alerts use SMTP when configured. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `ADMIN_EMAIL`, and optionally `MAIL_FROM` as private environment variables on the backend host. Do not commit real values to GitHub. If SMTP is not configured or email delivery fails, the signup notification remains saved in the database and its email status records the outcome.
 
 **Still required before this is usable by the administrator:** create/provision a secure admin account, build the Admin Dashboard login and notification interface, configure SMTP, apply the updated database schema, and test both registration types end to end. The API routes are not a substitute for the dashboard UI.
+
+## Administrator account and dashboard
+
+A separate `admin.html` page now provides an administrator sign-in and a signup-notification inbox. It uses the existing `/api/auth/login`, `/api/me`, and admin-only notification endpoints. Only a user whose database role is `admin` can load the inbox. Admin session tokens are kept in session storage and cleared on logout.
+
+### One-time initial administrator setup
+
+1. Configure a development/test PostgreSQL database and apply `schema.sql`.
+2. Set `DATABASE_URL`, `JWT_SECRET` (at least 32 random characters), `ADMIN_NAME`, `ADMIN_EMAIL`, and a unique `ADMIN_PASSWORD` (at least 14 characters) in a private local `.env` file or hosting secrets. Never commit the real `.env` file or share credentials in chat.
+3. Set `BOOTSTRAP_ADMIN_CONFIRM=YES_CREATE_ADMIN` temporarily in that private environment.
+4. Run `npm run create-admin` once. The script refuses to run without the explicit confirmation and refuses to create another admin if one already exists.
+5. Remove `BOOTSTRAP_ADMIN_CONFIRM` from the environment after the one-time setup. Keep the admin password private.
+6. Open `/admin.html` on the same website origin, or set `window.KAWUTEY_API_BASE` to the backend HTTPS origin before its page script runs and configure the backend CORS allowlist.
+
+The bootstrap script creates the first administrator; it does not reset or recover existing administrator credentials. If an administrator already exists, use a separately reviewed password-reset procedure rather than deleting or overwriting accounts.
+
+The dashboard currently lists recent signup notifications and lets an administrator mark them as reviewed. It is a first-stage notification inbox, not the complete operational Admin Dashboard (rider approvals, vendor management, assignments, wallet oversight, refunds and reports remain outstanding).
+
+Email delivery still requires private SMTP environment variables. An unconfigured or failed email is recorded in the inbox status; the dashboard notification is still persisted in PostgreSQL.
