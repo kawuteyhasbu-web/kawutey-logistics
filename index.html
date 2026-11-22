@@ -357,6 +357,20 @@
       if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
       return data;
     }
+    function showSection(sectionId) {
+      const allowedSections = ["home", "vendor", "rider"];
+      if (!allowedSections.includes(sectionId)) return;
+
+      document.querySelectorAll(".section").forEach(section => {
+        section.classList.toggle("hidden", section.id !== sectionId);
+      });
+
+      document.querySelectorAll(".tab-btn").forEach(button => {
+        const isActive = button.getAttribute("onclick") === "showSection('" + sectionId + "')";
+        button.classList.toggle("active", isActive);
+      });
+    }
+
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
     }
