@@ -20,7 +20,15 @@ if (!jwtSecret || jwtSecret.length < 32) {
 }
 app.disable("x-powered-by");
 app.use(helmet());
-app.use(cors({ origin: (process.env.CORS_ORIGIN || "").split(",").map(v => v.trim()).filter(Boolean), credentials: false }));
+const allowedOrigins = (process.env.CORS_ORIGIN || "").split(",").map(v => v.trim()).filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use((req, res, next) => {
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method) && req.path !== "/api/payments/paystack/webhook") {
+    const origin = req.get("Origin");
+    if (!origin || !allowedOrigins.includes(origin)) return res.status(403).json({ error: "Request origin is not allowed." });
+  }
+  next();
+});
 app.use((req, res, next) => req.path === "/api/payments/paystack/webhook" ? next() : express.json({ limit: "1mb" })(req, res, next));
 app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false }));
 
@@ -35,9 +43,16 @@ const moneyPesewas = value => {
 function tokenFor(user) {
   return jwt.sign({ sub: String(user.id), role: user.role }, jwtSecret, { expiresIn: process.env.JWT_EXPIRES_IN || "8h", issuer: "kawutey-logistics" });
 }
+const VENDOR_COOKIE = "kl_vendor_session";
+const vendorCookieOptions = { httpOnly: true, secure: true, sameSite: "strict", path: "/api", maxAge: 8 * 60 * 60 * 1000 };
+function setVendorCookie(res, user) { res.cookie(VENDOR_COOKIE, tokenFor(user), vendorCookieOptions); }
+function clearVendorCookie(res) { res.clearCookie(VENDOR_COOKIE, { httpOnly: true, secure: true, sameSite: "strict", path: "/api" }); }
 const authenticate = asyncRoute(async (req, res, next) => {
   const raw = req.headers.authorization || "";
-  const token = raw.startsWith("Bearer ") ? raw.slice(7) : "";
+  const bearer = raw.startsWith("Bearer ") ? raw.slice(7) : "";
+  const cookie = (req.headers.cookie || "").split(";").map(part => part.trim()).find(part => part.startsWith(VENDOR_COOKIE + "="));
+  const cookieToken = cookie ? decodeURIComponent(cookie.slice(VENDOR_COOKIE.length + 1)) : "";
+  const token = bearer || cookieToken;
   if (!token) return res.status(401).json({ error: "Please log in." });
   let claims;
   try { claims = jwt.verify(token, jwtSecret, { issuer: "kawutey-logistics" }); }
@@ -119,7 +134,8 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
       await pool.query("UPDATE admin_notifications SET email_status='failed',email_error=$1 WHERE id=$2",
         [String(mailError.message).slice(0,500), notice.id]).catch(() => {});
     }
-    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user, token: role === "vendor" ? tokenFor(user) : undefined });
+    if (role === "vendor") setVendorCookie(res, user);
+    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user, token: role === "vendor" ? undefined : undefined });
   } catch (error) {
     await client.query("ROLLBACK");
     if (error.code === "23505") return res.status(409).json({ error: "An account with that email already exists." });
@@ -135,8 +151,17 @@ app.post("/api/auth/login", asyncRoute(async (req, res) => {
   if (user.status === "suspended") return res.status(403).json({ error: "Your account is suspended. Contact Kawutey Logistics." });
   if (user.role === "rider" && user.status !== "active") return res.status(403).json({ error: "Your rider account is awaiting administrator approval." });
   delete user.password_hash;
+  if (user.role === "vendor") {
+    setVendorCookie(res, user);
+    return res.json({ user });
+  }
   res.json({ user, token: tokenFor(user) });
 }));
+
+app.post("/api/auth/logout", (req, res) => {
+  clearVendorCookie(res);
+  res.json({ ok: true });
+});
 
 app.get("/api/me", authenticate, (req, res) => res.json({ user: req.user }));
 
