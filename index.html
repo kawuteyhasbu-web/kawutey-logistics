@@ -357,6 +357,16 @@
       if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
       return data;
     }
+    function togglePassword(inputId, button) {
+      const passwordInput = document.getElementById(inputId);
+      if (!passwordInput) return;
+
+      const isHidden = passwordInput.type === "password";
+      passwordInput.type = isHidden ? "text" : "password";
+      button.textContent = isHidden ? "Hide" : "Show";
+      button.setAttribute("aria-pressed", String(isHidden));
+    }
+
     function showSection(sectionId) {
       const allowedSections = ["home", "vendor", "rider"];
       if (!allowedSections.includes(sectionId)) return;
