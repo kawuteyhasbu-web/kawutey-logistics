@@ -84,3 +84,28 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
   read_at TIMESTAMPTZ
 );
 CREATE INDEX IF NOT EXISTS admin_notifications_created_at_idx ON admin_notifications(created_at DESC);
+
+-- Enforce the company-wide limit of four administrator accounts at database level.
+-- The advisory lock prevents simultaneous admin inserts from passing the count check.
+CREATE OR REPLACE FUNCTION enforce_max_four_admin_accounts()
+RETURNS TRIGGER AS $$
+DECLARE
+  current_admin_count INTEGER;
+BEGIN
+  IF NEW.role = 'admin' AND (TG_OP = 'INSERT' OR OLD.role IS DISTINCT FROM NEW.role) THEN
+    PERFORM pg_advisory_xact_lock(2026112304);
+    SELECT COUNT(*)::int INTO current_admin_count FROM users WHERE role = 'admin';
+    IF current_admin_count >= 4 THEN
+      RAISE EXCEPTION 'Maximum of four administrator accounts is allowed'
+        USING ERRCODE = 'check_violation';
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS users_max_four_admin_accounts ON users;
+CREATE TRIGGER users_max_four_admin_accounts
+BEFORE INSERT OR UPDATE OF role ON users
+FOR EACH ROW
+EXECUTE FUNCTION enforce_max_four_admin_accounts();
