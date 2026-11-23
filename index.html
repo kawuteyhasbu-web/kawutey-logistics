@@ -792,11 +792,17 @@
           id: data.user.id, name: data.user.full_name, businessName: data.user.business_name || "",
           email: data.user.email, phone: data.user.phone, location: data.user.location || ""
         };
-        if (!document.getElementById("vendor").classList.contains("hidden")) showVendorDashboard();
+        // A valid vendor session should reopen the vendor dashboard after a page refresh.
+        showSection("vendor");
+        showVendorDashboard();
       } catch (error) {
         currentVendor = null;
       }
     }
+
+    // Check for an existing vendor login as soon as the page finishes loading.
+    // If no valid session exists, the homepage remains visible.
+    restoreVendorSession();
   </script>
 </body>
 </html>
