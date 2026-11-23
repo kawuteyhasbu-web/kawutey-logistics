@@ -53,11 +53,11 @@ A separate `admin.html` page now provides an administrator sign-in and a signup-
 1. Configure a development/test PostgreSQL database and apply `schema.sql`.
 2. Set `DATABASE_URL`, `JWT_SECRET` (at least 32 random characters), `ADMIN_NAME`, `ADMIN_EMAIL`, and a unique `ADMIN_PASSWORD` (at least 14 characters) in a private local `.env` file or hosting secrets. Never commit the real `.env` file or share credentials in chat.
 3. Set `BOOTSTRAP_ADMIN_CONFIRM=YES_CREATE_ADMIN` temporarily in that private environment.
-4. Run `npm run create-admin` once. The script refuses to run without the explicit confirmation and refuses to create another admin if one already exists.
-5. Remove `BOOTSTRAP_ADMIN_CONFIRM` from the environment after the one-time setup. Keep the admin password private.
+4. Run `npm run create-admin`. Repeat the setup with different administrator details only when you are ready to create another approved administrator. The script stops once four administrator accounts exist.
+5. Remove `BOOTSTRAP_ADMIN_CONFIRM` and the temporary administrator password variable from the environment after each setup. Keep all passwords private.
 6. Open `/admin.html` on the same website origin, or set `window.KAWUTEY_API_BASE` to the backend HTTPS origin before its page script runs and configure the backend CORS allowlist.
 
-The bootstrap script creates the first administrator; it does not reset or recover existing administrator credentials. If an administrator already exists, use a separately reviewed password-reset procedure rather than deleting or overwriting accounts.
+The system allows a maximum of four administrator accounts in total. The database trigger blocks a fifth administrator even if another code path attempts to add one. The setup script uses a database lock and count check so simultaneous setup attempts cannot exceed the limit. It can create administrator accounts until all four positions are filled; it does not reset or recover existing administrator credentials. If an administrator already exists, use a separately reviewed password-reset procedure rather than deleting or overwriting accounts.
 
 The dashboard currently lists recent signup notifications and lets an administrator mark them as reviewed. It is a first-stage notification inbox, not the complete operational Admin Dashboard (rider approvals, vendor management, assignments, wallet oversight, refunds and reports remain outstanding).
 
