@@ -44,9 +44,9 @@ function tokenFor(user) {
   return jwt.sign({ sub: String(user.id), role: user.role }, jwtSecret, { expiresIn: process.env.JWT_EXPIRES_IN || "8h", issuer: "kawutey-logistics" });
 }
 const VENDOR_COOKIE = "kl_vendor_session";
-const vendorCookieOptions = { httpOnly: true, secure: true, sameSite: "strict", path: "/api", maxAge: 8 * 60 * 60 * 1000 };
+const vendorCookieOptions = { httpOnly: true, secure: true, sameSite: "none", path: "/api", maxAge: 8 * 60 * 60 * 1000 };
 function setVendorCookie(res, user) { res.cookie(VENDOR_COOKIE, tokenFor(user), vendorCookieOptions); }
-function clearVendorCookie(res) { res.clearCookie(VENDOR_COOKIE, { httpOnly: true, secure: true, sameSite: "strict", path: "/api" }); }
+function clearVendorCookie(res) { res.clearCookie(VENDOR_COOKIE, { httpOnly: true, secure: true, sameSite: "none", path: "/api" }); }
 const authenticate = asyncRoute(async (req, res, next) => {
   const raw = req.headers.authorization || "";
   const bearer = raw.startsWith("Bearer ") ? raw.slice(7) : "";
