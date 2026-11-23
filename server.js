@@ -135,7 +135,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
         [String(mailError.message).slice(0,500), notice.id]).catch(() => {});
     }
     if (role === "vendor") setVendorCookie(res, user);
-    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user, token: role === "vendor" ? undefined : undefined });
+    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user });
   } catch (error) {
     await client.query("ROLLBACK");
     if (error.code === "23505") return res.status(409).json({ error: "An account with that email already exists." });
