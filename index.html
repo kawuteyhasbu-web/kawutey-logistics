@@ -350,9 +350,7 @@
 
     async function apiRequest(path, options = {}) {
       const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-      const token = sessionStorage.getItem("kl_vendor_token");
-      if (token) headers.Authorization = "Bearer " + token;
-      const response = await fetch(API_BASE + path, { ...options, headers });
+      const response = await fetch(API_BASE + path, { ...options, headers, credentials: "include" });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
       return data;
@@ -379,6 +377,7 @@
         const isActive = button.getAttribute("onclick") === "showSection('" + sectionId + "')";
         button.classList.toggle("active", isActive);
       });
+      if (sectionId === "vendor" && !currentVendor) restoreVendorSession();
     }
 
     function escapeHtml(value) {
@@ -393,7 +392,6 @@
         phone: data.user.phone,
         location: data.user.location || ""
       };
-      sessionStorage.setItem("kl_vendor_token", data.token);
     }
 
     // ========== VENDOR FUNCTIONS ==========
@@ -514,9 +512,14 @@
         area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
       }
     }
-    function logoutVendor() {
+    async function logoutVendor() {
+      try {
+        await apiRequest("/api/auth/logout", { method: "POST" });
+      } catch (error) {
+        alert("We could not confirm logout with the server. Please check your connection and try again.");
+        return;
+      }
       currentVendor = null;
-      sessionStorage.removeItem("kl_vendor_token");
       document.getElementById('vendorDashboard').classList.add('hidden');
       document.getElementById('vendorRegSection').classList.remove('hidden');
     }
@@ -782,21 +785,18 @@
       alert('Message sent successfully!');
     }
     async function restoreVendorSession() {
-      if (!sessionStorage.getItem("kl_vendor_token")) return;
       try {
         const data = await apiRequest("/api/me");
         if (data.user.role !== "vendor") throw new Error("Not a vendor account.");
         currentVendor = {
-          id: data.user.id, name: data.user.full_name, email: data.user.email,
-          phone: data.user.phone, location: data.user.location || ""
+          id: data.user.id, name: data.user.full_name, businessName: data.user.business_name || "",
+          email: data.user.email, phone: data.user.phone, location: data.user.location || ""
         };
         if (!document.getElementById("vendor").classList.contains("hidden")) showVendorDashboard();
       } catch (error) {
-        sessionStorage.removeItem("kl_vendor_token");
         currentVendor = null;
       }
     }
-    restoreVendorSession();
   </script>
 </body>
 </html>
