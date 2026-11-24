@@ -22,7 +22,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
 </section></main>
 <script>
-const API_BASE=(window.KAWUTEY_API_BASE||"").replace(/\\/$/,"");
+const API_BASE=(window.KAWUTEY_API_BASE||"").replace(/\/$/,"");
 const tokenKey="kl_admin_token";
 const $=id=>document.getElementById(id);
 function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
