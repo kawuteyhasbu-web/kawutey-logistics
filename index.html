@@ -661,6 +661,8 @@
         if (data.user.role !== "rider" || !data.token) throw new Error("This login is for rider accounts.");
         sessionStorage.setItem("kl_rider_token", data.token);
         document.getElementById("r-login-pass").value = "";
+        // Keep the rider inside the Rider Portal after login.
+        showSection("rider");
         await openSecureRiderDashboard(data.user);
       } catch (error) { alert(error.message); }
       finally { button.disabled = false; }
@@ -683,6 +685,8 @@
       try {
         const data = await apiRequest("/api/me", { riderAuth: true });
         if (data.user.role !== "rider") throw new Error("Not a rider account.");
+        // Restore the Rider Portal section as well as the authenticated dashboard.
+        showSection("rider");
         await openSecureRiderDashboard(data.user);
       } catch { sessionStorage.removeItem("kl_rider_token"); }
     }
@@ -892,6 +896,8 @@
     function logoutRider() {
       sessionStorage.removeItem("kl_rider_token");
       currentRider = null;
+      // Logging out should leave the user on the Rider Portal sign-in screen.
+      showSection("rider");
       document.getElementById("riderDashboard").classList.add("hidden");
       document.getElementById("riderAuthCard").classList.remove("hidden");
       showRiderLogin();
