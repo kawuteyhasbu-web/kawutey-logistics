@@ -98,7 +98,7 @@
   <div class="container">
     <header>
       <div class="logo-area">
-        <img src="logo.png" alt="Kawutey Logistics Logo" onerror="this.style.display='none'">
+        <img src="logo.png" alt="Kawutey Logistics Logo" id="siteLogo">
         <div class="logo-text">
           <h1>Kawutey Logistics</h1>
           <span>YOUR PACKAGE • OUR PRIORITY</span>
@@ -191,11 +191,11 @@
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
           <p id="vendorBusinessDisplay" style="margin-top:-8px; margin-bottom:14px; color:var(--muted);"></p>
           <p style="margin-bottom:14px;">Focus on growing your business while we take care of your packages.</p>
-          <button class="btn btn-accent" onclick="togglePickupForm()">Request Package Pickup</button>
-          <button class="btn btn-outline" onclick="logoutVendor()">Logout</button>
+          <button class="btn btn-accent" data-action="togglePickupForm">Request Package Pickup</button>
+          <button class="btn btn-outline" data-action="logoutVendor">Logout</button>
           <div id="pickupFormArea" class="hidden" style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
-            <form id="pickupForm" onsubmit="requestPickup(event)">
+            <form id="pickupForm">
               <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2"></textarea></div>
               <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
               <div class="form-group"><label>Total Number of Packages *</label><input type="number" id="total-packages" min="1" required></div>
@@ -233,7 +233,7 @@
               </div>
             </div>
             <div class="form-group"><label>Location *</label><input type="text" id="r-location" required placeholder="e.g. Accra, Kumasi"></div>
-            <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/*" required onchange="previewPhoto(event)"><div id="photoPreview" style="margin-top:10px;"></div></div>
+            <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/*" required><div id="photoPreview" style="margin-top:10px;"></div></div>
             <button type="submit" class="btn btn-accent" id="riderRegBtn">Create Rider Account</button>
           </form>
           <p style="margin-top:12px;">Rider sign-in will return when the secure account connection is ready.</p>
@@ -252,7 +252,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
-          <p style="margin-top:12px;">New rider? <a href="#" onclick="showRiderReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
+          <p style="margin-top:12px;">New rider? <a href="#" data-rider-view="register" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
       </div>
 
@@ -261,7 +261,7 @@
         <div class="card">
           <h2>Rider Dashboard</h2>
           <p>Welcome, <strong id="riderNameDisplay"></strong> | Status: <span id="riderStatus" class="status"></span></p>
-          <button class="btn btn-outline" onclick="logoutRider()">Logout</button>
+          <button class="btn btn-outline" data-action="logoutRider">Logout</button>
         </div>
 
         <div class="wallet-box">
@@ -274,9 +274,9 @@
             <div class="stat-box"><div class="value" id="remainingEligibility">0</div><div class="label">Remaining Eligibility</div></div>
           </div>
           <div style="margin-top:14px;">
-            <button class="btn btn-accent" onclick="showDepositForm()">Deposit Money</button>
-            <button class="btn btn-primary" onclick="showTransactionHistory()">Transaction History</button>
-            <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4);" onclick="requestRefund()">Request Refund</button>
+            <button class="btn btn-accent" data-action="showDepositForm">Deposit Money</button>
+            <button class="btn btn-primary" data-action="showTransactionHistory">Transaction History</button>
+            <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4);" data-action="requestRefund">Request Refund</button>
           </div>
         </div>
 
@@ -299,7 +299,7 @@
             </select>
           </div>
           <div class="form-group"><label>Confirm Reference Code *</label><input type="text" id="depositRef" placeholder="Enter your KW-RD-XXXX code" required></div>
-          <button class="btn btn-accent" onclick="submitDeposit()">Submit Deposit</button>
+          <button class="btn btn-accent" data-action="submitDeposit">Submit Deposit</button>
         </div>
 
         <div id="transactionHistoryArea" class="card hidden">
@@ -323,7 +323,7 @@
           <div id="ridersList"></div>
           <div class="form-group" style="margin-top:14px;"><label>Select Rider</label><select id="messageTo"><option value="">-- Choose a rider --</option></select></div>
           <div class="form-group"><label>Your Message</label><textarea id="messageText" rows="3"></textarea></div>
-          <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+          <button class="btn btn-primary" data-action="sendMessage">Send Message</button>
           <div id="messagesArea" style="margin-top:16px;"></div>
         </div>
       </div>
@@ -366,22 +366,39 @@
     }
 
     document.addEventListener("click", event => {
-      const sectionButton = event.target.closest("[data-section]");
-      if (sectionButton) {
-        showSection(sectionButton.getAttribute("data-section"));
-        return;
-      }
-      const passwordButton = event.target.closest("[data-toggle-password]");
-      if (passwordButton) {
-        togglePassword(passwordButton.getAttribute("data-toggle-password"), passwordButton);
-        return;
-      }
-      const vendorViewLink = event.target.closest("[data-vendor-view]");
+      const target = event.target.closest("button, a");
+      if (!target) return;
+
+      const sectionButton = target.closest("[data-section]");
+      if (sectionButton) { showSection(sectionButton.getAttribute("data-section")); return; }
+
+      const passwordButton = target.closest("[data-toggle-password]");
+      if (passwordButton) { togglePassword(passwordButton.getAttribute("data-toggle-password"), passwordButton); return; }
+
+      const vendorViewLink = target.closest("[data-vendor-view]");
       if (vendorViewLink) {
         event.preventDefault();
         if (vendorViewLink.getAttribute("data-vendor-view") === "login") showVendorLogin();
         else showVendorReg();
+        return;
       }
+
+      const riderViewLink = target.closest("[data-rider-view]");
+      if (riderViewLink) { event.preventDefault(); showRiderReg(); return; }
+
+      const action = target.getAttribute("data-action");
+      const actions = {
+        togglePickupForm, logoutVendor, logoutRider, showDepositForm,
+        showTransactionHistory, requestRefund, submitDeposit, sendMessage
+      };
+      if (action && actions[action]) { actions[action](); return; }
+
+      const acceptButton = target.closest("[data-accept-assignment]");
+      if (acceptButton) acceptAssignment(Number(acceptButton.getAttribute("data-accept-assignment")));
+    });
+
+    document.addEventListener("change", event => {
+      if (event.target.id === "r-photo") previewPhoto(event);
     });
 
     document.addEventListener("submit", event => {
@@ -389,10 +406,15 @@
         vendorRegForm: registerVendor,
         vendorLoginForm: loginVendor,
         riderRegForm: registerRider,
-        riderLoginForm: loginRider
+        riderLoginForm: loginRider,
+        pickupForm: requestPickup
       };
       const handler = handlers[event.target.id];
       if (handler) handler(event);
+    });
+
+    document.getElementById("siteLogo")?.addEventListener("error", event => {
+      event.currentTarget.style.display = "none";
     });
 
     function showSection(sectionId) {
@@ -637,7 +659,7 @@
               Pickup Time: ${a.time} | Packages: ${a.total}<br>
               Commission needed: GH₵${cost}<br>
               ${canAccept 
-                ? `<button class="btn btn-accent" onclick="acceptAssignment(${a.id})">Accept</button>` 
+                ? `<button class="btn btn-accent" data-accept-assignment="${a.id}">Accept</button>` 
                 : `<span style="color:#dc3545;">${currentRider.status !== "Approved" ? "Approval required" : "Insufficient wallet balance"}</span>`}
             </div>
           `;
