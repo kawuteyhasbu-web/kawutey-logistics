@@ -449,7 +449,7 @@ app.get("/api/admin/commission-reports", authenticate, roles("admin"), asyncRout
       LEFT JOIN pickups p ON p.id=a.pickup_id
       WHERE t.type='commission' AND t.status='successful' AND t.amount_pesewas<0
       GROUP BY (t.created_at AT TIME ZONE 'Africa/Accra')::date
-      ORDER BY (t.created_at AT TIME ZONE 'Africa/Accra')::date DESC LIMIT 90`),
+      ORDER BY (t.created_at AT TIME ZONE 'Africa/Accra')::date DESC`),
     pool.query(`SELECT t.id,u.full_name AS rider_name,u.phone,r.rider_code,
         ABS(t.amount_pesewas)::bigint AS amount_pesewas,t.reference,
         t.package_assignment_id,p.total_packages,t.created_at,
