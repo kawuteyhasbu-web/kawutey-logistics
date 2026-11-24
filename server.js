@@ -188,6 +188,14 @@ app.post("/api/auth/logout", (req, res) => {
 
 app.get("/api/me", authenticate, (req, res) => res.json({ user: req.user }));
 
+app.get("/api/rider/profile/photo", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  if (req.user.status !== "active") return res.status(403).json({ error: "Your rider account is not approved." });
+  const result = await pool.query("SELECT photo_data,photo_mime FROM rider_profiles WHERE user_id=$1", [req.user.id]);
+  if (!result.rowCount || !result.rows[0].photo_data) return res.status(404).json({ error: "No profile photograph is available." });
+  res.set({ "Content-Type": result.rows[0].photo_mime, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" });
+  res.send(result.rows[0].photo_data);
+}));
+
 app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT rider_code,approved_at,(photo_data IS NOT NULL) AS has_photo FROM rider_profiles WHERE user_id=$1", [req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: "Rider profile not found." });
