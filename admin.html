@@ -116,7 +116,8 @@ $("paymentSettingsForm").addEventListener("submit",async e=>{
   }catch(err){show($("paymentSettingsMessage"),err.message,"error");}
   finally{button.disabled=false;}
 });
-let activeCommissionReport=null;\nlet commissionRefreshTimer=null;
+let activeCommissionReport=null;
+let commissionRefreshTimer=null;
 function csvCell(value){
   let text=String(value??"");
   if(["=","+","-","@"].includes(text[0])||text.charCodeAt(0)===9||text.charCodeAt(0)===13)text="'"+text;
