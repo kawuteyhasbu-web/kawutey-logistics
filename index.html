@@ -347,6 +347,7 @@
     let assignments = [];
     let currentVendor = null;
     let currentRider = null;
+    let currentRiderPhotoUrl = null;
 
     async function apiRequest(path, options = {}) {
       const { riderAuth = false, ...fetchOptions } = options;
@@ -676,10 +677,28 @@
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><p id="secureRiderWelcome"></p><p id="secureRiderCode"></p><p>Your account is active and approved. Wallet and delivery tools will be connected here next.</p><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><p>Your account is active and approved. Wallet and delivery tools will be connected here next.</p><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.classList.remove("hidden");
       document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
       document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
+      const photo = document.getElementById("secureRiderPhoto");
+      const placeholder = document.getElementById("secureRiderPhotoPlaceholder");
+      if (currentRiderPhotoUrl) { URL.revokeObjectURL(currentRiderPhotoUrl); currentRiderPhotoUrl = null; }
+      if (profileData.profile.has_photo) {
+        try {
+          const response = await fetch(API_BASE + "/api/rider/profile/photo", {
+            headers: { Authorization: "Bearer " + sessionStorage.getItem("kl_rider_token") },
+            cache: "no-store"
+          });
+          if (!response.ok) throw new Error("Profile photograph unavailable.");
+          currentRiderPhotoUrl = URL.createObjectURL(await response.blob());
+          photo.src = currentRiderPhotoUrl;
+          photo.style.display = "block";
+          placeholder.style.display = "none";
+        } catch {
+          placeholder.textContent = "Photo unavailable";
+        }
+      }
     }
 
     async function restoreRiderSession() {
@@ -898,6 +917,7 @@
 
     function logoutRider() {
       sessionStorage.removeItem("kl_rider_token");
+      if (currentRiderPhotoUrl) { URL.revokeObjectURL(currentRiderPhotoUrl); currentRiderPhotoUrl = null; }
       currentRider = null;
       // Logging out should leave the user on the Rider Portal sign-in screen.
       showSection("rider");
