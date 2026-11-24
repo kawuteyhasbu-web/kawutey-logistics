@@ -302,6 +302,7 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/index.html", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/admin.html", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
+app.get("/admin-password.js", (req, res) => res.sendFile(path.join(__dirname, "admin-password.js")));
 app.get("/logo.png", (req, res) => res.sendFile(path.join(__dirname, "logo.png")));
 
 app.use((err, req, res, next) => {
