@@ -478,11 +478,26 @@ app.post("/api/payments/paystack/initialize", authenticate, roles("rider"), asyn
   if (mode.rows[0]?.manual_backup_enabled) return res.status(403).json({ error: "Paystack deposits are paused while manual backup mode is active." });
   const amount = moneyPesewas(req.body?.amountGhs);
   if (amount < 500) return res.status(400).json({ error: "Minimum deposit is GH₵5." });
-  const reference = "KAW-" + crypto.randomUUID();
+  let reference = "";
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    const profile = await client.query("SELECT rider_code FROM rider_profiles WHERE user_id=$1", [req.user.id]);
+    const profile = await client.query("SELECT rider_code FROM rider_profiles WHERE user_id=$1 FOR UPDATE", [req.user.id]);
+    if (!profile.rowCount || !profile.rows[0].rider_code) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "Your Kawutey rider reference code is not available. Please contact the administrator." });
+    }
+    const riderCode = String(profile.rows[0].rider_code).trim();
+    for (let attempt = 0; attempt < 1000; attempt++) {
+      const suffix = String(crypto.randomInt(0, 1000)).padStart(3, "0");
+      const candidate = riderCode + "-" + suffix;
+      const used = await client.query("SELECT 1 FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' AND reference=$2 LIMIT 1", [req.user.id, candidate]);
+      if (!used.rowCount) { reference = candidate; break; }
+    }
+    if (!reference) {
+      await client.query("ROLLBACK");
+      return res.status(503).json({ error: "A fresh three-digit payment reference could not be generated. Please try again shortly." });
+    }
     await client.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,description) VALUES($1,'deposit',$2,'pending',$3,$4)", [req.user.id, amount, reference, "Rider wallet deposit"]);
     await client.query("COMMIT");
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
