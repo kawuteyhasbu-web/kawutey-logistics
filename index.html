@@ -154,7 +154,7 @@
         <div id="vendorRegSection">
           <h3>New Vendor Registration</h3>
           <div class="alert alert-info">Create an account to start requesting package pickups.</div>
-          <form id="vendorRegForm" onsubmit="registerVendor(event)">
+          <form id="vendorRegForm">
             <div class="form-group"><label>Full Name *</label><input type="text" id="v-name" required></div>
             <div class="form-group"><label>Business Name *</label><input type="text" id="v-business-name" required maxlength="120" placeholder="Enter your business or shop name"></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="v-phone" required></div>
@@ -163,29 +163,29 @@
               <label>Password *</label>
               <div class="password-wrapper">
                 <input type="password" id="v-pass" required minlength="10">
-                <button type="button" class="toggle-password" onclick="togglePassword('v-pass', this)">Show</button>
+                <button type="button" class="toggle-password" data-toggle-password="v-pass">Show</button>
               </div>
             </div>
             <div class="form-group"><label>Location *</label><input type="text" id="v-location" required placeholder="e.g. Accra, Kumasi, Tamale"></div>
             <button type="submit" class="btn btn-primary" id="vendorRegBtn">Create Vendor Account</button>
           </form>
-          <p style="margin-top:12px;">Already have an account? <a href="#" onclick="showVendorLogin(); return false;" style="color:var(--accent); font-weight:600;">Login here</a></p>
+          <p style="margin-top:12px;">Already have an account? <a href="#" data-vendor-view="login" style="color:var(--accent); font-weight:600;">Login here</a></p>
           <div id="vendorRegSuccess" class="alert alert-success hidden" style="margin-top:14px;"></div>
         </div>
         <div id="vendorLoginSection" class="hidden">
           <h3>Vendor Login</h3>
-          <form onsubmit="loginVendor(event)">
+          <form id="vendorLoginForm">
             <div class="form-group"><label>Email Address</label><input type="email" id="login-email" required></div>
             <div class="form-group">
               <label>Password</label>
               <div class="password-wrapper">
                 <input type="password" id="login-pass" required>
-                <button type="button" class="toggle-password" onclick="togglePassword('login-pass', this)">Show</button>
+                <button type="button" class="toggle-password" data-toggle-password="login-pass">Show</button>
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
-          <p style="margin-top:12px;">New vendor? <a href="#" onclick="showVendorReg(); return false;" style="color:var(--accent); font-weight:600;">Register here</a></p>
+          <p style="margin-top:12px;">New vendor? <a href="#" data-vendor-view="register" style="color:var(--accent); font-weight:600;">Register here</a></p>
         </div>
         <div id="vendorDashboard" class="hidden">
           <h3>Welcome, <span id="vendorNameDisplay"></span></h3>
@@ -220,7 +220,7 @@
         <div id="riderRegSection">
           <h3>New Rider Registration</h3>
           <div class="alert alert-warning">A unique reference code will be assigned automatically. Use it only when making payments.</div>
-          <form id="riderRegForm" onsubmit="registerRider(event)">
+          <form id="riderRegForm">
             <div class="form-group"><label>Full Name *</label><input type="text" id="r-name" required></div>
             <div class="form-group"><label>Phone Number *</label><input type="tel" id="r-phone" required></div>
             <div class="form-group"><label>Email Address *</label><input type="email" id="r-email" required></div>
@@ -229,7 +229,7 @@
               <label>Password *</label>
               <div class="password-wrapper">
                 <input type="password" id="r-pass" required minlength="4">
-                <button type="button" class="toggle-password" onclick="togglePassword('r-pass', this)">Show</button>
+                <button type="button" class="toggle-password" data-toggle-password="r-pass">Show</button>
               </div>
             </div>
             <div class="form-group"><label>Location *</label><input type="text" id="r-location" required placeholder="e.g. Accra, Kumasi"></div>
@@ -241,13 +241,13 @@
         </div>
         <div id="riderLoginSection" class="hidden">
           <h3>Rider Login</h3>
-          <form onsubmit="loginRider(event)">
+          <form id="riderLoginForm">
             <div class="form-group"><label>Email Address</label><input type="email" id="r-login-email" required></div>
             <div class="form-group">
               <label>Password</label>
               <div class="password-wrapper">
                 <input type="password" id="r-login-pass" required>
-                <button type="button" class="toggle-password" onclick="togglePassword('r-login-pass', this)">Show</button>
+                <button type="button" class="toggle-password" data-toggle-password="r-login-pass">Show</button>
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
@@ -367,7 +367,32 @@
 
     document.addEventListener("click", event => {
       const sectionButton = event.target.closest("[data-section]");
-      if (sectionButton) showSection(sectionButton.getAttribute("data-section"));
+      if (sectionButton) {
+        showSection(sectionButton.getAttribute("data-section"));
+        return;
+      }
+      const passwordButton = event.target.closest("[data-toggle-password]");
+      if (passwordButton) {
+        togglePassword(passwordButton.getAttribute("data-toggle-password"), passwordButton);
+        return;
+      }
+      const vendorViewLink = event.target.closest("[data-vendor-view]");
+      if (vendorViewLink) {
+        event.preventDefault();
+        if (vendorViewLink.getAttribute("data-vendor-view") === "login") showVendorLogin();
+        else showVendorReg();
+      }
+    });
+
+    document.addEventListener("submit", event => {
+      const handlers = {
+        vendorRegForm: registerVendor,
+        vendorLoginForm: loginVendor,
+        riderRegForm: registerRider,
+        riderLoginForm: loginRider
+      };
+      const handler = handlers[event.target.id];
+      if (handler) handler(event);
     });
 
     function showSection(sectionId) {
