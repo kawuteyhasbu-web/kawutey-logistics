@@ -502,20 +502,45 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
   if (!secret) return res.sendStatus(503);
   const signature = req.headers["x-paystack-signature"];
   const expected = crypto.createHmac("sha512", secret).update(req.body).digest("hex");
-  if (typeof signature !== "string" || signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return res.sendStatus(401);
-  const event = JSON.parse(req.body.toString("utf8"));
-  if (event.event !== "charge.success" || !event.data?.reference) return res.sendStatus(200);
+  if (typeof signature !== "string" || !/^[a-f0-9]{128}$/i.test(signature) ||
+      !crypto.timingSafeEqual(Buffer.from(signature, "hex"), Buffer.from(expected, "hex"))) return res.sendStatus(401);
+
+  let event;
+  try { event = JSON.parse(req.body.toString("utf8")); }
+  catch { return res.sendStatus(400); }
+  if (event.event !== "charge.success" || typeof event.data?.reference !== "string" || !event.data.reference) return res.sendStatus(200);
+
   const reference = event.data.reference;
-  const verify = await fetch("https://api.paystack.co/transaction/verify/" + encodeURIComponent(reference), { headers: { Authorization: "Bearer " + secret } });
+  const verify = await fetch("https://api.paystack.co/transaction/verify/" + encodeURIComponent(reference), {
+    headers: { Authorization: "Bearer " + secret }
+  });
   const verified = await verify.json();
-  if (!verify.ok || !verified.status || verified.data.status !== "success" || verified.data.currency !== "GHS") return res.sendStatus(200);
+  const payment = verified?.data;
+  if (!verify.ok || !verified.status || payment?.status !== "success" || payment.currency !== "GHS" ||
+      payment.reference !== reference || !Number.isSafeInteger(Number(payment.amount)) ||
+      !payment.metadata || payment.metadata.purpose !== "rider_wallet_deposit") return res.sendStatus(200);
+
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    const tx = await client.query("SELECT * FROM wallet_transactions WHERE reference=$1 FOR UPDATE", [reference]);
-    if (tx.rowCount && tx.rows[0].status === "pending" && tx.rows[0].type === "deposit" && Number(tx.rows[0].amount_pesewas) === Number(verified.data.amount) && String(tx.rows[0].rider_id) === String(verified.data.metadata?.riderId)) {
-      const credited = await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [tx.rows[0].amount_pesewas, tx.rows[0].rider_id]);
-      if (credited.rowCount) await client.query("UPDATE wallet_transactions SET status='successful',provider_reference=$1 WHERE id=$2", [String(verified.data.id), tx.rows[0].id]);
+    const tx = await client.query(
+      "SELECT t.*, rp.rider_code FROM wallet_transactions t JOIN rider_profiles rp ON rp.user_id=t.rider_id WHERE t.reference=$1 FOR UPDATE OF t",
+      [reference]
+    );
+    if (tx.rowCount && tx.rows[0].status === "pending" && tx.rows[0].type === "deposit" &&
+        Number(tx.rows[0].amount_pesewas) === Number(payment.amount) &&
+        String(tx.rows[0].rider_id) === String(payment.metadata.riderId) &&
+        String(tx.rows[0].rider_code) === String(payment.metadata.riderCode)) {
+      const credited = await client.query(
+        "UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2",
+        [tx.rows[0].amount_pesewas, tx.rows[0].rider_id]
+      );
+      if (credited.rowCount) {
+        await client.query(
+          "UPDATE wallet_transactions SET status='successful',provider_reference=$1 WHERE id=$2 AND status='pending'",
+          [String(payment.id), tx.rows[0].id]
+        );
+      }
     }
     await client.query("COMMIT");
   } catch (error) { await client.query("ROLLBACK"); throw error; }
