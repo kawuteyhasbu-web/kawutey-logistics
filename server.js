@@ -423,7 +423,9 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
 
 app.get("/api/admin/commission-reports", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const requestedDate = typeof req.query.date === "string" ? req.query.date : "";
-  if (requestedDate && !/^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate)) {
+  const dateParts = requestedDate ? requestedDate.split("-") : [];
+  const validDate = !requestedDate || (dateParts.length === 3 && dateParts[0].length === 4 && dateParts[1].length === 2 && dateParts[2].length === 2 && dateParts.every(part => /^[0-9]+$/.test(part)) && !Number.isNaN(Date.parse(requestedDate)) && new Date(requestedDate + "T00:00:00Z").toISOString().slice(0,10) === requestedDate);
+  if (!validDate) {
     return res.status(400).json({ error: "Choose a valid report date in YYYY-MM-DD format." });
   }
   const current = await pool.query("SELECT to_char(NOW() AT TIME ZONE 'Africa/Accra','YYYY-MM-DD') AS today");
