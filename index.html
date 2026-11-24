@@ -575,8 +575,11 @@
         return;
       }
       currentVendor = null;
+      // Keep the user inside the Vendor Portal and show sign-in after logout.
+      showSection("vendor");
       document.getElementById('vendorDashboard').classList.add('hidden');
-      document.getElementById('vendorRegSection').classList.remove('hidden');
+      document.getElementById('vendorAuthCard').classList.remove('hidden');
+      showVendorLogin();
     }
 
     // ========== RIDER FUNCTIONS ==========
