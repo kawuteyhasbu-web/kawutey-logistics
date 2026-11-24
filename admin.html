@@ -20,6 +20,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
+<div class="card"><h2>Approved Riders</h2><p>View active, approved riders and their private profile photographs.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh approved riders</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Approval Queue</h2><p>Review each rider's details and profile photograph before approving access. Only approved riders can sign in and accept assignments.</p><button id="refreshRidersButton" class="secondary">Refresh rider applications</button><div id="riderStatus" class="notice hidden" role="status"></div><div id="pendingRiders" aria-live="polite"></div></div>
 </section></main>
 <script>
@@ -35,6 +36,22 @@ $("adminLogo").addEventListener("error",e=>{e.currentTarget.hidden=true;});
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("email").value,password:$("password").value})});if(data.user.role!=="admin")throw new Error("This account is not an administrator.");sessionStorage.setItem(tokenKey,data.token);$("password").value="";openDashboard();}catch(err){show($("loginMessage"),err.message,"error");}finally{$("loginButton").disabled=false;}});
 $("refreshButton").addEventListener("click",loadNotifications);
 $("refreshRidersButton").addEventListener("click",loadPendingRiders);
+$("refreshApprovedRidersButton").addEventListener("click",loadApprovedRiders);
+async function loadApprovedRiders(){
+  const area=$("approvedRiders");area.textContent="Loading approved riders…";
+  try{
+    const data=await api("/api/admin/riders/approved");
+    if(!data.riders.length){area.textContent="There are no approved riders yet.";return;}
+    area.innerHTML=data.riders.map(r=>'<article class="item"><strong>'+escapeHtml(r.full_name)+'</strong><p><strong>Rider code:</strong> '+escapeHtml(r.rider_code)+'</p><p><strong>Email:</strong> '+escapeHtml(r.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(r.phone)+'</p><p><strong>Location:</strong> '+escapeHtml(r.location||"Not provided")+'</p><p><span class="tag read">Approved / Active</span></p><div class="approved-rider-photo" data-approved-photo="'+Number(r.id)+'">'+(r.has_photo?'Loading private photograph…':'No photograph on file.')+'</div></article>').join("");
+    for(const rider of data.riders){
+      if(!rider.has_photo)continue;
+      const response=await fetch(API_BASE+"/api/admin/riders/"+encodeURIComponent(rider.id)+"/photo",{headers:{Authorization:"Bearer "+sessionStorage.getItem(tokenKey)}});
+      if(!response.ok)continue;
+      const blob=await response.blob(),url=URL.createObjectURL(blob),slot=area.querySelector('[data-approved-photo="'+Number(rider.id)+'"]');
+      if(slot){const img=document.createElement("img");img.src=url;img.alt="Approved rider profile photograph";img.style.cssText="width:120px;height:120px;object-fit:cover;border-radius:12px;display:block;margin:10px 0";img.onerror=()=>{URL.revokeObjectURL(url);slot.textContent="Photograph could not be displayed.";};slot.replaceChildren(img);}
+    }
+  }catch(e){show($("approvedRidersStatus"),e.message,"error");area.textContent="Could not load approved riders.";}
+}
 async function loadPendingRiders(){
   const area=$("pendingRiders");area.textContent="Loading rider applications…";
   try{
