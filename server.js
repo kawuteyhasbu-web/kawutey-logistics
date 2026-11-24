@@ -269,6 +269,19 @@ app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asy
   res.json({ notification: result.rows[0] });
 }));
 
+app.get("/api/admin/riders/managed", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.status,r.rider_code,r.approved_at,(r.photo_data IS NOT NULL AND octet_length(r.photo_data)>0) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status IN ('active','suspended') ORDER BY CASE WHEN u.status='active' THEN 0 ELSE 1 END,r.approved_at DESC NULLS LAST,u.full_name");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ riders: result.rows });
+}));
+app.patch("/api/admin/riders/:id/status", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const status = req.body?.status;
+  if (!["active","suspended"].includes(status)) return res.status(400).json({ error: "Choose active or suspended status." });
+  const result = await pool.query("UPDATE users SET status=$1 WHERE id=$2 AND role='rider' AND status IN ('active','suspended') RETURNING id,status", [status, req.params.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "Approved rider not found." });
+  res.set("Cache-Control", "no-store");
+  res.json({ rider: result.rows[0], message: status==="suspended" ? "Rider suspended." : "Rider reactivated." });
+}));
 app.get("/api/admin/riders/approved", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.created_at,r.rider_code,r.approved_at,(r.photo_data IS NOT NULL AND octet_length(r.photo_data)>0) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status='active' ORDER BY r.approved_at DESC NULLS LAST,u.full_name");
   res.set("Cache-Control", "private, no-store");
