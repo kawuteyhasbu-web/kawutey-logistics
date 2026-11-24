@@ -20,6 +20,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
+<div class="card"><h2>Rider Deposit Requests</h2><p>Verify the payment directly with the Mobile Money provider or company account before approving. Approving credits the rider wallet; rejecting does not.</p><button id="refreshDepositsButton" class="secondary">Refresh deposit requests</button><div id="depositStatus" class="notice hidden" role="status"></div><div id="depositRequests" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Management</h2><p>View approved and suspended riders, their private photographs, and control account access without deleting rider records.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh rider list</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Approval Queue</h2><p>Review each rider's details and profile photograph before approving access. Only approved riders can sign in and accept assignments.</p><button id="refreshRidersButton" class="secondary">Refresh rider applications</button><div id="riderStatus" class="notice hidden" role="status"></div><div id="pendingRiders" aria-live="polite"></div></div>
 </section></main>
@@ -29,8 +30,28 @@ const tokenKey="kl_admin_token";
 const $=id=>document.getElementById(id);
 function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
 async function api(path,options={}){const headers={"Content-Type":"application/json",...(options.headers||{})};const token=sessionStorage.getItem(tokenKey);if(token)headers.Authorization="Bearer "+token;const response=await fetch(API_BASE+path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Request failed.");return data;}
-function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications(); }
+function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits(); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function loadDeposits(){
+  const area=$("depositRequests");area.textContent="Loading deposit requests…";
+  try{
+    const data=await api("/api/admin/deposits");
+    if(!data.deposits.length){area.textContent="No deposit requests have been submitted.";return;}
+    area.innerHTML=data.deposits.map(d=>'<article class="item"><span class="tag '+(d.status==="successful"?"read":"")+'">'+escapeHtml(d.status.toUpperCase())+'</span><p><strong>Rider:</strong> '+escapeHtml(d.riderName)+' ('+escapeHtml(d.riderCode)+')</p><p><strong>Phone:</strong> '+escapeHtml(d.phone)+'</p><p><strong>Amount:</strong> GH₵'+Number(d.amountGhs).toFixed(2)+'</p><p><strong>Network / sender:</strong> '+escapeHtml(d.description||"Not recorded")+'</p><p><strong>Payment reference:</strong> '+escapeHtml(d.providerReference||"—")+'</p><p><strong>Request reference:</strong> '+escapeHtml(d.reference)+'</p><p class="meta">Submitted: '+escapeHtml(new Date(d.createdAt).toLocaleString())+'</p>'+(d.status==="pending"?'<button data-deposit-review="'+Number(d.id)+'" data-decision="approve">Approve and credit wallet</button><button class="secondary" data-deposit-review="'+Number(d.id)+'" data-decision="reject">Reject request</button>':'')+'</article>').join("");
+  }catch(e){show($("depositStatus"),e.message,"error");area.textContent="Could not load deposit requests.";}
+}
+$("refreshDepositsButton").addEventListener("click",loadDeposits);
+$("depositRequests").addEventListener("click",async e=>{
+  const btn=e.target.closest("[data-deposit-review]");if(!btn)return;
+  const approve=btn.dataset.decision==="approve";
+  const promptText=approve?"Only approve if you have independently confirmed the money was received in the company account. This will credit GH₵ to the rider's wallet. Continue?":"Reject this deposit request? The rider's wallet will not be credited.";
+  if(!confirm(promptText))return;
+  btn.disabled=true;
+  try{
+    const result=await api("/api/admin/deposits/"+btn.dataset.depositReview+"/review",{method:"PATCH",body:JSON.stringify({decision:approve?"approve":"reject"})});
+    show($("depositStatus"),result.message,"success");await loadDeposits();
+  }catch(err){show($("depositStatus"),err.message,"error");btn.disabled=false;}
+});
 async function loadNotifications(){const area=$("notifications");area.textContent="Loading notifications…";try{const data=await api("/api/admin/notifications");if(!data.notifications.length){area.textContent="No signup notifications yet.";return;}area.innerHTML=data.notifications.map(n=>{const d=n.details||{};return '<article class="item"><span class="tag '+(n.read_at?"read":"")+'">'+(n.read_at?"Reviewed":"New")+'</span> <strong>'+escapeHtml(n.account_type.toUpperCase())+' SIGNUP</strong><p><strong>Name:</strong> '+escapeHtml(d.fullName)+'</p><p><strong>Email:</strong> '+escapeHtml(d.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(d.phone)+'</p>'+(d.businessName?'<p><strong>Business:</strong> '+escapeHtml(d.businessName)+'</p>':'')+'<p class="meta">Registered: '+escapeHtml(new Date(n.created_at).toLocaleString())+'</p>'+(n.account_type==="rider"?'<p class="meta">Rider approval is required before assignments.</p>':'')+'<p class="meta">Email alert: '+escapeHtml(n.email_status)+'</p>'+(n.read_at?'':'<button data-read="'+Number(n.id)+'">Mark as reviewed</button>')+'</article>';}).join("");}catch(e){show($("status"),e.message,"error");area.textContent="Could not load notifications.";}}
 $("adminLogo").addEventListener("error",e=>{e.currentTarget.hidden=true;});
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("email").value,password:$("password").value})});if(data.user.role!=="admin")throw new Error("This account is not an administrator.");sessionStorage.setItem(tokenKey,data.token);$("password").value="";openDashboard();}catch(err){show($("loginMessage"),err.message,"error");}finally{$("loginButton").disabled=false;}});
