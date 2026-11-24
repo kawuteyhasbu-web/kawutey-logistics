@@ -20,7 +20,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
-<div class="card"><h2>Approved Riders</h2><p>View active, approved riders and their private profile photographs.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh approved riders</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
+<div class="card"><h2>Rider Management</h2><p>View approved and suspended riders, their private photographs, and control account access without deleting rider records.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh rider list</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Approval Queue</h2><p>Review each rider's details and profile photograph before approving access. Only approved riders can sign in and accept assignments.</p><button id="refreshRidersButton" class="secondary">Refresh rider applications</button><div id="riderStatus" class="notice hidden" role="status"></div><div id="pendingRiders" aria-live="polite"></div></div>
 </section></main>
 <script>
@@ -40,9 +40,9 @@ $("refreshApprovedRidersButton").addEventListener("click",loadApprovedRiders);
 async function loadApprovedRiders(){
   const area=$("approvedRiders");area.textContent="Loading approved riders…";
   try{
-    const data=await api("/api/admin/riders/approved");
-    if(!data.riders.length){area.textContent="There are no approved riders yet.";return;}
-    area.innerHTML=data.riders.map(r=>'<article class="item"><strong>'+escapeHtml(r.full_name)+'</strong><p><strong>Rider code:</strong> '+escapeHtml(r.rider_code)+'</p><p><strong>Email:</strong> '+escapeHtml(r.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(r.phone)+'</p><p><strong>Location:</strong> '+escapeHtml(r.location||"Not provided")+'</p><p><span class="tag read">Approved / Active</span></p><div class="approved-rider-photo" data-approved-photo="'+Number(r.id)+'">'+(r.has_photo?'Loading private photograph…':'No photograph on file.')+'</div></article>').join("");
+    const data=await api("/api/admin/riders/managed");
+    if(!data.riders.length){area.textContent="There are no approved or suspended riders yet.";return;}
+    area.innerHTML=data.riders.map(r=>'<article class="item"><strong>'+escapeHtml(r.full_name)+'</strong><p><strong>Rider code:</strong> '+escapeHtml(r.rider_code)+'</p><p><strong>Email:</strong> '+escapeHtml(r.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(r.phone)+'</p><p><strong>Location:</strong> '+escapeHtml(r.location||"Not provided")+'</p><p><span class="tag read">Approved / Active</span></p><div class="approved-rider-photo" data-approved-photo="'+Number(r.id)+'">'+(r.has_photo?'Loading private photograph…':'No photograph on file.')+'</div><button data-rider-status-id="'+Number(r.id)+'" data-next-status="'+(r.status==="active"?"suspended":"active")+'" class="'+(r.status==="active"?"secondary":"")+'">'+(r.status==="active"?"Suspend rider":"Reactivate rider")+'</button></article>').join("");
     for(const rider of data.riders){
       if(!rider.has_photo)continue;
       const response=await fetch(API_BASE+"/api/admin/riders/"+encodeURIComponent(rider.id)+"/photo",{headers:{Authorization:"Bearer "+sessionStorage.getItem(tokenKey)}});
@@ -68,6 +68,15 @@ async function loadPendingRiders(){
     }
   }catch(e){show($("riderStatus"),e.message,"error");area.textContent="Could not load rider applications.";}
 }
+$("approvedRiders").addEventListener("click",async e=>{
+  const btn=e.target.closest("[data-rider-status-id]");if(!btn)return;
+  const next=btn.dataset.nextStatus;
+  const promptText=next==="suspended"?"Suspend this rider? They will no longer be able to sign in. Their account, photograph and history will be retained.":"Reactivate this rider? They will regain access to their account.";
+  if(!confirm(promptText))return;
+  btn.disabled=true;
+  try{await api("/api/admin/riders/"+btn.dataset.riderStatusId+"/status",{method:"PATCH",body:JSON.stringify({status:next})});show($("approvedRidersStatus"),next==="suspended"?"Rider suspended. Account and history retained.":"Rider reactivated successfully.","success");await loadApprovedRiders();}
+  catch(err){show($("approvedRidersStatus"),err.message,"error");btn.disabled=false;}
+});
 $("pendingRiders").addEventListener("click",async e=>{
   const btn=e.target.closest("[data-approve-rider]");if(!btn)return;
   if(!confirm("Approve this rider account? The rider will then be able to sign in."))return;
