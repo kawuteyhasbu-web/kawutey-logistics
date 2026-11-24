@@ -352,9 +352,8 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
   const enabled = req.body?.manualBackupEnabled === true;
   const accountName = clean(req.body?.momoAccountName).slice(0,120);
   const accountNumber = clean(req.body?.momoAccountNumber).replace(/[\s-]/g,"").slice(0,20);
-  const reason = clean(req.body?.reason).slice(0,250);
-  if (enabled && (!accountName || !/^0\d{9}$/.test(accountNumber) || !reason)) return res.status(400).json({ error: "To activate backup mode, provide the company account name, a valid 10-digit receiving number, and a reason." });
-  if (!enabled && !reason) return res.status(400).json({ error: "Enter a reason for changing the payment mode." });
+  const reason = enabled ? "Manual Mobile Money backup activated by administrator." : "Manual Mobile Money backup deactivated by administrator.";
+  if (enabled && (!accountName || !/^0\d{9}$/.test(accountNumber))) return res.status(400).json({ error: "To activate backup mode, provide the company account name and a valid 10-digit receiving number." });
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
