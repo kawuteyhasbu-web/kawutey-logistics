@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Payment return — Kawutey Logistics</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4f6f8; color: #18212b; }
+    main { width: min(92%, 480px); box-sizing: border-box; padding: 30px; background: #fff; border: 1px solid #e4e8ed; border-radius: 14px; box-shadow: 0 8px 28px rgba(20,35,50,.08); }
+    h1 { margin-top: 0; font-size: 1.45rem; }
+    p { line-height: 1.6; }
+    .note { padding: 13px 15px; border-radius: 8px; background: #fff7e6; }
+    .ref { overflow-wrap: anywhere; font-family: monospace; }
+    a { display: inline-block; margin-top: 12px; color: #0759b5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Thank you for returning to Kawutey Logistics</h1>
+    <p id="message">Your payment response has been received by the browser. We are waiting for secure confirmation.</p>
+    <div class="note">
+      <strong>Important:</strong> Your rider wallet is credited only after Kawutey Logistics receives and verifies Paystack's secure payment notification. Returning to this page alone does not confirm payment.
+    </div>
+    <p>Payment reference: <span class="ref" id="reference">Not provided</span></p>
+    <p>You can return to your rider dashboard and refresh your wallet balance after a short while.</p>
+    <a href="/">Return to Kawutey Logistics</a>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var reference = params.get("reference") || params.get("trxref") || "";
+      if (reference) document.getElementById("reference").textContent = reference;
+      var status = params.get("status");
+      if (status === "cancelled") {
+        document.getElementById("message").textContent = "The checkout was cancelled or not completed. Your wallet will not be credited unless Paystack confirms a successful payment.";
+      }
+    }());
+  </script>
+</body>
+</html>
