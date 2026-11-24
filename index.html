@@ -395,7 +395,9 @@
         togglePickupForm, logoutVendor, logoutRider, showDepositForm,
         showTransactionHistory, requestRefund, submitDeposit, sendMessage,
         secureRefreshAssignments: loadSecureRiderAssignments,
-        secureRefreshDeposits: loadSecureRiderDeposits
+        secureRefreshDeposits: loadSecureRiderDeposits,
+        paystackDeposit: startPaystackDeposit,
+        createManualDeposit: createSecureManualIntent
       };
       if (action && actions[action]) { actions[action](); return; }
 
@@ -416,7 +418,7 @@
         riderRegForm: registerRider,
         riderLoginForm: loginRider,
         pickupForm: requestPickup,
-        secureDepositForm: submitSecureDeposit
+        secureManualSubmitForm: submitSecureManualDeposit
       };
       const handler = handlers[event.target.id];
       if (handler) handler(event);
@@ -705,7 +707,7 @@
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Submit a deposit after sending the money through your Mobile Money provider. Your wallet is credited only after the administrator independently verifies receipt.</p><form id="secureDepositForm"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender's Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your payment receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit deposit request</button><p id="secureDepositMessage" class="alert alert-info" role="status">Minimum deposit: GH₵5.00. Do not submit a request unless you have actually sent the payment.</p></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender's Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider's receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.classList.remove("hidden");
       document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
       document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
@@ -753,6 +755,7 @@
         placeholder.textContent = "The saved photograph could not be retrieved. Please contact the administrator.";
       }
       await loadSecureRiderAssignments();
+      await loadSecureDepositOptions();
       await loadSecureRiderDeposits();
     }
 
@@ -808,6 +811,102 @@
         message.textContent = error.message || "Could not load pickup requests. Please refresh.";
         message.className = "alert alert-warning";
       }
+    }
+
+    let secureDepositMode = "unavailable";
+    let secureManualIntent = null;
+
+    async function loadSecureDepositOptions() {
+      const message = document.getElementById("secureDepositMessage");
+      const paystackButton = document.getElementById("securePaystackButton");
+      const manualButton = document.getElementById("secureCreateManualButton");
+      if (!message || !paystackButton || !manualButton) return;
+      message.textContent = "Checking available payment methods…";
+      paystackButton.hidden = true; manualButton.hidden = true;
+      document.getElementById("secureManualInstructions").hidden = true;
+      document.getElementById("secureManualSubmitForm").hidden = true;
+      try {
+        const data = await apiRequest("/api/rider/deposit-options", { riderAuth: true });
+        secureDepositMode = data.mode;
+        if (data.mode === "paystack") {
+          message.textContent = "Automatic deposits are available through secure Paystack checkout.";
+          paystackButton.hidden = false;
+        } else if (data.mode === "manual") {
+          message.textContent = "Manual Mobile Money backup is active. Create a unique reference before sending money.";
+          manualButton.hidden = false;
+        } else {
+          message.textContent = "Deposits are temporarily unavailable. Paystack is not configured and manual backup has not been activated by the administrator. Please try again later.";
+        }
+      } catch (error) {
+        secureDepositMode = "unavailable";
+        message.textContent = error.message || "Could not check payment availability.";
+      }
+    }
+
+    async function startPaystackDeposit() {
+      const amount = document.getElementById("secureDepositAmount").value;
+      const button = document.getElementById("securePaystackButton");
+      if (secureDepositMode !== "paystack") return alert("Paystack is not currently available.");
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/payments/paystack/initialize", {
+          method: "POST", riderAuth: true, body: JSON.stringify({ amountGhs: amount })
+        });
+        window.location.assign(result.authorizationUrl);
+      } catch (error) { alert(error.message || "Could not start Paystack checkout."); button.disabled = false; }
+    }
+
+    async function createSecureManualIntent() {
+      const amount = document.getElementById("secureDepositAmount").value;
+      const button = document.getElementById("secureCreateManualButton");
+      if (secureDepositMode !== "manual") return alert("Manual Mobile Money deposits are not currently enabled.");
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/rider/deposits/manual-intents", {
+          method: "POST", riderAuth: true, body: JSON.stringify({ amountGhs: amount })
+        });
+        secureManualIntent = result.deposit;
+        const instructions = document.getElementById("secureManualInstructions");
+        instructions.innerHTML = "<strong>Send GH₵" + Number(result.deposit.amount_pesewas / 100).toFixed(2) + " to:</strong><br>Account name: " + escapeHtml(result.payment.accountName) + "<br>Mobile Money number: " + escapeHtml(result.payment.accountNumber) + "<br><br><strong>Important:</strong> Enter this exact Kawutey reference in the transfer reference/description: <strong>" + escapeHtml(result.deposit.reference) + "</strong><br>After sending the money, enter the actual transaction reference from your Mobile Money provider below.";
+        instructions.hidden = false;
+        document.getElementById("secureManualSubmitForm").hidden = false;
+        document.getElementById("secureDepositMessage").textContent = result.message;
+        button.hidden = true;
+        await loadSecureRiderDeposits();
+      } catch (error) {
+        document.getElementById("secureDepositMessage").textContent = error.message || "Could not create a payment reference.";
+      } finally { button.disabled = false; }
+    }
+
+    async function submitSecureManualDeposit(event) {
+      event.preventDefault();
+      if (!secureManualIntent) return alert("Create a payment reference first.");
+      const button = document.getElementById("secureDepositSubmit");
+      const message = document.getElementById("secureDepositMessage");
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/rider/deposits/" + encodeURIComponent(secureManualIntent.id) + "/submit", {
+          method: "POST", riderAuth: true,
+          body: JSON.stringify({
+            network: document.getElementById("secureDepositNetwork").value,
+            momoNumber: document.getElementById("secureDepositNumber").value,
+            providerReference: document.getElementById("secureDepositProviderRef").value
+          })
+        });
+        message.textContent = result.message;
+        message.className = "alert alert-info";
+        document.getElementById("secureManualSubmitForm").reset();
+        document.getElementById("secureManualSubmitForm").hidden = true;
+        document.getElementById("secureManualInstructions").hidden = true;
+        secureManualIntent = null;
+        document.getElementById("secureCreateManualButton").hidden = false;
+        document.getElementById("secureDepositAmount").value = "";
+        await loadSecureRiderDeposits();
+        await loadSecureDepositOptions();
+      } catch (error) {
+        message.textContent = error.message || "Could not submit payment details.";
+        message.className = "alert alert-warning";
+      } finally { button.disabled = false; }
     }
 
     async function loadSecureRiderDeposits() {
