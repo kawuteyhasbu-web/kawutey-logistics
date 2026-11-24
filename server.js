@@ -197,7 +197,7 @@ app.get("/api/rider/profile/photo", authenticate, roles("rider"), asyncRoute(asy
 }));
 
 app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (req, res) => {
-  const result = await pool.query("SELECT rider_code,approved_at,(photo_data IS NOT NULL) AS has_photo FROM rider_profiles WHERE user_id=$1", [req.user.id]);
+  const result = await pool.query("SELECT rider_code,approved_at,(photo_data IS NOT NULL AND octet_length(photo_data)>0) AS has_photo,photo_mime,octet_length(photo_data) AS photo_bytes FROM rider_profiles WHERE user_id=$1", [req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: "Rider profile not found." });
   res.set("Cache-Control", "private, no-store");
   res.json({ profile: result.rows[0] });
