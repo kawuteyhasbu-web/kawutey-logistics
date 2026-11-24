@@ -301,11 +301,37 @@ app.post("/api/rider/deposits/manual-intents", authenticate, roles("rider"), asy
   const setting = settings.rows[0] || {};
   if (!setting.manual_backup_enabled) return res.status(403).json({ error: "Manual Mobile Money deposits are currently disabled." });
   if (!setting.momo_account_name || !setting.momo_account_number) return res.status(503).json({ error: "The company Mobile Money receiving details have not been configured." });
-  const reference = "DEP-" + crypto.randomUUID();
-  const result = await pool.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,description) VALUES($1,'deposit',$2,'pending',$3,'MANUAL_AWAITING_PAYMENT') RETURNING id,amount_pesewas,status,reference,created_at",
-    [req.user.id, amount, reference]);
-  res.status(201).json({ message: "Deposit reference created. Send the exact amount to the company account using this reference, then submit your Mobile Money transaction reference.", deposit: result.rows[0],
-    payment: { accountName: setting.momo_account_name, accountNumber: setting.momo_account_number } });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const profile = await client.query("SELECT rider_code FROM rider_profiles WHERE user_id=$1 FOR UPDATE", [req.user.id]);
+    if (!profile.rowCount || !profile.rows[0].rider_code) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "Your Kawutey rider reference code is not available. Please contact the administrator." });
+    }
+    const riderCode = String(profile.rows[0].rider_code).trim();
+    let reference = "";
+    for (let attempt = 0; attempt < 1000; attempt++) {
+      const suffix = String(crypto.randomInt(0, 1000)).padStart(3, "0");
+      const candidate = riderCode + "-" + suffix;
+      const used = await client.query("SELECT 1 FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' AND reference=$2 LIMIT 1", [req.user.id, candidate]);
+      if (!used.rowCount) { reference = candidate; break; }
+    }
+    if (!reference) {
+      await client.query("ROLLBACK");
+      return res.status(503).json({ error: "A fresh three-digit payment reference could not be generated. Please try again shortly." });
+    }
+    const result = await client.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,description) VALUES($1,'deposit',$2,'pending',$3,'MANUAL_AWAITING_PAYMENT') RETURNING id,amount_pesewas,status,reference,created_at",
+      [req.user.id, amount, reference]);
+    await client.query("COMMIT");
+    res.status(201).json({ message: "Deposit reference created. Send the exact amount to the company account using this reference, then submit your Mobile Money transaction reference.", deposit: result.rows[0],
+      payment: { accountName: setting.momo_account_name, accountNumber: setting.momo_account_number } });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }));
 
 app.post("/api/rider/deposits/:id/submit", authenticate, roles("rider"), asyncRoute(async (req, res) => {
