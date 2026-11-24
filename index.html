@@ -684,20 +684,45 @@
       const photo = document.getElementById("secureRiderPhoto");
       const placeholder = document.getElementById("secureRiderPhotoPlaceholder");
       if (currentRiderPhotoUrl) { URL.revokeObjectURL(currentRiderPhotoUrl); currentRiderPhotoUrl = null; }
-      if (profileData.profile.has_photo) {
-        try {
-          const response = await fetch(API_BASE + "/api/rider/profile/photo", {
-            headers: { Authorization: "Bearer " + sessionStorage.getItem("kl_rider_token") },
-            cache: "no-store"
-          });
-          if (!response.ok) throw new Error("Profile photograph unavailable.");
-          currentRiderPhotoUrl = URL.createObjectURL(await response.blob());
-          photo.src = currentRiderPhotoUrl;
-          photo.style.display = "block";
-          placeholder.style.display = "none";
-        } catch {
-          placeholder.textContent = "Photo unavailable";
+      if (!profileData.profile.has_photo) {
+        placeholder.textContent = "No photograph was saved during registration.";
+        return;
+      }
+      placeholder.textContent = "Loading approved photograph…";
+      try {
+        const response = await fetch(API_BASE + "/api/rider/profile/photo", {
+          headers: { Authorization: "Bearer " + sessionStorage.getItem("kl_rider_token") },
+          cache: "no-store"
+        });
+        if (response.status === 404) {
+          placeholder.textContent = "No photograph is stored for this rider.";
+          return;
         }
+        if (!response.ok) {
+          placeholder.textContent = "The saved photograph could not be retrieved. Please contact the administrator.";
+          return;
+        }
+        const blob = await response.blob();
+        const supportedTypes = ["image/jpeg", "image/png", "image/webp"];
+        if (!blob.size || !supportedTypes.includes(blob.type)) {
+          placeholder.textContent = "A photo record exists, but its image file is empty or has an unsupported format.";
+          return;
+        }
+        currentRiderPhotoUrl = URL.createObjectURL(blob);
+        photo.src = currentRiderPhotoUrl;
+        try {
+          await photo.decode();
+        } catch {
+          photo.removeAttribute("src");
+          URL.revokeObjectURL(currentRiderPhotoUrl);
+          currentRiderPhotoUrl = null;
+          placeholder.textContent = "A photo record exists, but the image file cannot be displayed.";
+          return;
+        }
+        photo.style.display = "block";
+        placeholder.style.display = "none";
+      } catch {
+        placeholder.textContent = "The saved photograph could not be retrieved. Please contact the administrator.";
       }
     }
 
