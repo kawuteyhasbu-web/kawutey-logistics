@@ -20,7 +20,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
-<div class="card"><h2>Rider Deposit Requests</h2><p>Verify the payment directly with the Mobile Money provider or company account before approving. Approving credits the rider wallet; rejecting does not.</p><button id="refreshDepositsButton" class="secondary">Refresh deposit requests</button><div id="depositStatus" class="notice hidden" role="status"></div><div id="depositRequests" aria-live="polite"></div></div>
+<div class="card"><h2>Rider Payment Mode</h2><p>Paystack is the primary method when configured. Manual Mobile Money is a backup and must be activated deliberately during a Paystack outage or testing.</p><div id="paymentModeStatus" class="notice">Loading payment settings…</div><form id="paymentSettingsForm"><label for="momoAccountName">Company Mobile Money account name</label><input id="momoAccountName" maxlength="120" autocomplete="off"><label for="momoAccountNumber">Company receiving Mobile Money number</label><input id="momoAccountNumber" inputmode="numeric" maxlength="10" placeholder="10-digit Ghana number"><label for="paymentModeReason">Reason for this change</label><input id="paymentModeReason" maxlength="250" placeholder="e.g. Paystack service interruption / testing"><label style="display:flex;align-items:center;gap:10px;"><input id="manualBackupEnabled" type="checkbox" style="width:auto;"> Activate manual Mobile Money backup mode</label><p class="meta">When activated, riders will see the company payment details and manual process instead of Paystack. Turning it off hides manual deposits for new requests. Existing requests remain reviewable.</p><button id="savePaymentSettingsButton">Save payment settings</button></form><div id="paymentSettingsMessage" class="notice hidden" role="status"></div></div><div class="card"><h2>Rider Deposit Requests</h2><p>Verify the payment directly with the Mobile Money provider or company account before approving. Approving credits the rider wallet; rejecting does not.</p><button id="refreshDepositsButton" class="secondary">Refresh deposit requests</button><div id="depositStatus" class="notice hidden" role="status"></div><div id="depositRequests" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Management</h2><p>View approved and suspended riders, their private photographs, and control account access without deleting rider records.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh rider list</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Approval Queue</h2><p>Review each rider's details and profile photograph before approving access. Only approved riders can sign in and accept assignments.</p><button id="refreshRidersButton" class="secondary">Refresh rider applications</button><div id="riderStatus" class="notice hidden" role="status"></div><div id="pendingRiders" aria-live="polite"></div></div>
 </section></main>
@@ -30,14 +30,40 @@ const tokenKey="kl_admin_token";
 const $=id=>document.getElementById(id);
 function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
 async function api(path,options={}){const headers={"Content-Type":"application/json",...(options.headers||{})};const token=sessionStorage.getItem(tokenKey);if(token)headers.Authorization="Bearer "+token;const response=await fetch(API_BASE+path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Request failed.");return data;}
-function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits(); }
+function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadPaymentSettings(); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function loadPaymentSettings(){
+  const status=$("paymentModeStatus");
+  try{
+    const data=await api("/api/admin/payment-settings");
+    status.textContent="Paystack: "+(data.paystackConfigured?"configured on the server":"not configured")+". Manual backup: "+(data.manualBackupEnabled?"ACTIVE":"off")+".";
+    $("momoAccountName").value=data.momoAccountName||"";
+    $("momoAccountNumber").value=data.momoAccountNumber||"";
+    $("manualBackupEnabled").checked=Boolean(data.manualBackupEnabled);
+    $("paymentModeReason").value=data.manualBackupReason||"";
+  }catch(e){status.textContent="Could not load payment settings: "+e.message;}
+}
+$("paymentSettingsForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const button=$("savePaymentSettingsButton");button.disabled=true;
+  try{
+    const result=await api("/api/admin/payment-settings",{method:"PATCH",body:JSON.stringify({
+      momoAccountName:$("momoAccountName").value,
+      momoAccountNumber:$("momoAccountNumber").value,
+      manualBackupEnabled:$("manualBackupEnabled").checked,
+      reason:$("paymentModeReason").value
+    })});
+    show($("paymentSettingsMessage"),result.message,"success");
+    await loadPaymentSettings();
+  }catch(err){show($("paymentSettingsMessage"),err.message,"error");}
+  finally{button.disabled=false;}
+});
 async function loadDeposits(){
   const area=$("depositRequests");area.textContent="Loading deposit requests…";
   try{
     const data=await api("/api/admin/deposits");
     if(!data.deposits.length){area.textContent="No deposit requests have been submitted.";return;}
-    area.innerHTML=data.deposits.map(d=>'<article class="item"><span class="tag '+(d.status==="successful"?"read":"")+'">'+escapeHtml(d.status.toUpperCase())+'</span><p><strong>Rider:</strong> '+escapeHtml(d.riderName)+' ('+escapeHtml(d.riderCode)+')</p><p><strong>Phone:</strong> '+escapeHtml(d.phone)+'</p><p><strong>Amount:</strong> GH₵'+Number(d.amountGhs).toFixed(2)+'</p><p><strong>Network / sender:</strong> '+escapeHtml(d.description||"Not recorded")+'</p><p><strong>Payment reference:</strong> '+escapeHtml(d.providerReference||"—")+'</p><p><strong>Request reference:</strong> '+escapeHtml(d.reference)+'</p><p class="meta">Submitted: '+escapeHtml(new Date(d.createdAt).toLocaleString())+'</p>'+(d.status==="pending"?'<button data-deposit-review="'+Number(d.id)+'" data-decision="approve">Approve and credit wallet</button><button class="secondary" data-deposit-review="'+Number(d.id)+'" data-decision="reject">Reject request</button>':'')+'</article>').join("");
+    area.innerHTML=data.deposits.map(d=>'<article class="item"><span class="tag '+(d.status==="successful"?"read":"")+'">'+escapeHtml(d.status.toUpperCase())+'</span><p><strong>Rider:</strong> '+escapeHtml(d.riderName)+' ('+escapeHtml(d.riderCode)+')</p><p><strong>Phone:</strong> '+escapeHtml(d.phone)+'</p><p><strong>Amount:</strong> GH₵'+Number(d.amountGhs).toFixed(2)+'</p><p><strong>Network / sender:</strong> '+escapeHtml(d.description||"Not recorded")+'</p><p><strong>Payment reference:</strong> '+escapeHtml(d.providerReference||"Not submitted yet")+'</p><p><strong>Request reference:</strong> '+escapeHtml(d.reference)+'</p><p class="meta">Submitted: '+escapeHtml(new Date(d.createdAt).toLocaleString())+'</p>'+(d.status==="pending"&&d.providerReference?'<button data-deposit-review="'+Number(d.id)+'" data-decision="approve">Approve and credit wallet</button><button class="secondary" data-deposit-review="'+Number(d.id)+'" data-decision="reject">Reject request</button>':d.status==="pending"?"<p class=\"meta\">Awaiting rider payment details; approval is disabled.</p>":"")+'</article>').join("");
   }catch(e){show($("depositStatus"),e.message,"error");area.textContent="Could not load deposit requests.";}
 }
 $("refreshDepositsButton").addEventListener("click",loadDeposits);
