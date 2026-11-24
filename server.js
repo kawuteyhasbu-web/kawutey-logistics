@@ -111,7 +111,22 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     return res.status(400).json({ error: "Provide your name, valid email, phone, vendor/rider role and a password of at least 10 characters." });
   }
   if (role === "vendor" && (!business || business.length > 120)) return res.status(400).json({ error: "Please provide your business name (up to 120 characters)." });
-  if (role === "rider" && !clean(ghanaCardNumber)) return res.status(400).json({ error: "Ghana Card number is required for rider registration." });
+  let riderPhoto = null;
+  if (role === "rider") {
+    const card = clean(ghanaCardNumber).toUpperCase().replace(/[\s-]/g, "");
+    if (!/^GHA\d{10}$/.test(card)) return res.status(400).json({ error: "Enter a valid Ghana Card number in the format GHA-XXXXXXXXX-X." });
+    const photo = req.body?.photoDataUrl;
+    const match = typeof photo === "string" ? photo.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/) : null;
+    if (!match) return res.status(400).json({ error: "Upload a JPEG, PNG or WebP profile photograph." });
+    const bytes = Buffer.from(match[2], "base64");
+    if (!bytes.length || bytes.length > 512 * 1024 || bytes.toString("base64") !== match[2]) return res.status(400).json({ error: "The photograph must be no larger than 512 KB." });
+    const mime = match[1];
+    const validImage = (mime === "image/jpeg" && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[bytes.length-2] === 0xff && bytes[bytes.length-1] === 0xd9)
+      || (mime === "image/png" && bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))
+      || (mime === "image/webp" && bytes.toString("ascii",0,4) === "RIFF" && bytes.toString("ascii",8,12) === "WEBP");
+    if (!validImage) return res.status(400).json({ error: "The uploaded file is not a valid supported image." });
+    riderPhoto = { bytes, mime, last4: card.slice(-4) };
+  }
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
@@ -123,8 +138,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     const user = userResult.rows[0];
     if (role === "rider") {
       const code = "KW-RD-" + String(user.id).padStart(4, "0");
-      const digits = clean(ghanaCardNumber).replace(/\s/g, "");
-      await client.query("INSERT INTO rider_profiles(user_id,rider_code,ghana_card_last4) VALUES($1,$2,$3)", [user.id, code, digits.slice(-4)]);
+      await client.query("INSERT INTO rider_profiles(user_id,rider_code,ghana_card_last4,photo_data,photo_mime) VALUES($1,$2,$3,$4,$5)", [user.id, code, riderPhoto.last4, riderPhoto.bytes, riderPhoto.mime]);
       await client.query("INSERT INTO wallets(rider_id) VALUES($1)", [user.id]);
     }
     const noticeResult = await client.query(
@@ -239,8 +253,14 @@ app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asy
 }));
 
 app.get("/api/admin/riders/pending", authenticate, roles("admin"), asyncRoute(async (req, res) => {
-  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.created_at,r.rider_code,r.ghana_card_last4 FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status='pending' ORDER BY u.created_at");
+  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.created_at,r.rider_code,r.ghana_card_last4,(r.photo_data IS NOT NULL) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status='pending' ORDER BY u.created_at");
   res.json({ riders: result.rows });
+}));
+app.get("/api/admin/riders/:id/photo", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT photo_data,photo_mime FROM rider_profiles WHERE user_id=$1", [req.params.id]);
+  if (!result.rowCount || !result.rows[0].photo_data) return res.status(404).json({ error: "Rider photograph not found." });
+  res.set({ "Content-Type": result.rows[0].photo_mime, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" });
+  res.send(result.rows[0].photo_data);
 }));
 app.post("/api/admin/riders/:id/approve", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("UPDATE users SET status='active' WHERE id=$1 AND role='rider' AND status='pending' RETURNING id", [req.params.id]);
