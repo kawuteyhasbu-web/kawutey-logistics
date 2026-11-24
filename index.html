@@ -228,15 +228,15 @@
             <div class="form-group">
               <label>Password *</label>
               <div class="password-wrapper">
-                <input type="password" id="r-pass" required minlength="4">
+                <input type="password" id="r-pass" required minlength="10" autocomplete="new-password">
                 <button type="button" class="toggle-password" data-toggle-password="r-pass">Show</button>
               </div>
             </div>
             <div class="form-group"><label>Location *</label><input type="text" id="r-location" required placeholder="e.g. Accra, Kumasi"></div>
-            <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/*" required><div id="photoPreview" style="margin-top:10px;"></div></div>
+            <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/jpeg,image/png,image/webp" required><div id="photoPreview" style="margin-top:10px;"></div></div>
             <button type="submit" class="btn btn-accent" id="riderRegBtn">Create Rider Account</button>
           </form>
-          <p style="margin-top:12px;">Rider sign-in will return when the secure account connection is ready.</p>
+          <p style="margin-top:12px;">Already registered and approved? <a href="#" data-rider-view="login" style="color:var(--accent);font-weight:600;">Sign in here</a></p>
           <div id="riderRegSuccess" class="alert alert-success hidden" style="margin-top:14px;"></div>
         </div>
         <div id="riderLoginSection" class="hidden">
@@ -350,6 +350,8 @@
 
     async function apiRequest(path, options = {}) {
       const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+      const riderToken = sessionStorage.getItem("kl_rider_token");
+      if (riderToken) headers.Authorization = "Bearer " + riderToken;
       const response = await fetch(API_BASE + path, { ...options, headers, credentials: "include" });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
@@ -384,7 +386,7 @@
       }
 
       const riderViewLink = target.closest("[data-rider-view]");
-      if (riderViewLink) { event.preventDefault(); showRiderReg(); return; }
+      if (riderViewLink) { event.preventDefault(); riderViewLink.getAttribute("data-rider-view") === "login" ? showRiderLogin() : showRiderReg(); return; }
 
       const action = target.getAttribute("data-action");
       const actions = {
@@ -593,25 +595,95 @@
 
     let photoData = null;
     function previewPhoto(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          photoData = ev.target.result;
-          document.getElementById('photoPreview').innerHTML = `<img src="${photoData}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #FF6A00;">`;
-        };
-        reader.readAsDataURL(file);
+      const file = e.target.files && e.target.files[0];
+      photoData = null;
+      document.getElementById("photoPreview").textContent = "";
+      if (!file) return;
+      if (!["image/jpeg","image/png","image/webp"].includes(file.type) || file.size > 512 * 1024) {
+        e.target.value = "";
+        alert("Please choose a JPEG, PNG or WebP photograph no larger than 512 KB.");
+        return;
       }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        photoData = ev.target.result;
+        const img = document.createElement("img");
+        img.src = photoData;
+        img.alt = "Rider profile photograph preview";
+        img.style.cssText = "width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #FF6A00;";
+        document.getElementById("photoPreview").replaceChildren(img);
+      };
+      reader.readAsDataURL(file);
     }
 
     async function registerRider(e) {
       e.preventDefault();
-      alert("Rider registration is temporarily paused while secure photograph storage and identity-data protection are completed. Please check back soon.");
+      const button = document.getElementById("riderRegBtn");
+      if (!photoData) { alert("Please select a valid profile photograph first."); return; }
+      button.disabled = true;
+      try {
+        const data = await apiRequest("/api/auth/register", {
+          method: "POST",
+          body: JSON.stringify({
+            fullName: document.getElementById("r-name").value.trim(),
+            phone: document.getElementById("r-phone").value.trim(),
+            email: document.getElementById("r-email").value.trim(),
+            ghanaCardNumber: document.getElementById("r-ghana-card").value.trim(),
+            password: document.getElementById("r-pass").value,
+            location: document.getElementById("r-location").value.trim(),
+            photoDataUrl: photoData,
+            role: "rider"
+          })
+        });
+        const success = document.getElementById("riderRegSuccess");
+        success.textContent = data.message + (data.riderCode ? " Your rider reference code is " + data.riderCode + "." : "");
+        success.classList.remove("hidden");
+        document.getElementById("riderRegForm").reset();
+        document.getElementById("photoPreview").textContent = "";
+        photoData = null;
+      } catch (error) { alert(error.message); }
+      finally { button.disabled = false; }
     }
 
-    function loginRider(e) {
+    async function loginRider(e) {
       e.preventDefault();
-      alert("Rider login will be enabled after the secure rider account migration is completed. Please do not use the old browser-stored account system.");
+      const button = document.querySelector("#riderLoginForm button[type='submit']");
+      button.disabled = true;
+      try {
+        const data = await apiRequest("/api/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: document.getElementById("r-login-email").value.trim(),
+            password: document.getElementById("r-login-pass").value
+          })
+        });
+        if (data.user.role !== "rider" || !data.token) throw new Error("This login is for rider accounts.");
+        sessionStorage.setItem("kl_rider_token", data.token);
+        document.getElementById("r-login-pass").value = "";
+        await openSecureRiderDashboard(data.user);
+      } catch (error) { alert(error.message); }
+      finally { button.disabled = false; }
+    }
+
+    async function openSecureRiderDashboard(user) {
+      const profileData = await apiRequest("/api/rider/profile");
+      currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
+      document.getElementById("riderAuthCard").classList.add("hidden");
+      const dashboard = document.getElementById("riderDashboard");
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><p id="secureRiderWelcome"></p><p id="secureRiderCode"></p><p>Your account is active and approved. Wallet and delivery tools will be connected here next.</p><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.classList.remove("hidden");
+      document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
+      document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
+    }
+
+    async function restoreRiderSession() {
+      const token = sessionStorage.getItem("kl_rider_token");
+      if (!token) return;
+      try {
+        const data = await apiRequest("/api/me");
+        if (data.user.role !== "rider") throw new Error("Not a rider account.");
+        await openSecureRiderDashboard(data.user);
+      } catch { sessionStorage.removeItem("kl_rider_token"); }
     }
 
     function showRiderDashboard() {
@@ -817,11 +889,11 @@
     }
 
     function logoutRider() {
+      sessionStorage.removeItem("kl_rider_token");
       currentRider = null;
-      localStorage.removeItem('currentRider');
-      document.getElementById('riderDashboard').classList.add('hidden');
-      document.getElementById('riderAuthCard').classList.remove('hidden');
-      showRiderReg();
+      document.getElementById("riderDashboard").classList.add("hidden");
+      document.getElementById("riderAuthCard").classList.remove("hidden");
+      showRiderLogin();
     }
 
     function sendMessage() {
@@ -855,6 +927,7 @@
     // Check for an existing vendor login as soon as the page finishes loading.
     // If no valid session exists, the homepage remains visible.
     restoreVendorSession();
+    restoreRiderSession();
   </script>
 </body>
 </html>
