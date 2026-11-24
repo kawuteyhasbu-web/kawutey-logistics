@@ -18,8 +18,14 @@ CREATE TABLE IF NOT EXISTS rider_profiles (
   rider_code TEXT NOT NULL UNIQUE,
   ghana_card_last4 TEXT,
   photo_url TEXT,
+  photo_data BYTEA,
+  photo_mime TEXT CHECK (photo_mime IN ('image/jpeg','image/png','image/webp')),
   approved_at TIMESTAMPTZ
 );
+
+-- Upgrade existing testing databases without replacing existing rider records.
+ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA;
+ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT;
 CREATE TABLE IF NOT EXISTS wallets (
   rider_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   balance_pesewas BIGINT NOT NULL DEFAULT 0 CHECK (balance_pesewas >= 0)
