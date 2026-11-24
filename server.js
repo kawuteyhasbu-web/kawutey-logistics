@@ -408,6 +408,19 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
   finally { client.release(); }
 }));
 
+app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at
+    FROM wallet_transactions t JOIN users u ON u.id=t.rider_id JOIN rider_profiles r ON r.user_id=u.id
+    ORDER BY t.created_at DESC,t.id DESC LIMIT 300`);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ transactions: result.rows.map(t => ({
+    id:t.id, riderId:t.rider_id, riderName:t.full_name, phone:t.phone, riderCode:t.rider_code,
+    type:t.type, amountGhs:Number(t.amount_pesewas)/100, status:t.status, reference:t.reference,
+    providerReference:t.provider_reference, packageAssignmentId:t.package_assignment_id,
+    description:t.description, createdAt:t.created_at
+  })) });
+}));
+
 app.get("/api/admin/deposits", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT t.id,t.rider_id,u.full_name,u.phone,u.email,r.rider_code,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.description,t.created_at FROM wallet_transactions t JOIN users u ON u.id=t.rider_id JOIN rider_profiles r ON r.user_id=u.id WHERE t.type='deposit' ORDER BY CASE WHEN t.status='pending' THEN 0 ELSE 1 END,t.created_at DESC LIMIT 200");
   res.set("Cache-Control", "private, no-store");
