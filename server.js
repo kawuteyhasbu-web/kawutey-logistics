@@ -286,7 +286,7 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
 app.get("/api/rider/deposit-options", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT manual_backup_enabled,momo_account_name,momo_account_number FROM payment_settings WHERE id=1");
   const setting = result.rows[0] || {};
-  const paystackConfigured = Boolean(process.env.PAYSTACK_SECRET_KEY);
+  const paystackConfigured = Boolean(process.env.PAYSTACK_SECRET_KEY && process.env.PAYSTACK_WEBHOOK_READY === "true");
   const mode = setting.manual_backup_enabled ? "manual" : paystackConfigured ? "paystack" : "unavailable";
   res.set("Cache-Control", "private, no-store");
   res.json({ mode, paystackConfigured, manualBackupEnabled: Boolean(setting.manual_backup_enabled),
@@ -337,7 +337,7 @@ app.get("/api/admin/payment-settings", authenticate, roles("admin"), asyncRoute(
   const result = await pool.query("SELECT manual_backup_enabled,momo_account_name,momo_account_number,manual_backup_reason,updated_at FROM payment_settings WHERE id=1");
   const setting = result.rows[0] || {};
   res.set("Cache-Control", "private, no-store");
-  res.json({ paystackConfigured: Boolean(process.env.PAYSTACK_SECRET_KEY), manualBackupEnabled: Boolean(setting.manual_backup_enabled),
+  res.json({ paystackConfigured: Boolean(process.env.PAYSTACK_SECRET_KEY && process.env.PAYSTACK_WEBHOOK_READY === "true"), manualBackupEnabled: Boolean(setting.manual_backup_enabled),
     momoAccountName: setting.momo_account_name || "", momoAccountNumber: setting.momo_account_number || "",
     manualBackupReason: setting.manual_backup_reason || "", updatedAt: setting.updated_at || null });
 }));
@@ -448,7 +448,7 @@ app.post("/api/admin/riders/:id/approve", authenticate, roles("admin"), asyncRou
 }));
 
 app.post("/api/payments/paystack/initialize", authenticate, roles("rider"), asyncRoute(async (req, res) => {
-  if (!process.env.PAYSTACK_SECRET_KEY) return res.status(503).json({ error: "Paystack payments are not configured yet." });
+  if (!process.env.PAYSTACK_SECRET_KEY || process.env.PAYSTACK_WEBHOOK_READY !== "true") return res.status(503).json({ error: "Paystack is not fully configured yet. The secure payment webhook must also be registered." });
   const mode = await pool.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1");
   if (mode.rows[0]?.manual_backup_enabled) return res.status(403).json({ error: "Paystack deposits are paused while manual backup mode is active." });
   const amount = moneyPesewas(req.body?.amountGhs);
@@ -483,7 +483,7 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
   const reference = event.data.reference;
   const verify = await fetch("https://api.paystack.co/transaction/verify/" + encodeURIComponent(reference), { headers: { Authorization: "Bearer " + secret } });
   const verified = await verify.json();
-  if (!verify.ok || !verified.status || verified.data.status !== "success") return res.sendStatus(200);
+  if (!verify.ok || !verified.status || verified.data.status !== "success" || verified.data.currency !== "GHS") return res.sendStatus(200);
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
