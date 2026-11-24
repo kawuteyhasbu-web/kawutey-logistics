@@ -554,6 +554,16 @@
           const status = p.assignment_status === "accepted" ? "Rider accepted" :
             p.assignment_status === "completed" ? "Completed" :
             p.assignment_status === "cancelled" ? "Cancelled" : "Awaiting rider";
+          const assigned = Boolean(p.rider_name);
+          const riderBlock = assigned ? `
+            <div style="display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+              ${p.rider_has_photo ? `<img id="vendor-rider-photo-${Number(p.id)}" alt="Assigned rider profile photograph" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#f3f4f6;">` : ""}
+              <div>
+                <strong>Assigned Rider</strong><br>
+                ${escapeHtml(p.rider_name)}<br>
+                <small>Rider code: ${escapeHtml(p.rider_code || "—")}<br>Phone: ${escapeHtml(p.rider_phone || "Not provided")}<br>Location: ${escapeHtml(p.rider_location || "Not provided")}</small>
+              </div>
+            </div>` : (p.assignment_status === "accepted" || p.assignment_status === "completed" ? "<p><small>Assigned rider details are temporarily unavailable.</small></p>" : "");
           return `
             <div class="pickup-item">
               <strong>Status:</strong> ${status}<br>
@@ -561,9 +571,22 @@
               <strong>Total Packages:</strong> ${Number(p.total_packages)}<br>
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
+              ${riderBlock}
               <small>${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
             </div>`;
         }).join("");
+        for (const p of mine) {
+          if (!p.rider_name || !p.rider_has_photo) continue;
+          const photo = document.getElementById("vendor-rider-photo-" + Number(p.id));
+          if (!photo) continue;
+          try {
+            const response = await fetch(API_BASE + "/api/vendor/pickups/" + encodeURIComponent(p.id) + "/assigned-rider/photo", { credentials: "include", cache: "no-store" });
+            if (!response.ok) { photo.remove(); continue; }
+            const blob = await response.blob();
+            if (!blob.size || !["image/jpeg","image/png","image/webp"].includes(blob.type)) { photo.remove(); continue; }
+            photo.src = URL.createObjectURL(blob);
+          } catch { photo.remove(); }
+        }
       } catch (error) {
         area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
       }
