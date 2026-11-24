@@ -111,9 +111,9 @@
     </header>
 
     <div class="tabs">
-      <button class="tab-btn active" onclick="showSection('home')">Home</button>
-      <button class="tab-btn" onclick="showSection('vendor')">Vendor Portal</button>
-      <button class="tab-btn" onclick="showSection('rider')">Rider Portal</button>
+      <button class="tab-btn active" data-section="home">Home</button>
+      <button class="tab-btn" data-section="vendor">Vendor Portal</button>
+      <button class="tab-btn" data-section="rider">Rider Portal</button>
     </div>
 
     <!-- HOME -->
@@ -129,7 +129,7 @@
               <li>Schedule preferred pickup times</li>
               <li>Specify Large, Medium & Small packages</li>
             </ul>
-            <button class="btn btn-primary" onclick="showSection('vendor')">Vendor Portal</button>
+            <button class="btn btn-primary" data-section="vendor">Vendor Portal</button>
           </div>
           <div>
             <h3>For Riders</h3>
@@ -138,7 +138,7 @@
               <li>Personal wallet + unique reference code</li>
               <li>GH₵5 commission per package</li>
             </ul>
-            <button class="btn btn-accent" onclick="showSection('rider')">Rider Portal</button>
+            <button class="btn btn-accent" data-section="rider">Rider Portal</button>
           </div>
         </div>
       </div>
@@ -365,7 +365,7 @@
       button.setAttribute("aria-pressed", String(isHidden));
     }
 
-    function showSection(sectionId) {
+    document.addEventListener("click", event => {\n      const sectionButton = event.target.closest("[data-section]");\n      if (sectionButton) showSection(sectionButton.getAttribute("data-section"));\n    });\n\n    function showSection(sectionId) {
       const allowedSections = ["home", "vendor", "rider"];
       if (!allowedSections.includes(sectionId)) return;
 
