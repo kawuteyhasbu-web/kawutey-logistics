@@ -81,7 +81,7 @@ function compactDashboardSections(){
     dashboard.insertBefore(details,card);details.append(summary,card);card.classList.add("section-card");
   });
 }
-function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings();loadCommissionReport(); }
+function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings();loadCommissionReport(); if(!commissionRefreshTimer)commissionRefreshTimer=setInterval(()=>{if(!document.hidden&&sessionStorage.getItem(tokenKey))loadCommissionReport();},60000); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function loadPaymentSettings(){
   const status=$("paymentModeStatus");
@@ -116,7 +116,7 @@ $("paymentSettingsForm").addEventListener("submit",async e=>{
   }catch(err){show($("paymentSettingsMessage"),err.message,"error");}
   finally{button.disabled=false;}
 });
-let activeCommissionReport=null;
+let activeCommissionReport=null;\nlet commissionRefreshTimer=null;
 function csvCell(value){
   let text=String(value??"");
   if(/^[=+@\\-\\t\\r]/.test(text))text="'"+text;
