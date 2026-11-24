@@ -283,27 +283,84 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
 }));
 
 
-app.post("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+app.get("/api/rider/deposit-options", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT manual_backup_enabled,momo_account_name,momo_account_number FROM payment_settings WHERE id=1");
+  const setting = result.rows[0] || {};
+  const paystackConfigured = Boolean(process.env.PAYSTACK_SECRET_KEY);
+  const mode = setting.manual_backup_enabled ? "manual" : paystackConfigured ? "paystack" : "unavailable";
+  res.set("Cache-Control", "private, no-store");
+  res.json({ mode, paystackConfigured, manualBackupEnabled: Boolean(setting.manual_backup_enabled),
+    momoAccountName: mode === "manual" ? setting.momo_account_name || "" : "",
+    momoAccountNumber: mode === "manual" ? setting.momo_account_number || "" : "" });
+}));
+
+app.post("/api/rider/deposits/manual-intents", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const amount = moneyPesewas(req.body?.amountGhs);
+  if (amount < 500) return res.status(400).json({ error: "The minimum deposit is GH₵5.00." });
+  const settings = await pool.query("SELECT manual_backup_enabled,momo_account_name,momo_account_number FROM payment_settings WHERE id=1");
+  const setting = settings.rows[0] || {};
+  if (!setting.manual_backup_enabled) return res.status(403).json({ error: "Manual Mobile Money deposits are currently disabled." });
+  if (!setting.momo_account_name || !setting.momo_account_number) return res.status(503).json({ error: "The company Mobile Money receiving details have not been configured." });
+  const reference = "DEP-" + crypto.randomUUID();
+  const result = await pool.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,description) VALUES($1,'deposit',$2,'pending',$3,'MANUAL_AWAITING_PAYMENT') RETURNING id,amount_pesewas,status,reference,created_at",
+    [req.user.id, amount, reference]);
+  res.status(201).json({ message: "Deposit reference created. Send the exact amount to the company account using this reference, then submit your Mobile Money transaction reference.", deposit: result.rows[0],
+    payment: { accountName: setting.momo_account_name, accountNumber: setting.momo_account_number } });
+}));
+
+app.post("/api/rider/deposits/:id/submit", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const network = clean(req.body?.network);
   const momoNumber = clean(req.body?.momoNumber).replace(/[\s-]/g, "");
   const providerReference = clean(req.body?.providerReference);
-  if (amount < 500) return res.status(400).json({ error: "The minimum deposit request is GH₵5.00." });
   if (!["MTN MoMo","Telecel Cash","AT Money"].includes(network)) return res.status(400).json({ error: "Choose a supported Mobile Money network." });
   if (!/^0\d{9}$/.test(momoNumber)) return res.status(400).json({ error: "Enter a valid 10-digit Ghana Mobile Money number." });
   if (providerReference.length < 4 || providerReference.length > 100) return res.status(400).json({ error: "Enter the transaction reference shown by your Mobile Money provider." });
-  const duplicate = await pool.query("SELECT id FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' AND lower(provider_reference)=lower($2) AND status IN ('pending','successful') LIMIT 1", [req.user.id, providerReference]);
-  if (duplicate.rowCount) return res.status(409).json({ error: "That payment reference has already been submitted." });
-  const reference = "DEP-" + crypto.randomUUID();
-  const result = await pool.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,provider_reference,description) VALUES($1,'deposit',$2,'pending',$3,$4,$5) RETURNING id,amount_pesewas,status,reference,provider_reference,description,created_at",
-    [req.user.id, amount, reference, providerReference, network + " | Sender: " + momoNumber]);
-  res.status(201).json({ message: "Deposit request submitted. Your wallet will only be credited after the administrator verifies receipt of the payment.", deposit: result.rows[0] });
+  const settings = await pool.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1");
+  const intent = await pool.query("SELECT id FROM wallet_transactions WHERE id=$1 AND rider_id=$2 AND type='deposit' AND status='pending' AND provider_reference IS NULL AND description='MANUAL_AWAITING_PAYMENT'", [req.params.id, req.user.id]);
+  if (!intent.rowCount) return res.status(404).json({ error: "Pending deposit reference not found, or payment details have already been submitted." });
+  if (!settings.rows[0]?.manual_backup_enabled) return res.status(403).json({ error: "Manual deposit submissions are currently paused. Contact the administrator." });
+  const duplicate = await pool.query("SELECT id FROM wallet_transactions WHERE type='deposit' AND lower(provider_reference)=lower($1) AND status IN ('pending','successful') LIMIT 1", [providerReference]);
+  if (duplicate.rowCount) return res.status(409).json({ error: "That Mobile Money transaction reference has already been submitted." });
+  const result = await pool.query("UPDATE wallet_transactions SET provider_reference=$1,description=$2 WHERE id=$3 AND rider_id=$4 AND provider_reference IS NULL RETURNING id,amount_pesewas,status,reference,provider_reference,description,created_at",
+    [providerReference, "Manual Mobile Money | Network: " + network + " | Sender: " + momoNumber, req.params.id, req.user.id]);
+  if (!result.rowCount) return res.status(409).json({ error: "This deposit request has already been submitted." });
+  res.json({ message: "Payment details submitted. Your wallet will be credited only after the administrator verifies receipt.", deposit: result.rows[0] });
 }));
 
 app.get("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT id,amount_pesewas,status,reference,provider_reference,description,created_at FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' ORDER BY created_at DESC LIMIT 100", [req.user.id]);
   res.set("Cache-Control", "private, no-store");
   res.json({ deposits: result.rows.map(d => ({ id:d.id, amountGhs:Number(d.amount_pesewas)/100, status:d.status, reference:d.reference, providerReference:d.provider_reference, description:d.description, createdAt:d.created_at })) });
+}));
+
+app.get("/api/admin/payment-settings", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT manual_backup_enabled,momo_account_name,momo_account_number,manual_backup_reason,updated_at FROM payment_settings WHERE id=1");
+  const setting = result.rows[0] || {};
+  res.set("Cache-Control", "private, no-store");
+  res.json({ paystackConfigured: Boolean(process.env.PAYSTACK_SECRET_KEY), manualBackupEnabled: Boolean(setting.manual_backup_enabled),
+    momoAccountName: setting.momo_account_name || "", momoAccountNumber: setting.momo_account_number || "",
+    manualBackupReason: setting.manual_backup_reason || "", updatedAt: setting.updated_at || null });
+}));
+
+app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const enabled = req.body?.manualBackupEnabled === true;
+  const accountName = clean(req.body?.momoAccountName).slice(0,120);
+  const accountNumber = clean(req.body?.momoAccountNumber).replace(/[\s-]/g,"").slice(0,20);
+  const reason = clean(req.body?.reason).slice(0,250);
+  if (enabled && (!accountName || !/^0\d{9}$/.test(accountNumber) || !reason)) return res.status(400).json({ error: "To activate backup mode, provide the company account name, a valid 10-digit receiving number, and a reason." });
+  if (!enabled && !reason) return res.status(400).json({ error: "Enter a reason for changing the payment mode." });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const prior = await client.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1 FOR UPDATE");
+    await client.query("UPDATE payment_settings SET manual_backup_enabled=$1,momo_account_name=$2,momo_account_number=$3,manual_backup_reason=$4,updated_by=$5,updated_at=NOW() WHERE id=1",
+      [enabled, accountName || null, accountNumber || null, reason, req.user.id]);
+    await client.query("INSERT INTO payment_mode_audit(admin_user_id,manual_backup_enabled,reason) VALUES($1,$2,$3)", [req.user.id, enabled, reason]);
+    await client.query("COMMIT");
+    res.json({ message: enabled ? "Manual Mobile Money backup mode is now active." : "Manual Mobile Money backup mode is now off. Pending requests remain available for review.",
+      manualBackupEnabled: enabled, previousManualBackupEnabled: Boolean(prior.rows[0]?.manual_backup_enabled) });
+  } catch (error) { await client.query("ROLLBACK"); throw error; }
+  finally { client.release(); }
 }));
 
 app.get("/api/admin/deposits", authenticate, roles("admin"), asyncRoute(async (req, res) => {
@@ -322,11 +379,16 @@ app.patch("/api/admin/deposits/:id/review", authenticate, roles("admin"), asyncR
     if (!found.rowCount) { await client.query("ROLLBACK"); return res.status(404).json({ error: "Deposit request not found." }); }
     const deposit = found.rows[0];
     if (deposit.status !== "pending") { await client.query("ROLLBACK"); return res.status(409).json({ error: "This deposit has already been reviewed." }); }
+    const details = await client.query("SELECT provider_reference,description FROM wallet_transactions WHERE id=$1", [deposit.id]);
+    if (decision === "approve" && (!details.rows[0]?.provider_reference || details.rows[0]?.description === "MANUAL_AWAITING_PAYMENT")) { await client.query("ROLLBACK"); return res.status(400).json({ error: "This request has no submitted Mobile Money transaction reference yet." }); }
     if (decision === "approve") {
-      await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [deposit.amount_pesewas, deposit.rider_id]);
-      await client.query("UPDATE wallet_transactions SET status='successful' WHERE id=$1", [deposit.id]);
+      const credited = await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [deposit.amount_pesewas, deposit.rider_id]);
+      if (!credited.rowCount) throw new Error("Rider wallet was not found; no credit was applied.");
+      await client.query("UPDATE wallet_transactions SET status='successful',reviewed_by=$2,reviewed_at=NOW() WHERE id=$1", [deposit.id, req.user.id]);
+      await client.query("INSERT INTO payment_deposit_audit(wallet_transaction_id,admin_user_id,decision) VALUES($1,$2,'approve')", [deposit.id, req.user.id]);
     } else {
-      await client.query("UPDATE wallet_transactions SET status='failed' WHERE id=$1", [deposit.id]);
+      await client.query("UPDATE wallet_transactions SET status='failed',reviewed_by=$2,reviewed_at=NOW() WHERE id=$1", [deposit.id, req.user.id]);
+      await client.query("INSERT INTO payment_deposit_audit(wallet_transaction_id,admin_user_id,decision) VALUES($1,$2,'reject')", [deposit.id, req.user.id]);
     }
     await client.query("COMMIT");
     res.json({ message: decision === "approve" ? "Deposit verified and wallet credited." : "Deposit request rejected. Wallet not credited." });
@@ -380,7 +442,9 @@ app.post("/api/admin/riders/:id/approve", authenticate, roles("admin"), asyncRou
 }));
 
 app.post("/api/payments/paystack/initialize", authenticate, roles("rider"), asyncRoute(async (req, res) => {
-  if (!process.env.PAYSTACK_SECRET_KEY) return res.status(503).json({ error: "Mobile Money payments are not configured yet." });
+  if (!process.env.PAYSTACK_SECRET_KEY) return res.status(503).json({ error: "Paystack payments are not configured yet." });
+  const mode = await pool.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1");
+  if (mode.rows[0]?.manual_backup_enabled) return res.status(403).json({ error: "Paystack deposits are paused while manual backup mode is active." });
   const amount = moneyPesewas(req.body?.amountGhs);
   if (amount < 500) return res.status(400).json({ error: "Minimum deposit is GH₵5." });
   const reference = "KAW-" + crypto.randomUUID();
@@ -419,8 +483,8 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
     await client.query("BEGIN");
     const tx = await client.query("SELECT * FROM wallet_transactions WHERE reference=$1 FOR UPDATE", [reference]);
     if (tx.rowCount && tx.rows[0].status === "pending" && tx.rows[0].type === "deposit" && Number(tx.rows[0].amount_pesewas) === Number(verified.data.amount) && String(tx.rows[0].rider_id) === String(verified.data.metadata?.riderId)) {
-      await client.query("UPDATE wallet_transactions SET status='successful',provider_reference=$1 WHERE id=$2", [String(verified.data.id), tx.rows[0].id]);
-      await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [tx.rows[0].amount_pesewas, tx.rows[0].rider_id]);
+      const credited = await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [tx.rows[0].amount_pesewas, tx.rows[0].rider_id]);
+      if (credited.rowCount) await client.query("UPDATE wallet_transactions SET status='successful',provider_reference=$1 WHERE id=$2", [String(verified.data.id), tx.rows[0].id]);
     }
     await client.query("COMMIT");
   } catch (error) { await client.query("ROLLBACK"); throw error; }
@@ -444,6 +508,12 @@ async function startServer() {
     await pool.query("SELECT 1");
     await pool.query("ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA");
     await pool.query("ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT");
+    await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_by BIGINT");
+    await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ");
+    await pool.query("CREATE TABLE IF NOT EXISTS payment_settings (id INTEGER PRIMARY KEY CHECK (id=1), manual_backup_enabled BOOLEAN NOT NULL DEFAULT FALSE, momo_account_name TEXT, momo_account_number TEXT, manual_backup_reason TEXT, updated_by BIGINT, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    await pool.query("INSERT INTO payment_settings(id) VALUES(1) ON CONFLICT (id) DO NOTHING");
+    await pool.query("CREATE TABLE IF NOT EXISTS payment_mode_audit (id BIGSERIAL PRIMARY KEY, admin_user_id BIGINT NOT NULL, manual_backup_enabled BOOLEAN NOT NULL, reason TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    await pool.query("CREATE TABLE IF NOT EXISTS payment_deposit_audit (id BIGSERIAL PRIMARY KEY, wallet_transaction_id BIGINT NOT NULL, admin_user_id BIGINT NOT NULL, decision TEXT NOT NULL CHECK (decision IN ('approve','reject')), created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     console.log("Database connection and rider profile storage verified.");
     app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
   } catch (error) {
