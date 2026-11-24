@@ -421,6 +421,69 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
   })) });
 }));
 
+app.get("/api/admin/commission-reports", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const requestedDate = typeof req.query.date === "string" ? req.query.date : "";
+  if (requestedDate && !/^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate)) {
+    return res.status(400).json({ error: "Choose a valid report date in YYYY-MM-DD format." });
+  }
+  const current = await pool.query("SELECT to_char(NOW() AT TIME ZONE 'Africa/Accra','YYYY-MM-DD') AS today");
+  const today = current.rows[0].today;
+  const reportDate = requestedDate || today;
+  if (reportDate > today) return res.status(400).json({ error: "Future commission reports are not available." });
+
+  const [daily, history, entries] = await Promise.all([
+    pool.query(`SELECT COUNT(*)::int AS deduction_count,
+        COALESCE(SUM(ABS(t.amount_pesewas)),0)::bigint AS total_pesewas,
+        COALESCE(SUM(COALESCE(p.total_packages,0)),0)::int AS package_count
+      FROM wallet_transactions t
+      LEFT JOIN assignments a ON a.id=t.package_assignment_id
+      LEFT JOIN pickups p ON p.id=a.pickup_id
+      WHERE t.type='commission' AND t.status='successful' AND t.amount_pesewas<0
+        AND (t.created_at AT TIME ZONE 'Africa/Accra')::date=$1::date`, [today]),
+    pool.query(`SELECT to_char((t.created_at AT TIME ZONE 'Africa/Accra')::date,'YYYY-MM-DD') AS report_date,
+        COUNT(*)::int AS deduction_count,
+        COALESCE(SUM(ABS(t.amount_pesewas)),0)::bigint AS total_pesewas,
+        COALESCE(SUM(COALESCE(p.total_packages,0)),0)::int AS package_count
+      FROM wallet_transactions t
+      LEFT JOIN assignments a ON a.id=t.package_assignment_id
+      LEFT JOIN pickups p ON p.id=a.pickup_id
+      WHERE t.type='commission' AND t.status='successful' AND t.amount_pesewas<0
+      GROUP BY (t.created_at AT TIME ZONE 'Africa/Accra')::date
+      ORDER BY (t.created_at AT TIME ZONE 'Africa/Accra')::date DESC LIMIT 90`),
+    pool.query(`SELECT t.id,u.full_name AS rider_name,u.phone,r.rider_code,
+        ABS(t.amount_pesewas)::bigint AS amount_pesewas,t.reference,
+        t.package_assignment_id,p.total_packages,t.created_at,
+        to_char(t.created_at AT TIME ZONE 'Africa/Accra','YYYY-MM-DD HH24:MI:SS') AS ghana_time
+      FROM wallet_transactions t
+      JOIN users u ON u.id=t.rider_id
+      JOIN rider_profiles r ON r.user_id=t.rider_id
+      LEFT JOIN assignments a ON a.id=t.package_assignment_id
+      LEFT JOIN pickups p ON p.id=a.pickup_id
+      WHERE t.type='commission' AND t.status='successful' AND t.amount_pesewas<0
+        AND (t.created_at AT TIME ZONE 'Africa/Accra')::date=$1::date
+      ORDER BY t.created_at ASC,t.id ASC`, [reportDate])
+  ]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({
+    timezone: "Africa/Accra", today, reportDate,
+    todaySummary: {
+      totalGhs: Number(daily.rows[0].total_pesewas) / 100,
+      deductionCount: daily.rows[0].deduction_count,
+      packageCount: daily.rows[0].package_count
+    },
+    reports: history.rows.map(row => ({
+      date: row.report_date, totalGhs: Number(row.total_pesewas) / 100,
+      deductionCount: row.deduction_count, packageCount: row.package_count
+    })),
+    entries: entries.rows.map(row => ({
+      id: row.id, riderName: row.rider_name, phone: row.phone, riderCode: row.rider_code,
+      amountGhs: Number(row.amount_pesewas) / 100, reference: row.reference,
+      assignmentId: row.package_assignment_id, packageCount: row.total_packages,
+      createdAt: row.created_at, ghanaTime: row.ghana_time
+    }))
+  });
+}));
+
 app.get("/api/admin/deposits", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT t.id,t.rider_id,u.full_name,u.phone,u.email,r.rider_code,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.description,t.created_at FROM wallet_transactions t JOIN users u ON u.id=t.rider_id JOIN rider_profiles r ON r.user_id=u.id WHERE t.type='deposit' ORDER BY CASE WHEN t.status='pending' THEN 0 ELSE 1 END,t.created_at DESC LIMIT 200");
   res.set("Cache-Control", "private, no-store");
