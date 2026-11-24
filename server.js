@@ -332,7 +332,9 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     await pool.query("SELECT 1");
-    console.log("Database connection verified.");
+    await pool.query("ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA");
+    await pool.query("ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT");
+    console.log("Database connection and rider profile storage verified.");
     app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
   } catch (error) {
     console.error("Database connection failed:", error.message);
