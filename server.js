@@ -14,6 +14,9 @@ const port = Number(process.env.PORT || 3000);
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false });
 const COMMISSION_PESEWAS = 500;
 const jwtSecret = process.env.JWT_SECRET;
+const ADMIN_LIMIT = 4;
+const ADMIN_LOCK_ID = 2026112304;
+const adminRegisterLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
 
 if (!jwtSecret || jwtSecret.length < 32) {
   console.error("JWT_SECRET must be set to a random value of at least 32 characters.");
@@ -104,6 +107,44 @@ async function sendSignupEmail(notification) {
 }
 
 app.get("/api/health", (req, res) => res.json({ ok: true, service: "Kawutey Logistics API" }));
+
+
+app.post("/api/admin/register", adminRegisterLimiter, asyncRoute(async (req, res) => {
+  const configuredCode = process.env.ADMIN_INVITATION_CODE || "";
+  if (configuredCode.length < 24) return res.status(503).json({ error: "Administrator invitations are not configured. Contact the system owner." });
+  const { fullName, email, password, invitationCode } = req.body || {};
+  const name = clean(fullName), mail = clean(email).toLowerCase();
+  if (!name || name.length > 120 || !emailValid(mail) || typeof password !== "string" || password.length < 14 || password.length > 128 || typeof invitationCode !== "string" || invitationCode.length > 256) {
+    return res.status(400).json({ error: "Provide your name, valid email, password of at least 14 characters, and invitation code." });
+  }
+  const supplied = Buffer.from(invitationCode, "utf8");
+  const expected = Buffer.from(configuredCode, "utf8");
+  if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) {
+    return res.status(403).json({ error: "The invitation code is invalid." });
+  }
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("SELECT pg_advisory_xact_lock($1)", [ADMIN_LOCK_ID]);
+    const countResult = await client.query("SELECT COUNT(*)::int AS total FROM users WHERE role='admin'");
+    const totalAdmins = countResult.rows[0].total;
+    if (totalAdmins >= ADMIN_LIMIT) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "The maximum of four administrator accounts has been reached." });
+    }
+    const hash = await bcrypt.hash(password, 12);
+    const result = await client.query(
+      "INSERT INTO users(full_name,email,phone,password_hash,role,status) VALUES($1,$2,$3,$4,'admin','active') RETURNING id,full_name,email,role,status",
+      [name, mail, "ADMIN-CONTACT-" + crypto.randomUUID(), hash]
+    );
+    await client.query("COMMIT");
+    res.status(201).json({ message: "Administrator account created. You can now sign in.", user: result.rows[0], remainingSlots: ADMIN_LIMIT - totalAdmins - 1 });
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    if (error.code === "23505") return res.status(409).json({ error: "An account with that email already exists." });
+    throw error;
+  } finally { client.release(); }
+}));
 
 app.post("/api/auth/register", asyncRoute(async (req, res) => {
   const { fullName, businessName, email, phone, password, role, ghanaCardNumber, location } = req.body || {};
@@ -658,7 +699,14 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
 // Serve only the public website pages and logo; do not expose backend source files.
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/index.html", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
-app.get("/admin.html", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
+const adminPortalPath = process.env.ADMIN_PORTAL_PATH || "";
+if (/^\/[A-Za-z0-9_-]{24,100}$/.test(adminPortalPath)) {
+  app.get(adminPortalPath, (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(__dirname, "admin-portal.html")));
+} else {
+  console.error("ADMIN_PORTAL_PATH must be configured as a private path with 24–100 letters, numbers, underscores or hyphens.");
+}
+app.get("/admin-dashboard", (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(__dirname, "admin.html")));
+app.get("/admin.html", (req, res) => res.sendStatus(404));
 app.get("/payment-return.html", (req, res) => res.sendFile(path.join(__dirname, "payment-return.html")));
 app.get("/admin-password.js", (req, res) => res.sendFile(path.join(__dirname, "admin-password.js")));
 app.get("/logo.png", (req, res) => res.sendFile(path.join(__dirname, "logo.png")));
