@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 const rateLimit = require("express-rate-limit");
 const crypto = require("crypto");
+const path = require("path");
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -19,7 +20,14 @@ if (!jwtSecret || jwtSecret.length < 32) {
   process.exit(1);
 }
 app.disable("x-powered-by");
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}));
 const allowedOrigins = (process.env.CORS_ORIGIN || "").split(",").map(v => v.trim()).filter(Boolean);
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use((req, res, next) => {
@@ -289,6 +297,12 @@ app.post("/api/payments/paystack/webhook", express.raw({ type: "application/json
   finally { client.release(); }
   res.sendStatus(200);
 }));
+
+// Serve only the public website pages and logo; do not expose backend source files.
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/index.html", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/admin.html", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
+app.get("/logo.png", (req, res) => res.sendFile(path.join(__dirname, "logo.png")));
 
 app.use((err, req, res, next) => {
   console.error(err.message);
