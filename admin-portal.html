@@ -76,7 +76,8 @@ $("signUpForm").addEventListener("submit",async event=>{
     const response=await fetch("/api/admin/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fullName:$("fullName").value,email:$("registerEmail").value,password:$("registerPassword").value,invitationCode:$("invitationCode").value})});
     const data=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(data.error||"Registration failed.");
-    $("signUpForm").reset();selectView("signin");$("loginEmail").value=$("registerEmail").value;
+    const createdEmail=$("registerEmail").value;
+    $("signUpForm").reset();selectView("signin");$("loginEmail").value=createdEmail;
     showMessage(data.message+" "+data.remainingSlots+" administrator slot(s) remain.","success");
   }catch(error){showMessage(error.message,"error");}
   finally{$("signUpButton").disabled=false;}
