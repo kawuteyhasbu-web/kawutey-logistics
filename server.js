@@ -187,6 +187,13 @@ app.post("/api/auth/logout", (req, res) => {
 
 app.get("/api/me", authenticate, (req, res) => res.json({ user: req.user }));
 
+app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT rider_code,approved_at,(photo_data IS NOT NULL) AS has_photo FROM rider_profiles WHERE user_id=$1", [req.user.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "Rider profile not found." });
+  res.set("Cache-Control", "private, no-store");
+  res.json({ profile: result.rows[0] });
+}));
+
 app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,a.status AS assignment_status
     FROM pickups p LEFT JOIN assignments a ON a.pickup_id=p.id
