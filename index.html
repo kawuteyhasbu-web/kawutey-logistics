@@ -349,10 +349,11 @@
     let currentRider = null;
 
     async function apiRequest(path, options = {}) {
-      const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-      const riderToken = sessionStorage.getItem("kl_rider_token");
+      const { riderAuth = false, ...fetchOptions } = options;
+      const headers = { "Content-Type": "application/json", ...(fetchOptions.headers || {}) };
+      const riderToken = riderAuth ? sessionStorage.getItem("kl_rider_token") : null;
       if (riderToken) headers.Authorization = "Bearer " + riderToken;
-      const response = await fetch(API_BASE + path, { ...options, headers, credentials: "include" });
+      const response = await fetch(API_BASE + path, { ...fetchOptions, headers, credentials: "include" });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "The service is unavailable. Please try again.");
       return data;
@@ -666,7 +667,7 @@
     }
 
     async function openSecureRiderDashboard(user) {
-      const profileData = await apiRequest("/api/rider/profile");
+      const profileData = await apiRequest("/api/rider/profile", { riderAuth: true });
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
@@ -680,7 +681,7 @@
       const token = sessionStorage.getItem("kl_rider_token");
       if (!token) return;
       try {
-        const data = await apiRequest("/api/me");
+        const data = await apiRequest("/api/me", { riderAuth: true });
         if (data.user.role !== "rider") throw new Error("Not a rider account.");
         await openSecureRiderDashboard(data.user);
       } catch { sessionStorage.removeItem("kl_rider_token"); }
