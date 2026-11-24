@@ -342,6 +342,12 @@ app.get("/api/admin/payment-settings", authenticate, roles("admin"), asyncRoute(
     manualBackupReason: setting.manual_backup_reason || "", updatedAt: setting.updated_at || null });
 }));
 
+app.get("/api/admin/payment-settings/audit", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT a.manual_backup_enabled,a.reason,a.created_at,u.full_name AS admin_name FROM payment_mode_audit a LEFT JOIN users u ON u.id=a.admin_user_id ORDER BY a.created_at DESC LIMIT 30");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ entries: result.rows });
+}));
+
 app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const enabled = req.body?.manualBackupEnabled === true;
   const accountName = clean(req.body?.momoAccountName).slice(0,120);
@@ -462,7 +468,7 @@ app.post("/api/payments/paystack/initialize", authenticate, roles("rider"), asyn
     const data = await response.json();
     if (!response.ok || !data.status) throw new Error("Payment provider could not initialize the transaction.");
     res.json({ authorizationUrl: data.data.authorization_url, reference });
-  } catch (error) { await client.query("ROLLBACK").catch(() => {}); throw error; }
+  } catch (error) { await client.query("ROLLBACK").catch(() => {}); await pool.query("UPDATE wallet_transactions SET status='failed' WHERE reference=$1 AND status='pending'", [reference]).catch(() => {}); throw error; }
   finally { client.release(); }
 }));
 
