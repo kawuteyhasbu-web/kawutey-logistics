@@ -205,10 +205,32 @@ app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (re
 }));
 
 app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
-  const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,a.status AS assignment_status
-    FROM pickups p LEFT JOIN assignments a ON a.pickup_id=p.id
+  const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,
+      a.status AS assignment_status,a.rider_id,
+      CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.full_name END AS rider_name,
+      CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.phone END AS rider_phone,
+      CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.location END AS rider_location,
+      CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN rp.rider_code END AS rider_code,
+      CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN (rp.photo_data IS NOT NULL AND octet_length(rp.photo_data)>0) ELSE false END AS rider_has_photo
+    FROM pickups p
+    LEFT JOIN assignments a ON a.pickup_id=p.id
+    LEFT JOIN users u ON u.id=a.rider_id AND u.role='rider'
+    LEFT JOIN rider_profiles rp ON rp.user_id=u.id
     WHERE p.vendor_id=$1 ORDER BY p.created_at DESC`, [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
   res.json({ pickups: result.rows });
+}));
+
+app.get("/api/vendor/pickups/:id/assigned-rider/photo", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
+  const result = await pool.query(`SELECT rp.photo_data,rp.photo_mime
+    FROM pickups p
+    JOIN assignments a ON a.pickup_id=p.id
+    JOIN users u ON u.id=a.rider_id AND u.role='rider' AND u.status='active'
+    JOIN rider_profiles rp ON rp.user_id=u.id
+    WHERE p.id=$1 AND p.vendor_id=$2 AND a.status IN ('accepted','completed')`, [req.params.id, req.user.id]);
+  if (!result.rowCount || !result.rows[0].photo_data) return res.status(404).json({ error: "Assigned rider photograph is not available." });
+  res.set({ "Content-Type": result.rows[0].photo_mime, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" });
+  res.send(result.rows[0].photo_data);
 }));
 
 app.post("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
