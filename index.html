@@ -374,7 +374,7 @@
       });
 
       document.querySelectorAll(".tab-btn").forEach(button => {
-        const isActive = button.getAttribute("onclick") === "showSection('" + sectionId + "')";
+        const isActive = button.getAttribute("data-section") === sectionId;
         button.classList.toggle("active", isActive);
       });
       if (sectionId === "vendor" && !currentVendor) restoreVendorSession();
