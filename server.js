@@ -282,6 +282,58 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
   finally { client.release(); }
 }));
 
+
+app.post("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const amount = moneyPesewas(req.body?.amountGhs);
+  const network = clean(req.body?.network);
+  const momoNumber = clean(req.body?.momoNumber).replace(/[\\s-]/g, "");
+  const providerReference = clean(req.body?.providerReference);
+  if (amount < 500) return res.status(400).json({ error: "The minimum deposit request is GH₵5.00." });
+  if (!["MTN MoMo","Telecel Cash","AT Money"].includes(network)) return res.status(400).json({ error: "Choose a supported Mobile Money network." });
+  if (!/^0\\d{9}$/.test(momoNumber)) return res.status(400).json({ error: "Enter a valid 10-digit Ghana Mobile Money number." });
+  if (providerReference.length < 4 || providerReference.length > 100) return res.status(400).json({ error: "Enter the transaction reference shown by your Mobile Money provider." });
+  const duplicate = await pool.query("SELECT id FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' AND lower(provider_reference)=lower($2) AND status IN ('pending','successful') LIMIT 1", [req.user.id, providerReference]);
+  if (duplicate.rowCount) return res.status(409).json({ error: "That payment reference has already been submitted." });
+  const reference = "DEP-" + crypto.randomUUID();
+  const result = await pool.query("INSERT INTO wallet_transactions(rider_id,type,amount_pesewas,status,reference,provider_reference,description) VALUES($1,'deposit',$2,'pending',$3,$4,$5) RETURNING id,amount_pesewas,status,reference,provider_reference,description,created_at",
+    [req.user.id, amount, reference, providerReference, network + " | Sender: " + momoNumber]);
+  res.status(201).json({ message: "Deposit request submitted. Your wallet will only be credited after the administrator verifies receipt of the payment.", deposit: result.rows[0] });
+}));
+
+app.get("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT id,amount_pesewas,status,reference,provider_reference,description,created_at FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' ORDER BY created_at DESC LIMIT 100", [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ deposits: result.rows.map(d => ({ id:d.id, amountGhs:Number(d.amount_pesewas)/100, status:d.status, reference:d.reference, providerReference:d.provider_reference, description:d.description, createdAt:d.created_at })) });
+}));
+
+app.get("/api/admin/deposits", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT t.id,t.rider_id,u.full_name,u.phone,u.email,r.rider_code,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.description,t.created_at FROM wallet_transactions t JOIN users u ON u.id=t.rider_id JOIN rider_profiles r ON r.user_id=u.id WHERE t.type='deposit' ORDER BY CASE WHEN t.status='pending' THEN 0 ELSE 1 END,t.created_at DESC LIMIT 200");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ deposits: result.rows.map(d => ({ id:d.id, riderId:d.rider_id, riderName:d.full_name, phone:d.phone, email:d.email, riderCode:d.rider_code, amountGhs:Number(d.amount_pesewas)/100, status:d.status, reference:d.reference, providerReference:d.provider_reference, description:d.description, createdAt:d.created_at })) });
+}));
+
+app.patch("/api/admin/deposits/:id/review", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const decision = clean(req.body?.decision);
+  if (!["approve","reject"].includes(decision)) return res.status(400).json({ error: "Choose approve or reject." });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const found = await client.query("SELECT id,rider_id,amount_pesewas,status FROM wallet_transactions WHERE id=$1 AND type='deposit' FOR UPDATE", [req.params.id]);
+    if (!found.rowCount) { await client.query("ROLLBACK"); return res.status(404).json({ error: "Deposit request not found." }); }
+    const deposit = found.rows[0];
+    if (deposit.status !== "pending") { await client.query("ROLLBACK"); return res.status(409).json({ error: "This deposit has already been reviewed." }); }
+    if (decision === "approve") {
+      await client.query("UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2", [deposit.amount_pesewas, deposit.rider_id]);
+      await client.query("UPDATE wallet_transactions SET status='successful' WHERE id=$1", [deposit.id]);
+    } else {
+      await client.query("UPDATE wallet_transactions SET status='failed' WHERE id=$1", [deposit.id]);
+    }
+    await client.query("COMMIT");
+    res.json({ message: decision === "approve" ? "Deposit verified and wallet credited." : "Deposit request rejected. Wallet not credited." });
+  } catch (error) { await client.query("ROLLBACK"); throw error; }
+  finally { client.release(); }
+}));
+
 app.get("/api/admin/notifications", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT id,account_type,details,email_status,created_at,read_at FROM admin_notifications ORDER BY created_at DESC LIMIT 100");
   res.json({ notifications: result.rows });
