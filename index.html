@@ -393,10 +393,13 @@
       const action = target.getAttribute("data-action");
       const actions = {
         togglePickupForm, logoutVendor, logoutRider, showDepositForm,
-        showTransactionHistory, requestRefund, submitDeposit, sendMessage
+        showTransactionHistory, requestRefund, submitDeposit, sendMessage,
+        secureRefreshAssignments: loadSecureRiderAssignments
       };
       if (action && actions[action]) { actions[action](); return; }
 
+      const secureAcceptButton = target.closest("[data-secure-accept]");
+      if (secureAcceptButton) { acceptSecureAssignment(secureAcceptButton.getAttribute("data-secure-accept"), secureAcceptButton); return; }
       const acceptButton = target.closest("[data-accept-assignment]");
       if (acceptButton) acceptAssignment(Number(acceptButton.getAttribute("data-accept-assignment")));
     });
@@ -700,7 +703,7 @@
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><p>Your account is active and approved. Wallet and delivery tools will be connected here next.</p><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.classList.remove("hidden");
       document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
       document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
@@ -746,6 +749,78 @@
         placeholder.style.display = "none";
       } catch {
         placeholder.textContent = "The saved photograph could not be retrieved. Please contact the administrator.";
+      }
+      await loadSecureRiderAssignments();
+    }
+
+    async function loadSecureRiderAssignments() {
+      const message = document.getElementById("secureAssignmentMessage");
+      const availableArea = document.getElementById("secureAvailableAssignments");
+      const acceptedArea = document.getElementById("secureAcceptedAssignments");
+      const balanceArea = document.getElementById("secureRiderBalance");
+      if (!message || !availableArea || !acceptedArea) return;
+      message.textContent = "Loading pickup requests…";
+      try {
+        const [assignmentData, walletData] = await Promise.all([
+          apiRequest("/api/rider/assignments", { riderAuth: true }),
+          apiRequest("/api/rider/wallet", { riderAuth: true })
+        ]);
+        const balance = Number(walletData.balanceGhs || 0);
+        if (balanceArea) balanceArea.textContent = "GH₵" + balance.toFixed(2);
+        const available = assignmentData.assignments.filter(a => a.status === "available");
+        const accepted = assignmentData.assignments.filter(a => a.status === "accepted" || a.status === "completed");
+        message.textContent = available.length ? available.length + " pickup request(s) available. Review the details before accepting." : "There are no pickup requests available right now. Refresh to check again.";
+        message.className = "alert " + (available.length ? "alert-info" : "alert-warning");
+        availableArea.replaceChildren();
+        if (!available.length) {
+          availableArea.innerHTML = "<p>No available pickup requests at the moment.</p>";
+        } else {
+          available.forEach(a => {
+            const cost = Number(a.total_packages) * 5;
+            const card = document.createElement("div");
+            card.className = "assignment-item";
+            const canAfford = balance >= cost;
+            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
+            const button = document.createElement("button");
+            button.className = "btn btn-accent";
+            button.textContent = canAfford ? "Accept pickup" : "Insufficient wallet balance";
+            button.disabled = !canAfford;
+            button.setAttribute("data-secure-accept", String(a.id));
+            card.appendChild(button);
+            availableArea.appendChild(card);
+          });
+        }
+        acceptedArea.replaceChildren();
+        if (!accepted.length) {
+          acceptedArea.innerHTML = "<p>You have no accepted pickups yet.</p>";
+        } else {
+          accepted.forEach(a => {
+            const card = document.createElement("div");
+            card.className = "assignment-item";
+            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p>Packages: " + Number(a.total_packages) + "</p><span class='status verified'>" + escapeHtml(a.status) + "</span>";
+            acceptedArea.appendChild(card);
+          });
+        }
+      } catch (error) {
+        message.textContent = error.message || "Could not load pickup requests. Please refresh.";
+        message.className = "alert alert-warning";
+      }
+    }
+
+    async function acceptSecureAssignment(id, button) {
+      if (!confirm("Accept this pickup request? The commission of GH₵5 per package will be deducted from your wallet if acceptance succeeds.")) return;
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/rider/assignments/" + encodeURIComponent(id) + "/accept", {
+          method: "POST", riderAuth: true, body: JSON.stringify({})
+        });
+        alert(result.message || "Pickup accepted successfully.");
+        await loadSecureRiderAssignments();
+      } catch (error) {
+        alert(error.message);
+        await loadSecureRiderAssignments();
+      } finally {
+        if (button.isConnected) button.disabled = false;
       }
     }
 
