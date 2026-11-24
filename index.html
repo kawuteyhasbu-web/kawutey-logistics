@@ -365,7 +365,12 @@
       button.setAttribute("aria-pressed", String(isHidden));
     }
 
-    document.addEventListener("click", event => {\n      const sectionButton = event.target.closest("[data-section]");\n      if (sectionButton) showSection(sectionButton.getAttribute("data-section"));\n    });\n\n    function showSection(sectionId) {
+    document.addEventListener("click", event => {
+      const sectionButton = event.target.closest("[data-section]");
+      if (sectionButton) showSection(sectionButton.getAttribute("data-section"));
+    });
+
+    function showSection(sectionId) {
       const allowedSections = ["home", "vendor", "rider"];
       if (!allowedSections.includes(sectionId)) return;
 
