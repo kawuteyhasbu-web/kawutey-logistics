@@ -257,7 +257,8 @@ app.get("/api/rider/wallet", authenticate, roles("rider"), asyncRoute(async (req
 app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT a.id,a.status,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,u.full_name AS vendor_name
     FROM assignments a JOIN pickups p ON p.id=a.pickup_id JOIN users u ON u.id=p.vendor_id
-    WHERE a.status='available' OR a.rider_id=$1 ORDER BY p.preferred_at ASC`, [req.user.id]);
+    WHERE a.status='available' OR a.rider_id=$1 ORDER BY CASE WHEN a.status='available' THEN 0 ELSE 1 END,p.preferred_at ASC`, [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
   res.json({ assignments: result.rows });
 }));
 
