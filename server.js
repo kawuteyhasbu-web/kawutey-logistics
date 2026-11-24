@@ -269,6 +269,11 @@ app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asy
   res.json({ notification: result.rows[0] });
 }));
 
+app.get("/api/admin/riders/approved", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.created_at,r.rider_code,r.approved_at,(r.photo_data IS NOT NULL AND octet_length(r.photo_data)>0) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status='active' ORDER BY r.approved_at DESC NULLS LAST,u.full_name");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ riders: result.rows });
+}));
 app.get("/api/admin/riders/pending", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.created_at,r.rider_code,r.ghana_card_last4,(r.photo_data IS NOT NULL) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status='pending' ORDER BY u.created_at");
   res.json({ riders: result.rows });
