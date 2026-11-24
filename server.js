@@ -127,6 +127,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     if (!validImage) return res.status(400).json({ error: "The uploaded file is not a valid supported image." });
     riderPhoto = { bytes, mime, last4: card.slice(-4) };
   }
+  let riderCode = null;
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
@@ -137,8 +138,8 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
     );
     const user = userResult.rows[0];
     if (role === "rider") {
-      const code = "KW-RD-" + String(user.id).padStart(4, "0");
-      await client.query("INSERT INTO rider_profiles(user_id,rider_code,ghana_card_last4,photo_data,photo_mime) VALUES($1,$2,$3,$4,$5)", [user.id, code, riderPhoto.last4, riderPhoto.bytes, riderPhoto.mime]);
+      riderCode = "KW-RD-" + String(user.id).padStart(4, "0");
+      await client.query("INSERT INTO rider_profiles(user_id,rider_code,ghana_card_last4,photo_data,photo_mime) VALUES($1,$2,$3,$4,$5)", [user.id, riderCode, riderPhoto.last4, riderPhoto.bytes, riderPhoto.mime]);
       await client.query("INSERT INTO wallets(rider_id) VALUES($1)", [user.id]);
     }
     const noticeResult = await client.query(
@@ -157,7 +158,7 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
         [String(mailError.message).slice(0,500), notice.id]).catch(() => {});
     }
     if (role === "vendor") setVendorCookie(res, user);
-    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user });
+    res.status(201).json({ message: role === "rider" ? "Registration received. Your account awaits admin approval." : "Vendor account created.", user, riderCode });
   } catch (error) {
     await client.query("ROLLBACK");
     if (error.code === "23505") return res.status(409).json({ error: "An account with that email already exists." });
