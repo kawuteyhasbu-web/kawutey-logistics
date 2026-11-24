@@ -286,11 +286,11 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
 app.post("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const amount = moneyPesewas(req.body?.amountGhs);
   const network = clean(req.body?.network);
-  const momoNumber = clean(req.body?.momoNumber).replace(/[\\s-]/g, "");
+  const momoNumber = clean(req.body?.momoNumber).replace(/[\s-]/g, "");
   const providerReference = clean(req.body?.providerReference);
   if (amount < 500) return res.status(400).json({ error: "The minimum deposit request is GH₵5.00." });
   if (!["MTN MoMo","Telecel Cash","AT Money"].includes(network)) return res.status(400).json({ error: "Choose a supported Mobile Money network." });
-  if (!/^0\\d{9}$/.test(momoNumber)) return res.status(400).json({ error: "Enter a valid 10-digit Ghana Mobile Money number." });
+  if (!/^0\d{9}$/.test(momoNumber)) return res.status(400).json({ error: "Enter a valid 10-digit Ghana Mobile Money number." });
   if (providerReference.length < 4 || providerReference.length > 100) return res.status(400).json({ error: "Enter the transaction reference shown by your Mobile Money provider." });
   const duplicate = await pool.query("SELECT id FROM wallet_transactions WHERE rider_id=$1 AND type='deposit' AND lower(provider_reference)=lower($2) AND status IN ('pending','successful') LIMIT 1", [req.user.id, providerReference]);
   if (duplicate.rowCount) return res.status(409).json({ error: "That payment reference has already been submitted." });
