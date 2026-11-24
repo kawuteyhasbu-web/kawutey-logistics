@@ -119,7 +119,7 @@ $("paymentSettingsForm").addEventListener("submit",async e=>{
 let activeCommissionReport=null;\nlet commissionRefreshTimer=null;
 function csvCell(value){
   let text=String(value??"");
-  if(/^[=+@\\-\\t\\r]/.test(text))text="'"+text;
+  if(["=","+","-","@","\\t","\\r"].includes(text[0]))text="'"+text;
   return '"'+text.replace(/"/g,'""')+'"';
 }
 async function loadCommissionReport(){
