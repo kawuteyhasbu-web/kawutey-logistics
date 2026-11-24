@@ -251,7 +251,21 @@ app.get("/api/rider/wallet", authenticate, roles("rider"), asyncRoute(async (req
     GROUP BY w.balance_pesewas,rp.rider_code`, [req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: "Wallet not found." });
   const row = result.rows[0];
-  res.json({ riderCode: row.rider_code, balanceGhs: Number(row.balance_pesewas) / 100, totalDepositsGhs: Number(row.deposits_pesewas) / 100, commissionDeductedGhs: Number(row.commission_pesewas) / 100, packagesAvailable: Math.floor(Number(row.balance_pesewas) / COMMISSION_PESEWAS) });
+  const transactions = await pool.query(`SELECT id,type,amount_pesewas,status,reference,provider_reference,package_assignment_id,description,created_at
+    FROM wallet_transactions WHERE rider_id=$1 ORDER BY created_at DESC,id DESC LIMIT 100`, [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({
+    riderCode: row.rider_code,
+    balanceGhs: Number(row.balance_pesewas) / 100,
+    totalDepositsGhs: Number(row.deposits_pesewas) / 100,
+    commissionDeductedGhs: Number(row.commission_pesewas) / 100,
+    packagesAvailable: Math.floor(Number(row.balance_pesewas) / COMMISSION_PESEWAS),
+    transactions: transactions.rows.map(t => ({
+      id: t.id, type: t.type, amountGhs: Number(t.amount_pesewas) / 100,
+      status: t.status, reference: t.reference, providerReference: t.provider_reference,
+      assignmentId: t.package_assignment_id, description: t.description, createdAt: t.created_at
+    }))
+  });
 }));
 
 app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async (req, res) => {
