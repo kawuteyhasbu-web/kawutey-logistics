@@ -12,6 +12,28 @@ h2{color:var(--primary);margin:0 0 12px}label{display:block;font-weight:650;marg
 button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);color:#fff;font-weight:650;cursor:pointer;margin:10px 8px 0 0}button.secondary{background:#fff;color:var(--primary);border:1px solid var(--border)}button:disabled{opacity:.6;cursor:not-allowed}.password-wrap{display:flex;gap:8px;align-items:stretch}.password-wrap input{flex:1;min-width:0}.password-toggle{margin:0;min-width:76px}
 .notice{padding:12px;border-radius:9px;background:#e8f0fe;margin:12px 0}.error{background:#fce8e6;color:#8a1c13}.success{background:#d1e7dd;color:#0f5132}.hidden{display:none!important}
 .item{border:1px solid var(--border);border-radius:10px;padding:15px;margin:12px 0;background:#f9fbfd}.meta{color:#5d6675;font-size:.9rem}.tag{display:inline-block;padding:3px 9px;border-radius:20px;background:#fff3cd;color:#664d03;font-size:.78rem;font-weight:700}.tag.read{background:#d1e7dd;color:#0f5132}
+
+.admin-section{background:#fff;border:1px solid var(--border);border-radius:14px;margin:0 0 12px;box-shadow:0 3px 10px rgba(10,47,107,.05);overflow:hidden}
+.admin-section>summary{list-style:none;cursor:pointer;padding:16px 18px;font-weight:750;color:var(--primary);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.admin-section>summary::-webkit-details-marker{display:none}
+.admin-section>summary:after{content:"+";font-size:1.25rem;color:var(--accent)}
+.admin-section[open]>summary:after{content:"−"}
+.admin-section[open]>summary{border-bottom:1px solid var(--border);background:#f8faff}
+.admin-section .section-card{box-shadow:none;margin:0;border-radius:0;padding:18px}
+.admin-section .section-card>h2{display:none}
+.commission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.commission-metric{background:#f3f6fb;border-radius:12px;padding:14px;min-width:0}
+.commission-metric strong{display:block;font-size:1.45rem;color:var(--primary);overflow-wrap:anywhere}
+.commission-metric span{font-size:.82rem;color:#5d6675}
+.commission-total{background:#edf7f0;border:1px solid #cce6d3}
+.commission-total strong{font-size:2rem;color:#176b37}
+.commission-toolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.commission-toolbar label{margin:0;min-width:180px;flex:1}
+.commission-toolbar button{margin:0}
+.report-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.report-row:last-child{border-bottom:0}
+@media(max-width:600px){.commission-grid{grid-template-columns:1fr 1fr}.commission-total{grid-column:1/-1}.commission-metric strong{font-size:1.2rem}}
+
 @media(max-width:600px){.wrap{padding:10px}.head{align-items:flex-start}.card{padding:15px}}
 </style><script src="/admin-password.js" defer></script>
 </head>
@@ -19,6 +41,25 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
+<section class="card" id="commissionSummaryCard">
+<h2>Today's Rider Commission Collections</h2>
+<p class="meta">Successful commission deductions recorded from rider wallets today. Daily reporting uses Ghana time (GMT). This figure is commission deducted, not confirmation of funds received into Paystack.</p>
+<div class="commission-grid">
+<div class="commission-metric commission-total"><strong id="todayCommissionTotal">GH₵0.00</strong><span>Commission deducted today</span></div>
+<div class="commission-metric"><strong id="todayCommissionCount">0</strong><span>Successful deductions</span></div>
+<div class="commission-metric"><strong id="todayPackageCount">0</strong><span>Packages charged</span></div>
+</div>
+<div class="commission-toolbar">
+<label for="commissionReportDate">Daily report date (Ghana time)<input id="commissionReportDate" type="date"></label>
+<button type="button" id="loadCommissionReportButton" class="secondary">View report</button>
+<button type="button" id="downloadCommissionReportButton">Download CSV</button>
+</div>
+<div id="commissionReportStatus" class="notice hidden" role="status"></div>
+<h3 id="commissionReportHeading">Today's detailed report</h3>
+<div id="commissionReportEntries" aria-live="polite">Loading today's commission report…</div>
+<h3>Previous daily summaries</h3>
+<div id="commissionReportHistory" class="meta">Loading previous reports…</div>
+</section>
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><button class="secondary" id="logoutButton">Log out</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Payment Mode</h2><p>Paystack is the primary method only after its secret key and secure webhook are configured. Manual Mobile Money is a backup and must be activated deliberately during a Paystack outage or testing.</p><div id="paymentModeStatus" class="notice">Loading payment settings…</div><form id="paymentSettingsForm"><label for="momoAccountName">Company Mobile Money account name</label><input id="momoAccountName" maxlength="120" autocomplete="off"><label for="momoAccountNumber">Company receiving Mobile Money number</label><input id="momoAccountNumber" inputmode="numeric" maxlength="10" placeholder="10-digit Ghana number"><label style="display:flex;align-items:center;gap:10px;"><input id="manualBackupEnabled" type="checkbox" style="width:auto;"> Activate manual Mobile Money backup mode</label><p class="meta">When activated, riders will see the company payment details and manual process instead of Paystack. Turning it off hides manual deposits for new requests. Existing requests remain reviewable.</p><button id="savePaymentSettingsButton">Save payment settings</button></form><div id="paymentSettingsMessage" class="notice hidden" role="status"></div><h3>Payment Mode Change History</h3><div id="paymentModeAudit" class="meta">Loading history…</div></div><div class="card"><h2>Rider Wallet Transactions</h2><p>View successful deposits, commission deductions and unsuccessful deposit records for all riders. This section is read-only.</p><button id="refreshWalletTransactionsButton" class="secondary">Refresh wallet transactions</button><div id="walletTransactionsStatus" class="notice hidden" role="status"></div><div id="walletTransactions" aria-live="polite"></div></div><div class="card"><h2>Rider Deposit Requests</h2><p>Verify the payment directly with the Mobile Money provider or company account before approving. Approving credits the rider wallet; rejecting does not.</p><button id="refreshDepositsButton" class="secondary">Refresh deposit requests</button><div id="depositStatus" class="notice hidden" role="status"></div><div id="depositRequests" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Management</h2><p>View approved and suspended riders, their private photographs, and control account access without deleting rider records.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh rider list</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
@@ -30,7 +71,17 @@ const tokenKey="kl_admin_token";
 const $=id=>document.getElementById(id);
 function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
 async function api(path,options={}){const headers={"Content-Type":"application/json",...(options.headers||{})};const token=sessionStorage.getItem(tokenKey);if(token)headers.Authorization="Bearer "+token;const response=await fetch(API_BASE+path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Request failed.");return data;}
-function openDashboard(){ $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings(); }
+function compactDashboardSections(){
+  const dashboard=$("dashboard");
+  dashboard.querySelectorAll(":scope > .card:not(#commissionSummaryCard)").forEach(card=>{
+    if(card.parentElement.tagName==="DETAILS")return;
+    const heading=card.querySelector("h2");if(!heading)return;
+    const details=document.createElement("details");details.className="admin-section";
+    const summary=document.createElement("summary");summary.textContent=heading.textContent;
+    dashboard.insertBefore(details,card);details.append(summary,card);card.classList.add("section-card");
+  });
+}
+function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings();loadCommissionReport(); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function loadPaymentSettings(){
   const status=$("paymentModeStatus");
@@ -64,6 +115,45 @@ $("paymentSettingsForm").addEventListener("submit",async e=>{
     await loadPaymentSettings();
   }catch(err){show($("paymentSettingsMessage"),err.message,"error");}
   finally{button.disabled=false;}
+});
+let activeCommissionReport=null;
+function csvCell(value){
+  let text=String(value??"");
+  if(/^[=+@\\-\\t\\r]/.test(text))text="'"+text;
+  return '"'+text.replace(/"/g,'""')+'"';
+}
+async function loadCommissionReport(){
+  const dateInput=$("commissionReportDate");
+  const requestedDate=dateInput.value;
+  const status=$("commissionReportStatus");
+  $("commissionReportEntries").textContent="Loading commission report…";
+  try{
+    const data=await api("/api/admin/commission-reports"+(requestedDate?"?date="+encodeURIComponent(requestedDate):""));
+    activeCommissionReport=data;
+    if(!dateInput.value)dateInput.value=data.today;
+    $("todayCommissionTotal").textContent="GH₵"+Number(data.todaySummary.totalGhs).toFixed(2);
+    $("todayCommissionCount").textContent=String(data.todaySummary.deductionCount);
+    $("todayPackageCount").textContent=String(data.todaySummary.packageCount);
+    $("commissionReportHeading").textContent="Commission report for "+data.reportDate+" (Ghana time)";
+    if(!data.entries.length){
+      $("commissionReportEntries").textContent="No successful commission deductions were recorded on this date.";
+    }else{
+      $("commissionReportEntries").innerHTML=data.entries.map(entry=>'<article class="item"><strong>'+escapeHtml(entry.riderName)+'</strong> ('+escapeHtml(entry.riderCode)+')<p>Phone: '+escapeHtml(entry.phone)+'</p><p>Commission deducted: <strong>GH₵'+Number(entry.amountGhs).toFixed(2)+'</strong></p><p>Packages charged: '+escapeHtml(entry.packageCount??"Not available")+'</p><p>Reference: '+escapeHtml(entry.reference)+'</p><p>Pickup assignment: '+escapeHtml(entry.assignmentId??"—")+'</p><p class="meta">'+escapeHtml(entry.ghanaTime)+' GMT</p></article>').join("");
+    }
+    $("commissionReportHistory").innerHTML=data.reports.length?data.reports.map(report=>'<div class="report-row"><span>'+escapeHtml(report.date)+' · '+escapeHtml(report.deductionCount)+' deductions · '+escapeHtml(report.packageCount)+' packages</span><strong>GH₵'+Number(report.totalGhs).toFixed(2)+'</strong></div>').join(""):"No previous commission reports yet.";
+    status.classList.add("hidden");
+  }catch(error){show(status,error.message,"error");}
+}
+$("loadCommissionReportButton").addEventListener("click",loadCommissionReport);
+$("downloadCommissionReportButton").addEventListener("click",()=>{
+  if(!activeCommissionReport)return;
+  const rows=[["Date (Ghana time)","Rider","Rider code","Phone","Commission deducted (GHS)","Packages","Reference","Assignment ID","Time (GMT)"]];
+  for(const entry of activeCommissionReport.entries)rows.push([activeCommissionReport.reportDate,entry.riderName,entry.riderCode,entry.phone,Number(entry.amountGhs).toFixed(2),entry.packageCount??"",entry.reference,entry.assignmentId??"",entry.ghanaTime]);
+  const csv=rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+  const blob=new Blob(["\\uFEFF",csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const link=document.createElement("a");
+  link.href=url;link.download="kawutey-commission-"+activeCommissionReport.reportDate+".csv";
+  document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
 });
 async function loadWalletTransactions(){
   const area=$("walletTransactions");area.textContent="Loading wallet transactions…";
