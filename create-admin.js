@@ -42,7 +42,7 @@ async function main() {
     );
     await client.query("COMMIT");
     transactionStarted = false;
-    process.stdout.write(`Administrator account created. ${ADMIN_LIMIT - totalAdmins - 1} administrator slot(s) remain. Sign in through /admin.html.\n`);
+    process.stdout.write(`Administrator account created. ${ADMIN_LIMIT - totalAdmins - 1} administrator slot(s) remain. Sign in through /admin-dashboard.\n`);
   } catch (error) {
     if (transactionStarted) await client.query("ROLLBACK");
     throw error;
