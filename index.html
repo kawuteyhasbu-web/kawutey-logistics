@@ -379,7 +379,7 @@
       panel.dataset.collapsibleReady = "true";
       const content = document.createElement("div");
       content.className = "dashboard-panel-content";
-      const oldHeading = panel.querySelector(":scope > h3, :scope > h4");
+      const oldHeading = panel.querySelector("h3, h4");
       if (oldHeading) oldHeading.remove();
       while (panel.firstChild) content.appendChild(panel.firstChild);
       const contentId = "dashboard-panel-content-" + (++dashboardPanelSequence);
