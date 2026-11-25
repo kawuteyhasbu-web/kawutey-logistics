@@ -577,7 +577,7 @@ app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asy
 }));
 
 app.get("/api/admin/riders/managed", authenticate, roles("admin"), asyncRoute(async (req, res) => {
-  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.status,r.rider_code,r.approved_at,(r.photo_data IS NOT NULL AND octet_length(r.photo_data)>0) AS has_photo FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status IN ('active','suspended') ORDER BY CASE WHEN u.status='active' THEN 0 ELSE 1 END,r.approved_at DESC NULLS LAST,u.full_name");
+  const result = await pool.query("SELECT u.id,u.full_name,u.email,u.phone,u.location,u.status,r.rider_code,r.approved_at,(r.photo_data IS NOT NULL AND octet_length(r.photo_data)>0) AS has_photo,(r.pending_photo_data IS NOT NULL AND octet_length(r.pending_photo_data)>0) AS has_pending_photo,r.pending_photo_submitted_at FROM users u JOIN rider_profiles r ON r.user_id=u.id WHERE u.role='rider' AND u.status IN ('active','suspended') ORDER BY CASE WHEN u.status='active' THEN 0 ELSE 1 END,r.approved_at DESC NULLS LAST,u.full_name");
   res.set("Cache-Control", "private, no-store");
   res.json({ riders: result.rows });
 }));
@@ -603,6 +603,40 @@ app.get("/api/admin/riders/:id/photo", authenticate, roles("admin"), asyncRoute(
   if (!result.rowCount || !result.rows[0].photo_data) return res.status(404).json({ error: "Rider photograph not found." });
   res.set({ "Content-Type": result.rows[0].photo_mime, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" });
   res.send(result.rows[0].photo_data);
+}));
+app.post("/api/admin/riders/:id/photo/replacement", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const photo = req.body?.photoDataUrl;
+  const match = typeof photo === "string" ? photo.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/) : null;
+  if (!match) return res.status(400).json({ error: "Choose a JPEG, PNG or WebP photograph." });
+  const bytes = Buffer.from(match[2], "base64");
+  if (!bytes.length || bytes.length > 512 * 1024 || bytes.toString("base64") !== match[2]) return res.status(400).json({ error: "The photograph must be no larger than 512 KB." });
+  const mime = match[1];
+  const validImage = (mime === "image/jpeg" && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[bytes.length-2] === 0xff && bytes[bytes.length-1] === 0xd9)
+    || (mime === "image/png" && bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))
+    || (mime === "image/webp" && bytes.toString("ascii",0,4) === "RIFF" && bytes.toString("ascii",8,12) === "WEBP");
+  if (!validImage) return res.status(400).json({ error: "The uploaded file is not a valid supported image." });
+  const result = await pool.query("UPDATE rider_profiles r SET pending_photo_data=$1,pending_photo_mime=$2,pending_photo_submitted_at=NOW() FROM users u WHERE r.user_id=u.id AND r.user_id=$3 AND u.role='rider' AND u.status IN ('active','suspended') RETURNING r.user_id,r.pending_photo_submitted_at", [bytes,mime,req.params.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "Approved rider not found." });
+  res.set("Cache-Control", "no-store");
+  res.json({ message: "Replacement photograph uploaded for review. The current approved photograph remains in use.", submittedAt: result.rows[0].pending_photo_submitted_at });
+}));
+app.get("/api/admin/riders/:id/photo/replacement", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT r.pending_photo_data,r.pending_photo_mime FROM rider_profiles r JOIN users u ON u.id=r.user_id WHERE r.user_id=$1 AND u.role='rider' AND u.status IN ('active','suspended')", [req.params.id]);
+  if (!result.rowCount || !result.rows[0].pending_photo_data) return res.status(404).json({ error: "No replacement photograph is awaiting review." });
+  res.set({ "Content-Type": result.rows[0].pending_photo_mime, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" });
+  res.send(result.rows[0].pending_photo_data);
+}));
+app.post("/api/admin/riders/:id/photo/approve", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("UPDATE rider_profiles r SET photo_data=r.pending_photo_data,photo_mime=r.pending_photo_mime,pending_photo_data=NULL,pending_photo_mime=NULL,pending_photo_submitted_at=NULL FROM users u WHERE r.user_id=u.id AND r.user_id=$1 AND u.role='rider' AND u.status IN ('active','suspended') AND r.pending_photo_data IS NOT NULL RETURNING r.user_id", [req.params.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "No replacement photograph is awaiting approval." });
+  res.set("Cache-Control", "no-store");
+  res.json({ message: "Replacement photograph approved. The Rider and Vendor Portals will now use the updated official photograph." });
+}));
+app.post("/api/admin/riders/:id/photo/reject", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("UPDATE rider_profiles r SET pending_photo_data=NULL,pending_photo_mime=NULL,pending_photo_submitted_at=NULL FROM users u WHERE r.user_id=u.id AND r.user_id=$1 AND u.role='rider' AND u.status IN ('active','suspended') AND r.pending_photo_data IS NOT NULL RETURNING r.user_id", [req.params.id]);
+  if (!result.rowCount) return res.status(404).json({ error: "No replacement photograph is awaiting review." });
+  res.set("Cache-Control", "no-store");
+  res.json({ message: "Replacement photograph rejected. The current approved photograph remains unchanged." });
 }));
 app.post("/api/admin/riders/:id/approve", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("UPDATE users SET status='active' WHERE id=$1 AND role='rider' AND status='pending' RETURNING id", [req.params.id]);
