@@ -560,7 +560,7 @@
         }
         area.innerHTML = mine.map(p => {
           const assigned = Boolean(p.rider_name);
-          const phoneDial = String(p.rider_phone || "").replace(/[^\\d+]/g, "");
+          const phoneDial = String(p.rider_phone || "").replace(/[^\d+]/g, "");
           const phoneDisplay = p.rider_phone
             ? `<a href="tel:${escapeHtml(phoneDial)}" style="color:var(--primary);font-weight:600;">${escapeHtml(p.rider_phone)} — Call rider</a>`
             : "Not provided";
