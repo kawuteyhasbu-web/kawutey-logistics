@@ -823,28 +823,31 @@
     function startSecureAssignmentPolling() {
       if (secureAssignmentPollTimer) clearInterval(secureAssignmentPollTimer);
       secureAssignmentPollTimer = setInterval(() => {
-        if (sessionStorage.getItem("kl_rider_token")) loadSecureRiderAssignments();
-      }, 12000);
+        if (sessionStorage.getItem("kl_rider_token")) loadSecureRiderAssignments({ quiet: true });
+      }, 5000);
     }
 
-    async function loadSecureRiderAssignments() {
+    async function loadSecureRiderAssignments(options = {}) {
+      const quiet = options.quiet === true;
       const message = document.getElementById("secureAssignmentMessage");
       const availableArea = document.getElementById("secureAvailableAssignments");
       const acceptedArea = document.getElementById("secureAcceptedAssignments");
       const balanceArea = document.getElementById("secureRiderBalance");
       if (!message || !availableArea || !acceptedArea) return;
-      message.textContent = "Loading pickup requests…";
+      if (!quiet) message.textContent = "Loading pickup requests…";
       try {
         const assignmentQuery = secureRiderLocation
           ? "?latitude=" + encodeURIComponent(secureRiderLocation.latitude) + "&longitude=" + encodeURIComponent(secureRiderLocation.longitude)
           : "";
         const [assignmentData, walletData] = await Promise.all([
           apiRequest("/api/rider/assignments" + assignmentQuery, { riderAuth: true }),
-          apiRequest("/api/rider/wallet", { riderAuth: true })
+          quiet ? Promise.resolve(null) : apiRequest("/api/rider/wallet", { riderAuth: true })
         ]);
-        const balance = Number(walletData.balanceGhs || 0);
-        if (balanceArea) balanceArea.textContent = "GH₵" + balance.toFixed(2);
-        renderSecureWalletTransactions(walletData.transactions || []);
+        if (walletData) {
+          const balance = Number(walletData.balanceGhs || 0);
+          if (balanceArea) balanceArea.textContent = "GH₵" + balance.toFixed(2);
+          renderSecureWalletTransactions(walletData.transactions || []);
+        }
         const available = assignmentData.assignments.filter(a => a.status === "available");
         const accepted = assignmentData.assignments.filter(a => a.status === "accepted" || a.status === "completed");
         message.textContent = available.length ? available.length + " pickup request(s) available. Review the details before accepting." : "There are no pickup requests available right now. Refresh to check again.";
