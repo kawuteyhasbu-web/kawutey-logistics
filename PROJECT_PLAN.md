@@ -343,3 +343,31 @@ These changes are code additions only. They have not been deployed or verified a
 - Automatically refresh offers and confirm a claimed offer disappears for other riders.
 - Test with at least two approved test riders: both see the same available offer; one accepts; the other sees it disappear; a stale/simultaneous second acceptance is rejected; exactly one assignment and one commission transaction remain.
 - Keep all changes on the testing branch and testing database. Do not merge or deploy to production without separate approval.
+
+## 20. Implementation progress — open pickup offers and rider distance/ETA — 25 November 2026
+
+### Added to the testing branch
+- Added nullable pickup latitude/longitude fields to the pickup schema, including idempotent ALTER TABLE ... ADD COLUMN IF NOT EXISTS migration statements.
+- Vendor pickup submission now attempts to capture the browser's current coordinates at the pickup point when the vendor grants location permission. If location is unavailable/declined, the pickup request still submits and remains visible to riders.
+- The rider assignments API continues returning every available pickup to every authenticated rider, regardless of rider location. It accepts optional rider latitude/longitude and, when both rider and pickup coordinates are present, requests road distance and duration from a configurable OSRM-compatible routing service.
+- Routing failures, missing coordinates or unavailable estimates produce null distance/time values; offers are not hidden and the interface displays an unavailable message instead of fabricating an estimate.
+- Available offers are sorted by road distance where estimates exist. Offers within 5 km receive a “Nearby to you” label; this affects prominence only and never eligibility.
+- Rider Portal now includes an explicit “Share / update my location” control and an optional browser-notification permission control for newly available nearby pickups.
+- Rider offer lists now refresh every five seconds while the Rider Portal is open. The polling refreshes assignment data without repeatedly reloading wallet transaction history.
+- Acceptance conflict responses now distinguish an offer already accepted by the same rider from one accepted by another rider. Existing row locking and transactional commission deduction remain in place.
+- Added ROUTING_SERVICE_URL to .env.example. The public OSRM demo endpoint is only a development/testing default; a reliable provider with appropriate terms and capacity must be selected before production.
+- JavaScript syntax parsing passed for server.js and the script in index.html after these changes.
+
+### Not yet tested / required next
+- Apply the two pickup-coordinate migration statements to the Neon testing database only before using the updated backend:
+  - ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS pickup_latitude DOUBLE PRECISION;
+  - ALTER TABLE public.pickups ADD COLUMN IF NOT EXISTS pickup_longitude DOUBLE PRECISION;
+- Confirm Render's testing deployment is Live after the branch commits.
+- Create a new test pickup while the vendor browser is physically at the pickup point and grants location permission; verify the two coordinate columns are populated without exposing the coordinates to other users.
+- Sign in as at least two approved test riders on separate browsers/devices. Confirm both see the same available offer regardless of distance, and confirm each sees its own road distance and estimated driving duration when routing data is available.
+- Confirm a nearby rider sees the “Nearby to you” label and receives an optional browser notification after granting permission; confirm a distant rider still sees and can accept the offer.
+- Confirm the offer disappears from the other rider's list within the automatic refresh interval after acceptance. Test a stale/simultaneous second acceptance and verify it returns a conflict without changing the winner or deducting commission again.
+- Test denied location permission, missing pickup coordinates, and routing-service timeout; offers must remain visible with a clear unavailable estimate.
+- Browser notifications currently require the Rider Portal to remain open and permission to be granted; this is not a background push-notification service.
+- Do not use the public OSRM demo endpoint as a production routing dependency. Production routing provider, limits, privacy terms and operating cost require review.
+- Keep production branch/database unchanged; do not merge or launch without separate approval.
