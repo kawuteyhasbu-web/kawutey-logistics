@@ -329,7 +329,7 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
     FROM assignments a JOIN pickups p ON p.id=a.pickup_id JOIN users u ON u.id=p.vendor_id
     WHERE a.status='available' OR a.rider_id=$1 ORDER BY CASE WHEN a.status='available' THEN 0 ELSE 1 END,p.preferred_at ASC`, [req.user.id]);
   const assignments = result.rows.map(row => ({ ...row, distanceKm: null, travelMinutes: null, nearby: false }));
-  const routable = hasLocation ? assignments.filter(a => a.status === "available" && Number.isFinite(Number(a.pickup_latitude)) && Number.isFinite(Number(a.pickup_longitude))).slice(0, 30) : [];
+  const routable = hasLocation ? assignments.filter(a => a.status === "available" && a.pickup_latitude !== null && a.pickup_longitude !== null && Number.isFinite(Number(a.pickup_latitude)) && Number.isFinite(Number(a.pickup_longitude))).slice(0, 30) : [];
   if (routable.length) {
     const cacheKey = [riderLat.toFixed(3), riderLon.toFixed(3), routable.map(a => a.id + ":" + Number(a.pickup_latitude).toFixed(4) + ":" + Number(a.pickup_longitude).toFixed(4)).join(",")].join("|");
     let routeData = riderRouteCache.get(cacheKey);
