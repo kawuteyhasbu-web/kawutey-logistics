@@ -279,6 +279,45 @@ app.get("/api/vendor/pickups/:id/assigned-rider/photo", authenticate, roles("ven
   res.send(result.rows[0].photo_data);
 }));
 
+app.delete("/api/vendor/pickups/:id", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
+  const pickupId = Number(req.params.id);
+  if (!Number.isSafeInteger(pickupId) || pickupId < 1) return res.status(400).json({ error: "Invalid pickup request." });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(`SELECT a.id AS assignment_id,a.status,a.rider_id
+      FROM pickups p
+      JOIN assignments a ON a.pickup_id=p.id
+      WHERE p.id=$1 AND p.vendor_id=$2
+      FOR UPDATE OF p,a`, [pickupId, req.user.id]);
+    if (!result.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "This pickup request could not be found in your account." });
+    }
+    const assignment = result.rows[0];
+    if (assignment.status !== "available" || assignment.rider_id !== null) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "Deletion not allowed. This pickup request has already been accepted by a rider or is no longer available." });
+    }
+    const linkedRecords = await client.query(`SELECT
+        EXISTS(SELECT 1 FROM wallet_transactions WHERE package_assignment_id=$1) AS has_wallet_records,
+        EXISTS(SELECT 1 FROM exchange_requests WHERE assignment_id=$1) AS has_exchange_records`, [assignment.assignment_id]);
+    if (linkedRecords.rows[0].has_wallet_records || linkedRecords.rows[0].has_exchange_records) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "This pickup request has related financial or rider records and cannot be permanently deleted." });
+    }
+    await client.query("DELETE FROM assignments WHERE id=$1", [assignment.assignment_id]);
+    await client.query("DELETE FROM pickups WHERE id=$1 AND vendor_id=$2", [pickupId, req.user.id]);
+    await client.query("COMMIT");
+    res.json({ ok: true, message: "Pickup request permanently deleted." });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}));
+
 app.post("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const { description, preferredAt, totalPackages, largePackages = 0, mediumPackages = 0, smallPackages = 0, pickupLatitude, pickupLongitude } = req.body || {};
   const total = Number(totalPackages), large = Number(largePackages), medium = Number(mediumPackages), small = Number(smallPackages), when = new Date(preferredAt);
