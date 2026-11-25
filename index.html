@@ -843,8 +843,10 @@
           apiRequest("/api/rider/assignments" + assignmentQuery, { riderAuth: true }),
           quiet ? Promise.resolve(null) : apiRequest("/api/rider/wallet", { riderAuth: true })
         ]);
+        let balance = balanceArea ? Number(String(balanceArea.textContent || "").replace(/[^0-9.-]/g, "")) : 0;
+        if (!Number.isFinite(balance)) balance = 0;
         if (walletData) {
-          const balance = Number(walletData.balanceGhs || 0);
+          balance = Number(walletData.balanceGhs || 0);
           if (balanceArea) balanceArea.textContent = "GH₵" + balance.toFixed(2);
           renderSecureWalletTransactions(walletData.transactions || []);
         }
