@@ -61,6 +61,7 @@ button{border:0;border-radius:9px;padding:11px 16px;background:var(--primary);co
 <h3>Previous daily summaries</h3>
 <div id="commissionReportHistory" class="meta">Loading previous reports…</div>
 </section>
+<div class="card" id="adminAccountCountCard"><h2>Administrator Accounts</h2><p class="meta">Read-only account count. The system allows a maximum of four administrator accounts.</p><div id="adminAccountCount" aria-live="polite">Loading administrator account count…</div><button type="button" class="secondary" id="refreshAdminAccountCountButton">Refresh count</button></div>
 <div class="card"><h2>Signup Notifications</h2><p>New vendor and rider registrations appear here. Rider accounts still require administrator approval.</p><button id="refreshButton">Refresh notifications</button><div id="status" class="notice hidden" role="status"></div><div id="notifications" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Payment Mode</h2><p>Paystack is the primary method only after its secret key and secure webhook are configured. Manual Mobile Money is a backup and must be activated deliberately during a Paystack outage or testing.</p><div id="paymentModeStatus" class="notice">Loading payment settings…</div><form id="paymentSettingsForm"><label for="momoAccountName">Company Mobile Money account name</label><input id="momoAccountName" maxlength="120" autocomplete="off"><label for="momoAccountNumber">Company receiving Mobile Money number</label><input id="momoAccountNumber" inputmode="numeric" maxlength="10" placeholder="10-digit Ghana number"><label style="display:flex;align-items:center;gap:10px;"><input id="manualBackupEnabled" type="checkbox" style="width:auto;"> Activate manual Mobile Money backup mode</label><p class="meta">When activated, riders will see the company payment details and manual process instead of Paystack. Turning it off hides manual deposits for new requests. Existing requests remain reviewable.</p><button id="savePaymentSettingsButton">Save payment settings</button></form><div id="paymentSettingsMessage" class="notice hidden" role="status"></div><h3>Payment Mode Change History</h3><div id="paymentModeAudit" class="meta">Loading history…</div></div><div class="card"><h2>Rider Wallet Transactions</h2><p>View successful deposits, commission deductions and unsuccessful deposit records for all riders. This section is read-only.</p><button id="refreshWalletTransactionsButton" class="secondary">Refresh wallet transactions</button><div id="walletTransactionsStatus" class="notice hidden" role="status"></div><div id="walletTransactions" aria-live="polite"></div></div><div class="card"><h2>Rider Deposit Requests</h2><p>Verify the payment directly with the Mobile Money provider or company account before approving. Approving credits the rider wallet; rejecting does not.</p><button id="refreshDepositsButton" class="secondary">Refresh deposit requests</button><div id="depositStatus" class="notice hidden" role="status"></div><div id="depositRequests" aria-live="polite"></div></div>
 <div class="card"><h2>Rider Management</h2><p>View approved and suspended riders, their private photographs, and control account access without deleting rider records.</p><button id="refreshApprovedRidersButton" class="secondary">Refresh rider list</button><div id="approvedRidersStatus" class="notice hidden" role="status"></div><div id="approvedRiders" aria-live="polite"></div></div>
@@ -72,17 +73,18 @@ const tokenKey="kl_admin_token";
 const $=id=>document.getElementById(id);
 function show(el,msg,kind){el.textContent=msg;el.className="notice "+(kind||"");}
 async function api(path,options={}){const headers={"Content-Type":"application/json",...(options.headers||{})};const token=sessionStorage.getItem(tokenKey);if(token)headers.Authorization="Bearer "+token;const response=await fetch(API_BASE+path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Request failed.");return data;}
+async function loadAdminAccountCount(){const area=$("adminAccountCount");area.textContent="Loading…";try{const data=await api("/api/admin/admin-account-count");area.textContent=data.total+" of "+data.maximum+" administrator accounts registered.";}catch(error){area.textContent="Could not load administrator account count: "+error.message;}}
 function compactDashboardSections(){
   const dashboard=$("dashboard");
   dashboard.querySelectorAll(":scope > .card:not(#commissionSummaryCard)").forEach(card=>{
-    if(card.parentElement.tagName==="DETAILS")return;
+    if(card.id==="adminAccountCountCard"||card.parentElement.tagName==="DETAILS")return;
     const heading=card.querySelector("h2");if(!heading)return;
     const details=document.createElement("details");details.className="admin-section";
     const summary=document.createElement("summary");summary.textContent=heading.textContent;
     dashboard.insertBefore(details,card);details.append(summary,card);card.classList.add("section-card");
   });
 }
-function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings();loadCommissionReport(); if(!commissionRefreshTimer)commissionRefreshTimer=setInterval(()=>{if(!document.hidden&&sessionStorage.getItem(tokenKey))loadCommissionReport();},60000); }
+function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadAdminAccountCount();loadNotifications();loadDeposits();loadWalletTransactions();loadPaymentSettings();loadCommissionReport(); if(!commissionRefreshTimer)commissionRefreshTimer=setInterval(()=>{if(!document.hidden&&sessionStorage.getItem(tokenKey))loadCommissionReport();},60000); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function loadPaymentSettings(){
   const status=$("paymentModeStatus");
@@ -190,6 +192,7 @@ async function loadNotifications(){const area=$("notifications");area.textConten
 $("adminLogo").addEventListener("error",e=>{e.currentTarget.hidden=true;});
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;try{const data=await api("/api/auth/login",{method:"POST",body:JSON.stringify({email:$("email").value,password:$("password").value})});if(data.user.role!=="admin")throw new Error("This account is not an administrator.");sessionStorage.setItem(tokenKey,data.token);$("password").value="";openDashboard();}catch(err){show($("loginMessage"),err.message,"error");}finally{$("loginButton").disabled=false;}});
 $("refreshButton").addEventListener("click",loadNotifications);
+$("refreshAdminAccountCountButton").addEventListener("click",loadAdminAccountCount);
 $("refreshRidersButton").addEventListener("click",loadPendingRiders);
 $("refreshApprovedRidersButton").addEventListener("click",loadApprovedRiders);
 async function loadApprovedRiders(){
