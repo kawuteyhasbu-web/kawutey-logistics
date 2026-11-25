@@ -592,11 +592,19 @@
           if (!photo) continue;
           try {
             const response = await fetch(API_BASE + "/api/vendor/pickups/" + encodeURIComponent(p.id) + "/assigned-rider/photo", { credentials: "include", cache: "no-store" });
-            if (!response.ok) { photo.remove(); continue; }
+            if (!response.ok) {
+              photo.outerHTML = '<div role="img" aria-label="Rider photograph unavailable" style="width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:#eef2f7;border:2px solid var(--border);color:#555;font-size:11px;">Photo unavailable</div>';
+              continue;
+            }
             const blob = await response.blob();
-            if (!blob.size || !["image/jpeg","image/png","image/webp"].includes(blob.type)) { photo.remove(); continue; }
+            if (!blob.size || !["image/jpeg","image/png","image/webp"].includes(blob.type)) {
+              photo.outerHTML = '<div role="img" aria-label="Rider photograph unavailable" style="width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:#eef2f7;border:2px solid var(--border);color:#555;font-size:11px;">Photo unavailable</div>';
+              continue;
+            }
             photo.src = URL.createObjectURL(blob);
-          } catch { photo.remove(); }
+          } catch {
+            photo.outerHTML = '<div role="img" aria-label="Rider photograph unavailable" style="width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:#eef2f7;border:2px solid var(--border);color:#555;font-size:11px;">Photo unavailable</div>';
+          }
         }
       } catch (error) {
         area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
