@@ -17,6 +17,7 @@ button.secondary{background:#fff;color:var(--blue);border:1px solid var(--border
 button:disabled{opacity:.6;cursor:not-allowed}
 label{display:block;font-weight:650;margin:13px 0 6px}
 input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;font:inherit}
+.input-with-toggle{display:flex;gap:8px;align-items:stretch}.input-with-toggle input{min-width:0;flex:1}.toggle-visibility{flex:0 0 auto;min-width:76px;padding:10px 12px;background:#fff;color:var(--blue);border:1px solid var(--border);font-weight:600}
 form>button{margin-top:16px;width:100%}
 .notice{padding:12px;border-radius:9px;background:#e8f0fe;margin-top:14px}.error{background:#fce8e6;color:#8a1c13}.success{background:#d1e7dd;color:#0f5132}
 .hidden{display:none!important}.small{font-size:.88rem;color:#5d6675}.back{color:var(--blue)}
@@ -37,8 +38,8 @@ form>button{margin-top:16px;width:100%}
 <p class="small">Administrator registration requires an invitation code. A maximum of four administrator accounts is permitted.</p>
 <label for="fullName">Full name</label><input id="fullName" maxlength="120" autocomplete="name" required>
 <label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required>
-<label for="registerPassword">Password (at least 14 characters)</label><input id="registerPassword" type="password" minlength="14" maxlength="128" autocomplete="new-password" required>
-<label for="invitationCode">Private invitation code</label><input id="invitationCode" type="password" maxlength="256" autocomplete="off" required>
+<label for="registerPassword">Password (at least 14 characters)</label><div class="input-with-toggle"><input id="registerPassword" type="password" minlength="14" maxlength="128" autocomplete="new-password" required><button class="toggle-visibility" type="button" id="toggleRegisterPassword" aria-controls="registerPassword" aria-pressed="false">Show</button></div>
+<label for="invitationCode">Private invitation code</label><div class="input-with-toggle"><input id="invitationCode" type="password" maxlength="256" autocomplete="off" required><button class="toggle-visibility" type="button" id="toggleInvitationCode" aria-controls="invitationCode" aria-pressed="false">Show</button></div>
 <button id="signUpButton">Create Admin Account</button>
 </form>
 <div id="message" class="notice hidden" role="status" aria-live="polite"></div>
@@ -58,6 +59,18 @@ function selectView(view){
 }
 $("showSignIn").addEventListener("click",()=>selectView("signin"));
 $("showSignUp").addEventListener("click",()=>selectView("signup"));
+function attachVisibilityToggle(inputId,buttonId){
+  const field=$(inputId),button=$(buttonId);
+  button.addEventListener("click",()=>{
+    const reveal=field.type==="password";
+    field.type=reveal?"text":"password";
+    button.textContent=reveal?"Hide":"Show";
+    button.setAttribute("aria-pressed",String(reveal));
+    button.setAttribute("aria-label",(reveal?"Hide ":"Show ")+(inputId==="registerPassword"?"password":"invitation code"));
+  });
+}
+attachVisibilityToggle("registerPassword","toggleRegisterPassword");
+attachVisibilityToggle("invitationCode","toggleInvitationCode");
 $("signInForm").addEventListener("submit",async event=>{
   event.preventDefault();$("signInButton").disabled=true;
   try{
