@@ -92,6 +92,22 @@
     footer { text-align: center; margin-top: 30px; padding: 16px; color: #666; font-size: 0.82rem; }
     footer strong { color: var(--primary); }
     .contact-bar { background: var(--primary); color: white; text-align: center; padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 0.9rem; }
+  
+    /* Dashboard section styling and independent expand/collapse controls */
+    .dashboard-panel { background:#fff; border:1px solid #dce4ef; border-radius:15px; box-shadow:0 5px 18px rgba(10,47,107,.06); margin:0 0 16px; overflow:hidden; }
+    .dashboard-panel-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border:0; background:linear-gradient(110deg,#fff 0%,#f5f8fd 100%); color:var(--primary); text-align:left; font:inherit; font-weight:700; font-size:1rem; cursor:pointer; }
+    .dashboard-panel-toggle:hover { background:#edf3fb; }
+    .dashboard-panel-toggle:focus-visible { outline:3px solid rgba(255,106,0,.35); outline-offset:-3px; }
+    .dashboard-panel-icon { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; flex:0 0 30px; border-radius:50%; background:#fff0e6; color:var(--accent); font-size:1.15rem; transition:transform .2s ease; }
+    .dashboard-panel-toggle[aria-expanded="true"] .dashboard-panel-icon { transform:rotate(180deg); }
+    .dashboard-panel-content { padding:18px; border-top:1px solid #e7edf5; }
+    .dashboard-panel-content > :last-child { margin-bottom:0; }
+    #vendorDashboard > h3 { font-size:1.35rem; margin-bottom:5px; }
+    #vendorDashboard > p { color:#64748b; }
+    #riderDashboard .dashboard-panel-content .card { box-shadow:none; border:0; padding:0 !important; margin:0; }
+    #riderDashboard .dashboard-panel-content .wallet-box { margin:0; }
+    @media (max-width:650px) { .dashboard-panel-toggle { padding:15px; } .dashboard-panel-content { padding:14px; } }
+
   </style>
 </head>
 <body>
@@ -356,6 +372,40 @@
     let secureAssignmentPollTimer = null;
     let secureRiderWatchId = null;
     let secureSeenNearbyOffers = new Set();
+
+    let dashboardPanelSequence = 0;
+    function makeDashboardPanel(panel, title, initiallyOpen = true) {
+      if (!panel || panel.dataset.collapsibleReady === "true") return;
+      panel.dataset.collapsibleReady = "true";
+      const content = document.createElement("div");
+      content.className = "dashboard-panel-content";
+      const oldHeading = panel.querySelector(":scope > h3, :scope > h4");
+      if (oldHeading) oldHeading.remove();
+      while (panel.firstChild) content.appendChild(panel.firstChild);
+      const contentId = "dashboard-panel-content-" + (++dashboardPanelSequence);
+      content.id = contentId;
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "dashboard-panel-toggle";
+      toggle.setAttribute("aria-controls", contentId);
+      toggle.setAttribute("aria-expanded", String(initiallyOpen));
+      const label = document.createElement("span");
+      label.textContent = title;
+      const icon = document.createElement("span");
+      icon.className = "dashboard-panel-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "⌄";
+      toggle.append(label, icon);
+      content.hidden = !initiallyOpen;
+      toggle.addEventListener("click", () => {
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!expanded));
+        content.hidden = expanded;
+      });
+      panel.classList.add("dashboard-panel");
+      panel.append(toggle, content);
+    }
+
     let secureNearbyOffersInitialised = false;
 
     function getBrowserPosition(options = {}) {
@@ -538,6 +588,19 @@
       document.getElementById('vendorNameDisplay').textContent = currentVendor.name;
       const businessDisplay = document.getElementById('vendorBusinessDisplay');
       businessDisplay.textContent = currentVendor.businessName ? 'Business: ' + currentVendor.businessName : '';
+      if (!document.getElementById("pickupFormArea").dataset.collapsibleReady) {
+        makeDashboardPanel(document.getElementById("pickupFormArea"), "Pickup Request Form", true);
+        const historyPanel = document.createElement("section");
+        historyPanel.id = "vendorPickupHistoryPanel";
+        const historyHeading = document.querySelector("#vendorDashboard > h4");
+        const historyContent = document.getElementById("pickupHistory");
+        if (historyHeading && historyContent) {
+          historyHeading.remove();
+          historyPanel.appendChild(historyContent);
+          document.getElementById("vendorDashboard").appendChild(historyPanel);
+          makeDashboardPanel(historyPanel, "Your Pickup Requests & History", true);
+        }
+      }
       renderPickups();
     }
     function togglePickupForm() {
@@ -768,6 +831,11 @@
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
       dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.querySelectorAll(".wallet-box, section.card").forEach((panel, index) => {
+        const heading = panel.querySelector("h3");
+        const title = heading ? heading.textContent.trim() : (index === 0 ? "Wallet Overview" : "Rider Dashboard Section");
+        makeDashboardPanel(panel, title, true);
+      });
       dashboard.classList.remove("hidden");
       document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
       document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
