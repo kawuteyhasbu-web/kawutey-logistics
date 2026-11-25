@@ -269,4 +269,15 @@ These changes are code additions only. They have not been deployed or verified a
 - Confirm the testing deployment is Live and verify the complete workflow in the browser.
 - Do not apply this migration to the production database or merge to the production branch without separate approval.
 
-These are code changes in the testing branch. They are not yet confirmed deployed or functionally tested.
+### Testing results — 25 November 2026
+- The three pending-photo database columns were successfully added to the testing database.
+- Render reported the testing service deployment as **Live**.
+- Successfully uploaded a replacement photograph and confirmed it appeared as pending for administrator review.
+- Confirmed the existing approved photograph remained official while the replacement was pending.
+- Approved a replacement and confirmed the new official photograph appeared in both the Vendor Portal and Rider Portal.
+- Uploaded a second replacement and rejected it. The system confirmed the current approved photograph remained unchanged.
+- Confirmed the rejected pending photograph was no longer accessible through the administrator's private preview.
+- The owner manually verified the portal displays and post-rejection access behaviour during this test session.
+
+**Testing status:** The administrator-controlled replacement-photo workflow has passed the functional checks listed above on the testing deployment. This is not a full independent security audit. Keep the production branch and production database unchanged; do not merge or deploy to production without separate approval.
+
