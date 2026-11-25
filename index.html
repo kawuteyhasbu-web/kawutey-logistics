@@ -996,8 +996,13 @@
             const routeEstimate = a.distanceKm !== null && a.distanceKm !== undefined && a.travelMinutes !== null && a.travelMinutes !== undefined
               ? Number(a.distanceKm).toFixed(1) + " km / approximately " + Number(a.travelMinutes) + " min driving"
               : "Distance / travel time unavailable — share your location and ensure the vendor pickup pin is available.";
-            const nearbyLabel = a.nearby ? "<span class='status verified'>Nearby to you</span>" : "";
-            card.innerHTML = nearbyLabel + "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p><strong>Distance / estimated travel time:</strong> " + escapeHtml(routeEstimate) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
+            const hasRouteEstimate = a.distanceKm !== null && a.distanceKm !== undefined && a.travelMinutes !== null && a.travelMinutes !== undefined;
+            const proximityLabel = hasRouteEstimate
+              ? (a.nearby
+                ? "<span class='status verified' style='display:inline-block;margin-bottom:8px;'>Nearby to you</span>"
+                : "<span class='status' style='display:inline-block;margin-bottom:8px;background:#fff0d9;color:#805000;border:1px solid #f0cf91;'>Further away</span>")
+              : "";
+            card.innerHTML = proximityLabel + "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p><strong>Distance / estimated travel time:</strong> " + escapeHtml(routeEstimate) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
             const button = document.createElement("button");
             button.className = "btn btn-accent";
             button.textContent = canAfford ? "Accept pickup" : "Insufficient wallet balance";
