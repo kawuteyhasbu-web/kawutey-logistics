@@ -196,6 +196,7 @@
           <div id="pickupFormArea" class="hidden" style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
             <form id="pickupForm">
+              <p class="alert alert-info">For accurate rider distance and travel-time estimates, allow location access when submitting this request while you are at the pickup point. If location is unavailable, riders will still see the offer.</p>
               <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2"></textarea></div>
               <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
               <div class="form-group"><label>Total Number of Packages *</label><input type="number" id="total-packages" min="1" required></div>
@@ -348,6 +349,18 @@
     let currentVendor = null;
     let currentRider = null;
     let currentRiderPhotoUrl = null;
+    let secureRiderLocation = null;
+    let secureAssignmentPollTimer = null;
+    let secureRiderWatchId = null;
+    let secureSeenNearbyOffers = new Set();
+    let secureNearbyOffersInitialised = false;
+
+    function getBrowserPosition(options = {}) {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) return reject(new Error("Location services are not available in this browser."));
+        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000, ...options });
+      });
+    }
 
     async function apiRequest(path, options = {}) {
       const { riderAuth = false, ...fetchOptions } = options;
@@ -397,6 +410,8 @@
         secureRefreshAssignments: loadSecureRiderAssignments,
         secureRefreshDeposits: loadSecureRiderDeposits,
         secureRefreshWalletTransactions: loadSecureRiderWalletTransactions,
+        secureUpdateLocation: updateSecureRiderLocation,
+        secureEnableNearbyAlerts: enableSecureNearbyAlerts,
         paystackDeposit: startPaystackDeposit,
         createManualDeposit: createSecureManualIntent
       };
@@ -528,6 +543,8 @@
       e.preventDefault();
       if (!currentVendor) return alert("Please log in again.");
       try {
+        // Capture the vendor's position at the pickup point when permission is granted.
+        const pickupPosition = await getBrowserPosition({ timeout: 7000, maximumAge: 60000 }).catch(() => null);
         const data = await apiRequest("/api/vendor/pickups", {
           method: "POST",
           body: JSON.stringify({
@@ -536,7 +553,9 @@
             totalPackages: Number(document.getElementById('total-packages').value),
             largePackages: Number(document.getElementById('large-packages').value || 0),
             mediumPackages: Number(document.getElementById('medium-packages').value || 0),
-            smallPackages: Number(document.getElementById('small-packages').value || 0)
+            smallPackages: Number(document.getElementById('small-packages').value || 0),
+            pickupLatitude: pickupPosition ? pickupPosition.coords.latitude : null,
+            pickupLongitude: pickupPosition ? pickupPosition.coords.longitude : null
           })
         });
         document.getElementById('pickupForm').reset();
@@ -719,7 +738,7 @@
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.classList.remove("hidden");
       document.getElementById("secureRiderWelcome").textContent = "Welcome, " + user.full_name;
       document.getElementById("secureRiderCode").textContent = "Rider reference: " + profileData.profile.rider_code;
@@ -767,8 +786,45 @@
         placeholder.textContent = "The saved photograph could not be retrieved. Please contact the administrator.";
       }
       await loadSecureRiderAssignments();
+      startSecureAssignmentPolling();
       await loadSecureDepositOptions();
       await loadSecureRiderDeposits();
+    }
+
+    async function updateSecureRiderLocation() {
+      const status = document.getElementById("secureRiderLocationStatus");
+      if (status) status.textContent = "Requesting your current location…";
+      try {
+        const position = await getBrowserPosition({ timeout: 10000, maximumAge: 15000 });
+        secureRiderLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+        if (status) status.textContent = "Location shared for pickup distance and driving-time estimates. Nearby offers will be highlighted.";
+        await loadSecureRiderAssignments();
+      } catch (error) {
+        if (status) status.textContent = "Location unavailable. You can still see and accept every available pickup; distance and travel time will appear when location is available.";
+      }
+    }
+
+    async function enableSecureNearbyAlerts() {
+      if (!("Notification" in window)) return alert("This browser does not support pickup notifications. You can still see offers in the Rider Portal.");
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          alert("Nearby pickup alerts are enabled on this browser.");
+          secureNearbyOffersInitialised = false;
+          await loadSecureRiderAssignments();
+        } else {
+          alert("Notifications were not enabled. Nearby pickups will still be highlighted in your Rider Portal.");
+        }
+      } catch {
+        alert("Could not enable browser notifications. Nearby pickups will still be highlighted in your Rider Portal.");
+      }
+    }
+
+    function startSecureAssignmentPolling() {
+      if (secureAssignmentPollTimer) clearInterval(secureAssignmentPollTimer);
+      secureAssignmentPollTimer = setInterval(() => {
+        if (sessionStorage.getItem("kl_rider_token")) loadSecureRiderAssignments();
+      }, 12000);
     }
 
     async function loadSecureRiderAssignments() {
@@ -779,8 +835,11 @@
       if (!message || !availableArea || !acceptedArea) return;
       message.textContent = "Loading pickup requests…";
       try {
+        const assignmentQuery = secureRiderLocation
+          ? "?latitude=" + encodeURIComponent(secureRiderLocation.latitude) + "&longitude=" + encodeURIComponent(secureRiderLocation.longitude)
+          : "";
         const [assignmentData, walletData] = await Promise.all([
-          apiRequest("/api/rider/assignments", { riderAuth: true }),
+          apiRequest("/api/rider/assignments" + assignmentQuery, { riderAuth: true }),
           apiRequest("/api/rider/wallet", { riderAuth: true })
         ]);
         const balance = Number(walletData.balanceGhs || 0);
@@ -790,6 +849,22 @@
         const accepted = assignmentData.assignments.filter(a => a.status === "accepted" || a.status === "completed");
         message.textContent = available.length ? available.length + " pickup request(s) available. Review the details before accepting." : "There are no pickup requests available right now. Refresh to check again.";
         message.className = "alert " + (available.length ? "alert-info" : "alert-warning");
+        if (secureRiderLocation) {
+          const locationStatus = document.getElementById("secureRiderLocationStatus");
+          if (locationStatus) locationStatus.textContent = assignmentData.routingAvailable
+            ? "Your location is active. Distances and driving times use available road-route estimates."
+            : "Your location is active, but some pickup pins or road-route estimates are unavailable. Offers remain visible.";
+        }
+        const nearbyNow = new Set(available.filter(a => a.nearby).map(a => String(a.id)));
+        if (secureNearbyOffersInitialised && "Notification" in window && Notification.permission === "granted") {
+          for (const a of available) {
+            if (a.nearby && !secureSeenNearbyOffers.has(String(a.id))) {
+              new Notification("Nearby Kawutey pickup available", { body: (a.vendor_name || "A vendor") + " • " + Number(a.distanceKm).toFixed(1) + " km / about " + Number(a.travelMinutes) + " min driving" });
+            }
+          }
+        }
+        secureSeenNearbyOffers = nearbyNow;
+        secureNearbyOffersInitialised = true;
         availableArea.replaceChildren();
         if (!available.length) {
           availableArea.innerHTML = "<p>No available pickup requests at the moment.</p>";
@@ -799,7 +874,11 @@
             const card = document.createElement("div");
             card.className = "assignment-item";
             const canAfford = balance >= cost;
-            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
+            const routeEstimate = a.distanceKm !== null && a.distanceKm !== undefined && a.travelMinutes !== null && a.travelMinutes !== undefined
+              ? Number(a.distanceKm).toFixed(1) + " km / approximately " + Number(a.travelMinutes) + " min driving"
+              : "Distance / travel time unavailable — share your location and ensure the vendor pickup pin is available.";
+            const nearbyLabel = a.nearby ? "<span class='status verified'>Nearby to you</span>" : "";
+            card.innerHTML = nearbyLabel + "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p><strong>Distance / estimated travel time:</strong> " + escapeHtml(routeEstimate) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
             const button = document.createElement("button");
             button.className = "btn btn-accent";
             button.textContent = canAfford ? "Accept pickup" : "Insufficient wallet balance";
@@ -1234,6 +1313,11 @@
     }
 
     function logoutRider() {
+      if (secureAssignmentPollTimer) { clearInterval(secureAssignmentPollTimer); secureAssignmentPollTimer = null; }
+      if (secureRiderWatchId !== null && navigator.geolocation) { navigator.geolocation.clearWatch(secureRiderWatchId); secureRiderWatchId = null; }
+      secureRiderLocation = null;
+      secureSeenNearbyOffers = new Set();
+      secureNearbyOffersInitialised = false;
       sessionStorage.removeItem("kl_rider_token");
       if (currentRiderPhotoUrl) { URL.revokeObjectURL(currentRiderPhotoUrl); currentRiderPhotoUrl = null; }
       currentRider = null;
