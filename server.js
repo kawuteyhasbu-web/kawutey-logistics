@@ -13,6 +13,8 @@ const app = express();
 const port = Number(process.env.PORT || 3000);
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false });
 const COMMISSION_PESEWAS = 500;
+const riderRouteCache = new Map();
+const ROUTING_SERVICE_BASE = (process.env.ROUTING_SERVICE_URL || "https://router.project-osrm.org").replace(/\/+$/, "");
 const jwtSecret = process.env.JWT_SECRET;
 const ADMIN_LIMIT = 4;
 const ADMIN_LOCK_ID = 2026112304;
@@ -278,10 +280,15 @@ app.get("/api/vendor/pickups/:id/assigned-rider/photo", authenticate, roles("ven
 }));
 
 app.post("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
-  const { description, preferredAt, totalPackages, largePackages = 0, mediumPackages = 0, smallPackages = 0 } = req.body || {};
+  const { description, preferredAt, totalPackages, largePackages = 0, mediumPackages = 0, smallPackages = 0, pickupLatitude, pickupLongitude } = req.body || {};
   const total = Number(totalPackages), large = Number(largePackages), medium = Number(mediumPackages), small = Number(smallPackages), when = new Date(preferredAt);
+  const hasLatitude = pickupLatitude !== null && pickupLatitude !== undefined && pickupLatitude !== "";
+  const hasLongitude = pickupLongitude !== null && pickupLongitude !== undefined && pickupLongitude !== "";
+  const lat = hasLatitude ? Number(pickupLatitude) : null;
+  const lon = hasLongitude ? Number(pickupLongitude) : null;
   if (!Number.isInteger(total) || total < 1 || !Number.isInteger(large) || !Number.isInteger(medium) || !Number.isInteger(small) || Math.min(large, medium, small) < 0 || !Number.isFinite(when.getTime())) return res.status(400).json({ error: "Check the pickup date and package quantities." });
-  const result = await pool.query("INSERT INTO pickups(vendor_id,description,preferred_at,total_packages,large_packages,medium_packages,small_packages) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *", [req.user.id, clean(description) || "Package pickup", when, total, large, medium, small]);
+  if (hasLatitude !== hasLongitude || (hasLatitude && (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180))) return res.status(400).json({ error: "The pickup location coordinates are invalid. Please try sharing your location again." });
+  const result = await pool.query("INSERT INTO pickups(vendor_id,description,preferred_at,total_packages,large_packages,medium_packages,small_packages,pickup_latitude,pickup_longitude) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *", [req.user.id, clean(description) || "Package pickup", when, total, large, medium, small, lat, lon]);
   await pool.query("INSERT INTO assignments(pickup_id) VALUES($1)", [result.rows[0].id]);
   res.status(201).json({ pickup: result.rows[0] });
 }));
@@ -313,11 +320,54 @@ app.get("/api/rider/wallet", authenticate, roles("rider"), asyncRoute(async (req
 }));
 
 app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async (req, res) => {
-  const result = await pool.query(`SELECT a.id,a.status,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,u.full_name AS vendor_name
+  const latValue = req.query.latitude, lonValue = req.query.longitude;
+  const hasLocation = latValue !== undefined && lonValue !== undefined && latValue !== "" && lonValue !== "";
+  const riderLat = hasLocation ? Number(latValue) : null;
+  const riderLon = hasLocation ? Number(lonValue) : null;
+  if (hasLocation && (!Number.isFinite(riderLat) || !Number.isFinite(riderLon) || riderLat < -90 || riderLat > 90 || riderLon < -180 || riderLon > 180)) return res.status(400).json({ error: "Your location could not be read. Please update your location and try again." });
+  const result = await pool.query(`SELECT a.id,a.status,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.pickup_latitude,p.pickup_longitude,u.full_name AS vendor_name
     FROM assignments a JOIN pickups p ON p.id=a.pickup_id JOIN users u ON u.id=p.vendor_id
     WHERE a.status='available' OR a.rider_id=$1 ORDER BY CASE WHEN a.status='available' THEN 0 ELSE 1 END,p.preferred_at ASC`, [req.user.id]);
+  const assignments = result.rows.map(row => ({ ...row, distanceKm: null, travelMinutes: null, nearby: false }));
+  const routable = hasLocation ? assignments.filter(a => a.status === "available" && Number.isFinite(Number(a.pickup_latitude)) && Number.isFinite(Number(a.pickup_longitude))).slice(0, 30) : [];
+  if (routable.length) {
+    const cacheKey = [riderLat.toFixed(3), riderLon.toFixed(3), routable.map(a => a.id + ":" + Number(a.pickup_latitude).toFixed(4) + ":" + Number(a.pickup_longitude).toFixed(4)).join(",")].join("|");
+    let routeData = riderRouteCache.get(cacheKey);
+    if (!routeData || Date.now() - routeData.savedAt > 30000) {
+      try {
+        const coordinates = [[riderLon, riderLat], ...routable.map(a => [Number(a.pickup_longitude), Number(a.pickup_latitude)])].map(pair => pair.join(",")).join(";");
+        const destinations = routable.map((_, index) => index + 1).join(";");
+        const routeUrl = ROUTING_SERVICE_BASE + "/table/v1/driving/" + coordinates + "?sources=0&destinations=" + destinations + "&annotations=distance,duration";
+        const response = await fetch(routeUrl, { signal: AbortSignal.timeout(3500) });
+        if (!response.ok) throw new Error("Routing service unavailable");
+        const table = await response.json();
+        if (table.code !== "Ok" || !Array.isArray(table.distances?.[0]) || !Array.isArray(table.durations?.[0])) throw new Error("No road-route estimates returned");
+        routeData = { savedAt: Date.now(), estimates: routable.map((a, index) => ({ id: a.id, distanceKm: Number.isFinite(table.distances[0][index]) ? table.distances[0][index] / 1000 : null, travelMinutes: Number.isFinite(table.durations[0][index]) ? Math.max(1, Math.round(table.durations[0][index] / 60)) : null })) };
+        riderRouteCache.set(cacheKey, routeData);
+        if (riderRouteCache.size > 100) riderRouteCache.delete(riderRouteCache.keys().next().value);
+      } catch {
+        routeData = { savedAt: Date.now(), estimates: [] };
+        riderRouteCache.set(cacheKey, routeData);
+      }
+    }
+    const estimateById = new Map(routeData.estimates.map(item => [item.id, item]));
+    for (const assignment of assignments) {
+      const estimate = estimateById.get(assignment.id);
+      if (!estimate) continue;
+      assignment.distanceKm = estimate.distanceKm === null ? null : Number(estimate.distanceKm.toFixed(1));
+      assignment.travelMinutes = estimate.travelMinutes;
+      assignment.nearby = estimate.distanceKm !== null && estimate.distanceKm <= 5;
+    }
+  }
+  assignments.sort((a, b) => {
+    if (a.status !== b.status) return a.status === "available" ? -1 : 1;
+    if (a.status === "available" && a.distanceKm !== null && b.distanceKm !== null) return a.distanceKm - b.distanceKm;
+    if (a.status === "available" && a.distanceKm !== null) return -1;
+    if (a.status === "available" && b.distanceKm !== null) return 1;
+    return new Date(a.preferred_at) - new Date(b.preferred_at);
+  });
   res.set("Cache-Control", "private, no-store");
-  res.json({ assignments: result.rows });
+  res.json({ assignments, locationReceived: hasLocation, routingAvailable: routable.length > 0 && assignments.some(a => a.distanceKm !== null) });
 }));
 
 app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyncRoute(async (req, res) => {
@@ -325,7 +375,11 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
   try {
     await client.query("BEGIN");
     const assignment = await client.query("SELECT a.id,a.status,a.rider_id,p.total_packages FROM assignments a JOIN pickups p ON p.id=a.pickup_id WHERE a.id=$1 FOR UPDATE OF a", [req.params.id]);
-    if (!assignment.rowCount || assignment.rows[0].status !== "available") { await client.query("ROLLBACK"); return res.status(409).json({ error: "This delivery is no longer available." }); }
+    if (!assignment.rowCount || assignment.rows[0].status !== "available") {
+      const alreadyMine = assignment.rowCount && Number(assignment.rows[0].rider_id) === Number(req.user.id);
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: alreadyMine ? "You have already accepted this pickup." : "Sorry, another rider has already accepted this pickup." });
+    }
     const count = Number(assignment.rows[0].total_packages);
     const fee = count * COMMISSION_PESEWAS;
     const wallet = await client.query("SELECT balance_pesewas FROM wallets WHERE rider_id=$1 FOR UPDATE", [req.user.id]);
