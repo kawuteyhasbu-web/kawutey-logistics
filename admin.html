@@ -200,13 +200,16 @@ async function loadApprovedRiders(){
   try{
     const data=await api("/api/admin/riders/managed");
     if(!data.riders.length){area.textContent="There are no approved or suspended riders yet.";return;}
-    area.innerHTML=data.riders.map(r=>'<article class="item"><strong>'+escapeHtml(r.full_name)+'</strong><p><strong>Rider code:</strong> '+escapeHtml(r.rider_code)+'</p><p><strong>Email:</strong> '+escapeHtml(r.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(r.phone)+'</p><p><strong>Location:</strong> '+escapeHtml(r.location||"Not provided")+'</p><p><span class="tag '+(r.status==="active"?"read":"") +'">'+(r.status==="active"?"Approved / Active":"Suspended") +'</span></p><div class="approved-rider-photo" data-approved-photo="'+Number(r.id)+'">'+(r.has_photo?'Loading private photograph…':'No photograph on file.')+'</div><button data-rider-status-id="'+Number(r.id)+'" data-next-status="'+(r.status==="active"?"suspended":"active")+'" class="'+(r.status==="active"?"secondary":"")+'">'+(r.status==="active"?"Suspend rider":"Reactivate rider")+'</button></article>').join("");
+    area.innerHTML=data.riders.map(r=>'<article class="item"><strong>'+escapeHtml(r.full_name)+'</strong><p><strong>Rider code:</strong> '+escapeHtml(r.rider_code)+'</p><p><strong>Email:</strong> '+escapeHtml(r.email)+'</p><p><strong>Phone:</strong> '+escapeHtml(r.phone)+'</p><p><strong>Location:</strong> '+escapeHtml(r.location||"Not provided")+'</p><p><span class="tag '+(r.status==="active"?"read":"") +'">'+(r.status==="active"?"Approved / Active":"Suspended") +'</span></p><p><strong>Current official photograph</strong></p><div data-approved-photo="'+Number(r.id)+'">'+(r.has_photo?"Loading private photograph…":"No photograph on file.")+'</div><hr><p><strong>Replacement photograph</strong></p><input type="file" accept="image/jpeg,image/png,image/webp" data-replacement-file="'+Number(r.id)+'"><button type="button" data-upload-replacement="'+Number(r.id)+'">Upload replacement for review</button>'+(r.has_pending_photo?'<p class="meta">A replacement is awaiting your approval. Uploaded: '+escapeHtml(r.pending_photo_submitted_at?new Date(r.pending_photo_submitted_at).toLocaleString():"time unavailable")+'</p><div data-pending-photo="'+Number(r.id)+'">Loading replacement preview…</div><button type="button" data-approve-replacement="'+Number(r.id)+'">Approve replacement</button><button type="button" class="secondary" data-reject-replacement="'+Number(r.id)+'">Reject replacement</button>':'<p class="meta">No replacement photograph awaiting approval.</p>')+'<button data-rider-status-id="'+Number(r.id)+'" data-next-status="'+(r.status==="active"?"suspended":"active")+'" class="'+(r.status==="active"?"secondary":"")+'">'+(r.status==="active"?"Suspend rider":"Reactivate rider")+'</button></article>').join("");
     for(const rider of data.riders){
-      if(!rider.has_photo)continue;
-      const response=await fetch(API_BASE+"/api/admin/riders/"+encodeURIComponent(rider.id)+"/photo",{headers:{Authorization:"Bearer "+sessionStorage.getItem(tokenKey)}});
-      if(!response.ok)continue;
-      const blob=await response.blob(),url=URL.createObjectURL(blob),slot=area.querySelector('[data-approved-photo="'+Number(rider.id)+'"]');
-      if(slot){const img=document.createElement("img");img.src=url;img.alt="Approved rider profile photograph";img.style.cssText="width:120px;height:120px;object-fit:cover;border-radius:12px;display:block;margin:10px 0";img.onerror=()=>{URL.revokeObjectURL(url);slot.textContent="Photograph could not be displayed.";};slot.replaceChildren(img);}
+      if(rider.has_photo){
+        const response=await fetch(API_BASE+"/api/admin/riders/"+encodeURIComponent(rider.id)+"/photo",{headers:{Authorization:"Bearer "+sessionStorage.getItem(tokenKey)}});
+        if(response.ok){const blob=await response.blob(),url=URL.createObjectURL(blob),slot=area.querySelector('[data-approved-photo="'+Number(rider.id)+'"]');if(slot){const img=document.createElement("img");img.src=url;img.alt="Current approved rider photograph";img.style.cssText="width:120px;height:120px;object-fit:cover;border-radius:12px;display:block;margin:10px 0";slot.replaceChildren(img);}}
+      }
+      if(rider.has_pending_photo){
+        const response=await fetch(API_BASE+"/api/admin/riders/"+encodeURIComponent(rider.id)+"/photo/replacement",{headers:{Authorization:"Bearer "+sessionStorage.getItem(tokenKey)}});
+        if(response.ok){const blob=await response.blob(),url=URL.createObjectURL(blob),slot=area.querySelector('[data-pending-photo="'+Number(rider.id)+'"]');if(slot){const img=document.createElement("img");img.src=url;img.alt="Pending replacement photograph for administrator review";img.style.cssText="width:120px;height:120px;object-fit:cover;border:2px solid #b7791f;border-radius:12px;display:block;margin:10px 0";slot.replaceChildren(img);}}
+      }
     }
   }catch(e){show($("approvedRidersStatus"),e.message,"error");area.textContent="Could not load approved riders.";}
 }
@@ -227,6 +230,32 @@ async function loadPendingRiders(){
   }catch(e){show($("riderStatus"),e.message,"error");area.textContent="Could not load rider applications.";}
 }
 $("approvedRiders").addEventListener("click",async e=>{
+  const upload=e.target.closest("[data-upload-replacement]");
+  const approve=e.target.closest("[data-approve-replacement]");
+  const reject=e.target.closest("[data-reject-replacement]");
+  if(upload){
+    const id=upload.dataset.uploadReplacement;
+    const fileInput=$("approvedRiders").querySelector('[data-replacement-file="'+id+'"]');
+    const file=fileInput?.files?.[0];
+    if(!file){show($("approvedRidersStatus"),"Choose a replacement photograph first.","error");return;}
+    if(file.size>512*1024){show($("approvedRidersStatus"),"The photograph must be no larger than 512 KB.","error");return;}
+    upload.disabled=true;
+    try{
+      const photoDataUrl=await new Promise((resolve,rejectPromise)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>rejectPromise(new Error("The photograph could not be read."));reader.readAsDataURL(file);});
+      const result=await api("/api/admin/riders/"+id+"/photo/replacement",{method:"POST",body:JSON.stringify({photoDataUrl})});
+      show($("approvedRidersStatus"),result.message,"success");await loadApprovedRiders();
+    }catch(err){show($("approvedRidersStatus"),err.message,"error");upload.disabled=false;}
+    return;
+  }
+  if(approve||reject){
+    const id=(approve||reject).dataset[approve?"approveReplacement":"rejectReplacement"];
+    const action=approve?"approve":"reject";
+    if(!confirm(approve?"Approve this replacement photograph? It will become the rider official photograph in both portals.":"Reject this replacement photograph? The current official photograph will remain in use."))return;
+    (approve||reject).disabled=true;
+    try{const result=await api("/api/admin/riders/"+id+"/photo/"+action,{method:"POST"});show($("approvedRidersStatus"),result.message,"success");await loadApprovedRiders();}
+    catch(err){show($("approvedRidersStatus"),err.message,"error");(approve||reject).disabled=false;}
+    return;
+  }
   const btn=e.target.closest("[data-rider-status-id]");if(!btn)return;
   const next=btn.dataset.nextStatus;
   const promptText=next==="suspended"?"Suspend this rider? They will no longer be able to sign in. Their account, photograph and history will be retained.":"Reactivate this rider? They will regain access to their account.";
