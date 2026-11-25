@@ -281,3 +281,17 @@ These changes are code additions only. They have not been deployed or verified a
 
 **Testing status:** The administrator-controlled replacement-photo workflow has passed the functional checks listed above on the testing deployment. This is not a full independent security audit. Keep the production branch and production database unchanged; do not merge or deploy to production without separate approval.
 
+
+
+## 17. Authentication hardening — 25 November 2026
+
+### Implemented on the testing branch
+- Added a dedicated rate limit of five vendor/rider registration attempts per IP per hour.
+- Added a dedicated login rate limit of ten failed attempts per IP per 15 minutes; successful logins are excluded from the failure count.
+- Retained the existing general API rate limit and administrator-registration rate limit.
+- Enforced a maximum bcrypt-compatible password size of 72 UTF-8 bytes for vendor/rider registration, login input and administrator registration, preventing silent bcrypt truncation ambiguity. Existing minimum password requirements remain in place.
+
+### Verification still required
+- Run JavaScript syntax checks and deploy to the testing service.
+- Test that ordinary sign-in and registration still work, invalid attempts are throttled, and valid users can sign in after successful attempts.
+- These controls are IP-based application limits, not a substitute for a full security audit or edge/WAF protection. Production remains unchanged and must not be merged/deployed without separate approval.
