@@ -250,3 +250,22 @@ These changes are code additions only. They have not been deployed or verified a
 - Test admin creation, login, role restrictions, notification rendering, mark-as-reviewed, and email delivery.
 - The admin page is only the initial notification inbox; the full operational Admin Dashboard remains to be built.
 - Do not deploy or use this for real customer information until functional and security testing is completed.
+
+
+## 16. Administrator-controlled rider photograph replacement — 25 November 2026
+
+### Added to the testing branch
+- Added separate pending replacement-photograph storage fields to rider profiles. Uploading a replacement does not overwrite the current approved photograph.
+- Added administrator-only routes to upload a replacement, privately preview it, approve it, or reject it.
+- Replacement uploads accept validated JPEG, PNG or WebP images up to 512 KB.
+- The Admin Portal Rider Management section now shows the current official photograph and a separate pending replacement preview, with upload, approve and reject controls.
+- Approval promotes the pending image to the official rider photograph; rejection clears only the pending image. The existing official photograph remains unchanged after rejection.
+- Rider and Vendor photo endpoints continue reading the same official photograph fields, so both portals use the approved image.
+
+### Required before use
+- Apply the new `schema.sql` migration to the **testing database only**.
+- Run syntax checks and test upload validation, administrator-only access, pending preview, approve/reject behaviour, and the Rider and Vendor photo views.
+- Confirm the testing deployment is Live and verify the complete workflow in the browser.
+- Do not apply this migration to the production database or merge to the production branch without separate approval.
+
+These are code changes in the testing branch. They are not yet confirmed deployed or functionally tested.
