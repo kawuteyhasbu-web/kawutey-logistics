@@ -560,6 +560,12 @@ app.patch("/api/admin/deposits/:id/review", authenticate, roles("admin"), asyncR
   finally { client.release(); }
 }));
 
+app.get("/api/admin/admin-account-count", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("SELECT COUNT(*)::int AS total FROM users WHERE role='admin'");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ total: result.rows[0].total, maximum: ADMIN_LIMIT });
+}));
+
 app.get("/api/admin/notifications", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT id,account_type,details,email_status,created_at,read_at FROM admin_notifications ORDER BY created_at DESC LIMIT 100");
   res.json({ notifications: result.rows });
