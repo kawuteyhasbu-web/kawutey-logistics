@@ -196,7 +196,9 @@
           <div id="pickupFormArea" class="hidden" style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
             <h4>Request Package Pickup</h4>
             <form id="pickupForm">
-              <p class="alert alert-info">For accurate rider distance and travel-time estimates, allow location access when submitting this request while you are at the pickup point. If location is unavailable, riders will still see the offer.</p>
+              <p class="alert alert-info">Share your current location while you are at the pickup point so riders can see the road distance and estimated driving time. This is optional; your pickup request can still be submitted without location access.</p>
+              <button type="button" class="btn btn-outline" data-action="capturePickupLocation">Share My Current Location</button>
+              <p id="pickupLocationStatus" role="status" aria-live="polite" style="margin:0 0 14px;color:#555;font-size:0.88rem;">Pickup location not shared yet.</p>
               <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2"></textarea></div>
               <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
               <div class="form-group"><label>Total Number of Packages *</label><input type="number" id="total-packages" min="1" required></div>
@@ -350,6 +352,7 @@
     let currentRider = null;
     let currentRiderPhotoUrl = null;
     let secureRiderLocation = null;
+    let securePickupLocation = null;
     let secureAssignmentPollTimer = null;
     let secureRiderWatchId = null;
     let secureSeenNearbyOffers = new Set();
@@ -406,6 +409,7 @@
       const action = target.getAttribute("data-action");
       const actions = {
         togglePickupForm, logoutVendor, logoutRider, showDepositForm,
+        capturePickupLocation,
         showTransactionHistory, requestRefund, submitDeposit, sendMessage,
         secureRefreshAssignments: loadSecureRiderAssignments,
         secureRefreshDeposits: loadSecureRiderDeposits,
@@ -539,12 +543,34 @@
     function togglePickupForm() {
       document.getElementById('pickupFormArea').classList.toggle('hidden');
     }
+    async function capturePickupLocation() {
+      const status = document.getElementById("pickupLocationStatus");
+      const button = document.querySelector('[data-action="capturePickupLocation"]');
+      if (!currentVendor) return alert("Please log in again.");
+      if (!navigator.geolocation) {
+        securePickupLocation = null;
+        if (status) status.textContent = "Location services are not available in this browser. You can still submit the pickup request.";
+        return;
+      }
+      if (status) status.textContent = "Requesting your location… Please allow location access in your browser.";
+      if (button) button.disabled = true;
+      try {
+        const position = await getBrowserPosition({ timeout: 15000, maximumAge: 0 });
+        securePickupLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+        if (status) status.textContent = "Pickup location captured successfully. Riders can receive distance and estimated driving-time information when road routing is available.";
+      } catch (error) {
+        securePickupLocation = null;
+        if (status) status.textContent = error.code === 1
+          ? "Location permission was denied. You can allow it in your browser settings or submit without location."
+          : "Your location could not be obtained. Please try again at the pickup point, or submit without location.";
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
     async function requestPickup(e) {
       e.preventDefault();
       if (!currentVendor) return alert("Please log in again.");
       try {
-        // Capture the vendor's position at the pickup point when permission is granted.
-        const pickupPosition = await getBrowserPosition({ timeout: 7000, maximumAge: 60000 }).catch(() => null);
         const data = await apiRequest("/api/vendor/pickups", {
           method: "POST",
           body: JSON.stringify({
@@ -554,11 +580,14 @@
             largePackages: Number(document.getElementById('large-packages').value || 0),
             mediumPackages: Number(document.getElementById('medium-packages').value || 0),
             smallPackages: Number(document.getElementById('small-packages').value || 0),
-            pickupLatitude: pickupPosition ? pickupPosition.coords.latitude : null,
-            pickupLongitude: pickupPosition ? pickupPosition.coords.longitude : null
+            pickupLatitude: securePickupLocation ? securePickupLocation.latitude : null,
+            pickupLongitude: securePickupLocation ? securePickupLocation.longitude : null
           })
         });
         document.getElementById('pickupForm').reset();
+        securePickupLocation = null;
+        const locationStatus = document.getElementById("pickupLocationStatus");
+        if (locationStatus) locationStatus.textContent = "Pickup location not shared yet.";
         document.getElementById('pickupFormArea').classList.add('hidden');
         await renderPickups();
         alert("Pickup request submitted successfully.");
