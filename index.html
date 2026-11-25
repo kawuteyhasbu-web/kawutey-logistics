@@ -559,28 +559,31 @@
           return;
         }
         area.innerHTML = mine.map(p => {
-          const status = p.assignment_status === "accepted" ? "Rider accepted" :
-            p.assignment_status === "completed" ? "Completed" :
-            p.assignment_status === "cancelled" ? "Cancelled" : "Awaiting rider";
           const assigned = Boolean(p.rider_name);
+          const phoneDial = String(p.rider_phone || "").replace(/[^\\d+]/g, "");
+          const phoneDisplay = p.rider_phone
+            ? `<a href="tel:${escapeHtml(phoneDial)}" style="color:var(--primary);font-weight:600;">${escapeHtml(p.rider_phone)} — Call rider</a>`
+            : "Not provided";
+          const riderPhoto = p.rider_has_photo
+            ? `<img id="vendor-rider-photo-${Number(p.id)}" alt="Approved profile photograph of assigned rider" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#f3f4f6;">`
+            : `<div role="img" aria-label="Rider photograph unavailable" style="width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:#eef2f7;border:2px solid var(--border);color:#555;font-size:11px;">Photo unavailable</div>`;
           const riderBlock = assigned ? `
             <div style="display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
-              ${p.rider_has_photo ? `<img id="vendor-rider-photo-${Number(p.id)}" alt="Assigned rider profile photograph" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#f3f4f6;">` : ""}
+              ${riderPhoto}
               <div>
                 <strong>Assigned Rider</strong><br>
                 ${escapeHtml(p.rider_name)}<br>
-                <small>Rider code: ${escapeHtml(p.rider_code || "—")}<br>Phone: ${escapeHtml(p.rider_phone || "Not provided")}<br>Location: ${escapeHtml(p.rider_location || "Not provided")}</small>
+                <small>Rider code: ${escapeHtml(p.rider_code || "—")}<br>Phone: ${phoneDisplay}<br>Location: ${escapeHtml(p.rider_location || "Not provided")}</small>
               </div>
-            </div>` : (p.assignment_status === "accepted" || p.assignment_status === "completed" ? "<p><small>Assigned rider details are temporarily unavailable.</small></p>" : "");
+            </div>` : "";
           return `
             <div class="pickup-item">
-              <strong>Status:</strong> ${status}<br>
               <strong>Pickup Time:</strong> ${escapeHtml(new Date(p.preferred_at).toLocaleString())}<br>
               <strong>Total Packages:</strong> ${Number(p.total_packages)}<br>
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
               ${riderBlock}
-              <small>${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
+              <small>Request submitted: ${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
             </div>`;
         }).join("");
         for (const p of mine) {
