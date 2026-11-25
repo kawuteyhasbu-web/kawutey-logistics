@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS rider_profiles (
 -- Upgrade existing testing databases without replacing existing rider records.
 ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA;
 ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT;
+ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS pending_photo_data BYTEA;
+ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS pending_photo_mime TEXT;
+ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS pending_photo_submitted_at TIMESTAMPTZ;
 CREATE TABLE IF NOT EXISTS wallets (
   rider_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   balance_pesewas BIGINT NOT NULL DEFAULT 0 CHECK (balance_pesewas >= 0)
