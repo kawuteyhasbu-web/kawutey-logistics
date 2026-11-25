@@ -331,7 +331,7 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
   const assignments = result.rows.map(row => ({ ...row, distanceKm: null, travelMinutes: null, nearby: false }));
   const routable = hasLocation ? assignments.filter(a => a.status === "available" && a.pickup_latitude !== null && a.pickup_longitude !== null && Number.isFinite(Number(a.pickup_latitude)) && Number.isFinite(Number(a.pickup_longitude))).slice(0, 30) : [];
   if (routable.length) {
-    const cacheKey = [riderLat.toFixed(3), riderLon.toFixed(3), routable.map(a => a.id + ":" + Number(a.pickup_latitude).toFixed(4) + ":" + Number(a.pickup_longitude).toFixed(4)).join(",")].join("|");
+    const cacheKey = [riderLat.toFixed(4), riderLon.toFixed(4), routable.map(a => a.id + ":" + Number(a.pickup_latitude).toFixed(4) + ":" + Number(a.pickup_longitude).toFixed(4)).join(",")].join("|");
     let routeData = riderRouteCache.get(cacheKey);
     if (!routeData || Date.now() - routeData.savedAt > 30000) {
       try {
@@ -356,7 +356,7 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
       if (!estimate) continue;
       assignment.distanceKm = estimate.distanceKm === null ? null : Number(estimate.distanceKm.toFixed(1));
       assignment.travelMinutes = estimate.travelMinutes;
-      assignment.nearby = estimate.distanceKm !== null && estimate.distanceKm <= 5;
+      assignment.nearby = estimate.distanceKm !== null && estimate.travelMinutes !== null && estimate.distanceKm <= 5;
     }
   }
   assignments.sort((a, b) => {
