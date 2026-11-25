@@ -315,3 +315,31 @@ These changes are code additions only. They have not been deployed or verified a
 - On testing data only, verify one-package acceptance deducts GH₵5, two-package acceptance deducts GH₵10, insufficient balance blocks acceptance, a repeated acceptance attempt does not deduct again, and a deposit changes the wallet balance without appearing as commission revenue.
 - Verify CSV export matches the selected Ghana-time report date and entries.
 - Do not run acceptance tests using real customer deliveries or real funds. Production remains unchanged.
+
+## 19. Open pickup offers, live availability and rider distance — 25 November 2026
+
+### Official owner-approved behaviour
+- Every active/approved rider may see and attempt to accept every available pickup, regardless of the rider's current location. Distance must never be an eligibility restriction.
+- Each available pickup should show the rider the distance from their current location and an estimated travel duration, preferably based on a road route rather than straight-line distance.
+- If either location is unavailable or routing cannot produce a reliable estimate, show a clear unavailable message; never invent a distance or travel time.
+- Nearby pickups should receive stronger visual prominence, be sorted ahead of farther pickups where a reliable route estimate exists, and support a stronger/immediate notification to the rider where notification permission is granted. A nearby label/threshold must be explicit and configurable.
+- Riders farther away must continue to see and accept the same offer.
+- After one rider successfully accepts a pickup, it must disappear from every other rider's available list and remain in the successful rider's accepted assignments.
+- The backend/database must allow only one rider to win, including simultaneous attempts. Losing riders receive a clear “already accepted” response. Only the winning rider is charged the commission.
+- Rider available-offer lists should refresh automatically so accepted offers disappear without requiring a manual refresh.
+
+### Existing code review — testing branch
+- The rider assignments API currently returns all assignments with status 'available' to every authenticated rider, without a location restriction. It also returns that rider's own accepted/completed assignments.
+- The acceptance endpoint already locks the assignment row, checks that it remains 'available', and commits the assignment claim and commission deduction in one database transaction. This is a strong existing safeguard against simultaneous acceptance.
+- The current rider page refreshes the assignments only when manually refreshed or after an acceptance; there is no automatic refresh/push update.
+- Pickup records currently have no latitude/longitude fields. Vendor account location is text only, and the rider page does not currently request or submit the rider's live coordinates. Therefore distance and travel duration cannot yet be calculated reliably.
+- Existing acceptance and commission tests do not test two different riders attempting the same offer simultaneously or verify that the losing rider's screen refreshes automatically.
+
+### Implementation and verification still required
+- Add optional, consent-based pickup coordinates captured at the vendor's pickup location and rider current-location capture; retain offer visibility if either party declines location sharing.
+- Add a road-routing integration for distance and travel duration, with safe timeouts, sensible request limits and a clear unavailable fallback. Do not use fabricated straight-line values as road-route estimates.
+- Display distance and estimated duration together on available pickup cards.
+- Prioritise nearby offers visually and in ordering without excluding distant riders; provide optional browser notifications subject to rider permission.
+- Automatically refresh offers and confirm a claimed offer disappears for other riders.
+- Test with at least two approved test riders: both see the same available offer; one accepts; the other sees it disappear; a stale/simultaneous second acceptance is rejected; exactly one assignment and one commission transaction remain.
+- Keep all changes on the testing branch and testing database. Do not merge or deploy to production without separate approval.
