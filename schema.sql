@@ -42,9 +42,13 @@ CREATE TABLE IF NOT EXISTS pickups (
   large_packages INTEGER NOT NULL DEFAULT 0 CHECK (large_packages >= 0),
   medium_packages INTEGER NOT NULL DEFAULT 0 CHECK (medium_packages >= 0),
   small_packages INTEGER NOT NULL DEFAULT 0 CHECK (small_packages >= 0),
+  pickup_latitude DOUBLE PRECISION,
+  pickup_longitude DOUBLE PRECISION,
   status TEXT NOT NULL DEFAULT 'requested',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE pickups ADD COLUMN IF NOT EXISTS pickup_latitude DOUBLE PRECISION;
+ALTER TABLE pickups ADD COLUMN IF NOT EXISTS pickup_longitude DOUBLE PRECISION;
 CREATE TABLE IF NOT EXISTS assignments (
   id BIGSERIAL PRIMARY KEY,
   pickup_id BIGINT NOT NULL UNIQUE REFERENCES pickups(id),
