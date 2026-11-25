@@ -694,9 +694,13 @@
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
               ${riderBlock}
+              ${p.assignment_status === "available" && !p.rider_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
               <small>Request submitted: ${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
             </div>`;
         }).join("");
+        area.querySelectorAll(".delete-pickup-button").forEach(button => {
+          button.addEventListener("click", () => deletePickupRequest(button.dataset.pickupId));
+        });
         for (const p of mine) {
           if (!p.rider_name || !p.rider_has_photo) continue;
           const photo = document.getElementById("vendor-rider-photo-" + Number(p.id));
@@ -719,6 +723,19 @@
         }
       } catch (error) {
         area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
+      }
+    }
+    async function deletePickupRequest(pickupId) {
+      if (!currentVendor) return alert("Please log in again.");
+      const confirmed = window.confirm("Permanently delete this pickup request? This cannot be undone.");
+      if (!confirmed) return;
+      try {
+        await apiRequest("/api/vendor/pickups/" + encodeURIComponent(pickupId), { method: "DELETE" });
+        await renderPickups();
+        alert("Pickup request permanently deleted.");
+      } catch (error) {
+        alert(error.message);
+        await renderPickups();
       }
     }
     async function logoutVendor() {
