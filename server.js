@@ -17,6 +17,8 @@ const jwtSecret = process.env.JWT_SECRET;
 const ADMIN_LIMIT = 4;
 const ADMIN_LOCK_ID = 2026112304;
 const adminRegisterLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
+const authRegisterLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
+const authLoginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, skipSuccessfulRequests: true, standardHeaders: true, legacyHeaders: false });
 
 if (!jwtSecret || jwtSecret.length < 32) {
   console.error("JWT_SECRET must be set to a random value of at least 32 characters.");
@@ -114,7 +116,7 @@ app.post("/api/admin/register", adminRegisterLimiter, asyncRoute(async (req, res
   if (configuredCode.length < 24) return res.status(503).json({ error: "Administrator invitations are not configured. Contact the system owner." });
   const { fullName, email, password, invitationCode } = req.body || {};
   const name = clean(fullName), mail = clean(email).toLowerCase();
-  if (!name || name.length > 120 || !emailValid(mail) || typeof password !== "string" || password.length < 14 || password.length > 128 || typeof invitationCode !== "string" || invitationCode.length > 256) {
+  if (!name || name.length > 120 || !emailValid(mail) || typeof password !== "string" || password.length < 14 || Buffer.byteLength(password, "utf8") > 72 || typeof invitationCode !== "string" || invitationCode.length > 256) {
     return res.status(400).json({ error: "Provide your name, valid email, password of at least 14 characters, and invitation code." });
   }
   const supplied = Buffer.from(invitationCode, "utf8");
@@ -146,10 +148,10 @@ app.post("/api/admin/register", adminRegisterLimiter, asyncRoute(async (req, res
   } finally { client.release(); }
 }));
 
-app.post("/api/auth/register", asyncRoute(async (req, res) => {
+app.post("/api/auth/register", authRegisterLimiter, asyncRoute(async (req, res) => {
   const { fullName, businessName, email, phone, password, role, ghanaCardNumber, location } = req.body || {};
   const name = clean(fullName), business = clean(businessName), mail = clean(email).toLowerCase(), tel = clean(phone);
-  if (!name || !emailValid(mail) || !tel || !["vendor", "rider"].includes(role) || typeof password !== "string" || password.length < 10) {
+  if (!name || !emailValid(mail) || !tel || !["vendor", "rider"].includes(role) || typeof password !== "string" || password.length < 10 || Buffer.byteLength(password, "utf8") > 72) {
     return res.status(400).json({ error: "Provide your name, valid email, phone, vendor/rider role and a password of at least 10 characters." });
   }
   if (role === "vendor" && (!business || business.length > 120)) return res.status(400).json({ error: "Please provide your business name (up to 120 characters)." });
@@ -208,8 +210,9 @@ app.post("/api/auth/register", asyncRoute(async (req, res) => {
   } finally { client.release(); }
 }));
 
-app.post("/api/auth/login", asyncRoute(async (req, res) => {
+app.post("/api/auth/login", authLoginLimiter, asyncRoute(async (req, res) => {
   const mail = clean(req.body?.email).toLowerCase(), password = req.body?.password;
+  if (typeof password !== "string" || Buffer.byteLength(password, "utf8") > 72) return res.status(400).json({ error: "Enter a valid password." });
   const found = await pool.query("SELECT id,full_name,business_name,email,phone,password_hash,role,status,location FROM users WHERE email=$1", [mail]);
   if (!found.rowCount || !(await bcrypt.compare(String(password || ""), found.rows[0].password_hash))) return res.status(401).json({ error: "Invalid email or password." });
   const user = found.rows[0];
