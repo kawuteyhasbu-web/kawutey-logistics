@@ -264,7 +264,8 @@ These changes are code additions only. They have not been deployed or verified a
 
 ### Required before use
 - Apply the new `schema.sql` migration to the **testing database only**.
-- Run syntax checks and test upload validation, administrator-only access, pending preview, approve/reject behaviour, and the Rider and Vendor photo views.
+- JavaScript syntax checks for `server.js` and the Admin Portal script passed after the changes.
+- Still test upload validation, administrator-only access, pending preview, approve/reject behaviour, and the Rider and Vendor photo views.
 - Confirm the testing deployment is Live and verify the complete workflow in the browser.
 - Do not apply this migration to the production database or merge to the production branch without separate approval.
 
