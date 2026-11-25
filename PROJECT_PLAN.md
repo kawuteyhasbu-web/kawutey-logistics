@@ -295,3 +295,23 @@ These changes are code additions only. They have not been deployed or verified a
 - Run JavaScript syntax checks and deploy to the testing service.
 - Test that ordinary sign-in and registration still work, invalid attempts are throttled, and valid users can sign in after successful attempts.
 - These controls are IP-based application limits, not a substitute for a full security audit or edge/WAF protection. Production remains unchanged and must not be merged/deployed without separate approval.
+
+
+## 18. Rider commission and wallet integrity review — 25 November 2026
+
+### Code review findings on the testing branch
+- Commission rate is defined as 500 pesewas (GH₵5.00) per package.
+- The acceptance endpoint calculates the fee from the pickup's total package count, checks the rider's wallet balance, locks the assignment and wallet rows, changes the assignment to accepted, deducts the fee, and records a commission transaction within one database transaction. If a step fails, the transaction is rolled back.
+- The database schema defines a partial unique index allowing only one successful commission transaction per assignment. This provides an additional duplicate-deduction safeguard.
+- Wallet deposit totals include only successful deposit transactions; commission totals include only successful commission transactions. Deposits and commission are reported separately.
+- Commission reports filter by Ghana local date (Africa/Accra), include successful negative commission entries only, and show rider, package count, reference and Ghana time.
+
+### Existing owner-observed test evidence
+- Owner previously reported a 24 November 2026 commission report showing GH₵10.00 deducted for two packages, with a commission reference. This is consistent with the GH₵5-per-package rule.
+- Owner reported that daily report dates reset at midnight Ghana time while previous dated commission receipts remained available.
+
+### Remaining testing before production
+- Confirm the unique index one_commission_per_assignment exists in the testing database; if not, apply the idempotent index statement from schema.sql to the testing database only.
+- On testing data only, verify one-package acceptance deducts GH₵5, two-package acceptance deducts GH₵10, insufficient balance blocks acceptance, a repeated acceptance attempt does not deduct again, and a deposit changes the wallet balance without appearing as commission revenue.
+- Verify CSV export matches the selected Ghana-time report date and entries.
+- Do not run acceptance tests using real customer deliveries or real funds. Production remains unchanged.
