@@ -1040,8 +1040,25 @@ app.patch("/api/admin/cancellation-requests/:id/review", authenticate, roles("ad
 }));
 
 app.get("/api/admin/notifications", authenticate, roles("admin"), asyncRoute(async (req, res) => {
-  const result = await pool.query("SELECT id,account_type,details,email_status,created_at,read_at FROM admin_notifications ORDER BY created_at DESC LIMIT 100");
-  res.json({ notifications: result.rows });
+  const unreadOnly = req.query.unreadOnly === "true";
+  const requestedLimit = Number.parseInt(req.query.limit, 10);
+  const limit = Number.isInteger(requestedLimit) ? Math.min(100, Math.max(1, requestedLimit)) : 100;
+  const beforeId = req.query.beforeId && /^\d+$/.test(String(req.query.beforeId)) ? String(req.query.beforeId) : null;
+  const result = await pool.query(
+    `SELECT id,account_type,details,email_status,created_at,read_at
+     FROM admin_notifications
+     WHERE ($1::boolean = FALSE OR read_at IS NULL)
+       AND ($2::bigint IS NULL OR id < $2::bigint)
+     ORDER BY id DESC LIMIT $3`,
+    [unreadOnly, beforeId, limit]
+  );
+  const counts = await pool.query("SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE read_at IS NULL)::int AS unread FROM admin_notifications");
+  res.set("Cache-Control", "private, no-store");
+  res.json({ notifications: result.rows, total: counts.rows[0].total, unread: counts.rows[0].unread, limit, hasMore: result.rowCount === limit, nextBeforeId: result.rowCount ? result.rows[result.rowCount - 1].id : null });
+}));
+app.post("/api/admin/notifications/read-all", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query("UPDATE admin_notifications SET read_at=NOW() WHERE read_at IS NULL");
+  res.json({ message: "All signup notifications have been marked as reviewed.", updated: result.rowCount });
 }));
 app.patch("/api/admin/notifications/:id/read", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("UPDATE admin_notifications SET read_at=COALESCE(read_at,NOW()) WHERE id=$1 RETURNING id,read_at", [req.params.id]);
