@@ -1134,6 +1134,7 @@ async function startServer() {
     await pool.query("INSERT INTO payment_settings(id) VALUES(1) ON CONFLICT (id) DO NOTHING");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_mode_audit (id BIGSERIAL PRIMARY KEY, admin_user_id BIGINT NOT NULL, manual_backup_enabled BOOLEAN NOT NULL, reason TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_deposit_audit (id BIGSERIAL PRIMARY KEY, wallet_transaction_id BIGINT NOT NULL, admin_user_id BIGINT NOT NULL, decision TEXT NOT NULL CHECK (decision IN ('approve','reject')), created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    await pool.query("CREATE TABLE IF NOT EXISTS rider_messages (\n  id BIGSERIAL PRIMARY KEY,\n  sender_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  recipient_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  message TEXT NOT NULL CHECK (length(btrim(message)) BETWEEN 1 AND 2000),\n  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n  CHECK (sender_id <> recipient_id)\n);\nCREATE INDEX IF NOT EXISTS rider_messages_sender_created_idx ON rider_messages(sender_id, created_at DESC, id DESC);\nCREATE INDEX IF NOT EXISTS rider_messages_recipient_created_idx ON rider_messages(recipient_id, created_at DESC, id DESC);");
     console.log("Database connection and rider profile storage verified.");
     app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
   } catch (error) {
