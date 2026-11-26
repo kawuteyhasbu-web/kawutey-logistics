@@ -1407,6 +1407,87 @@ body{background:radial-gradient(ellipse at 50% -15%,#e7effb 0,transparent 48%),#
  #dashboard table{min-width:580px}
 }
 </style>
+<style id="kl-admin-information-finish-visual-system-2026-11">
+/* ADMIN COMMAND CENTRE — information architecture and usability finish */
+#dashboard{grid-template-columns:repeat(12,minmax(0,1fr));align-items:start}
+#dashboard>*{min-width:0}
+#dashboard>.admin-hero,#dashboard>#kl-admin-quicknav,#dashboard>#dashboardActions,
+#dashboard>#commissionSummaryCard,#dashboard>#walletReconciliationCard{grid-column:1/-1}
+#dashboard>.admin-hero{min-height:280px}
+#dashboard>.admin-hero .admin-hero-copy{max-width:680px}
+#dashboard>.admin-hero .admin-hero-art{min-height:220px}
+#dashboard>#kl-admin-quicknav{top:74px}
+#dashboard>#dashboardActions{align-items:center}
+#dashboard>#commissionSummaryCard{position:relative;overflow:hidden}
+#dashboard>#commissionSummaryCard:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#ff7900,#ffb36d)}
+#dashboard>#commissionSummaryCard>h2{font-size:clamp(1.25rem,2.3vw,1.65rem)}
+#dashboard>#commissionSummaryCard .commission-metric{min-height:105px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+#dashboard>#commissionSummaryCard .commission-metric span{font-size:.75rem;color:#6e8199}
+#dashboard>#commissionSummaryCard #commissionReportEntries .item{border-left:3px solid #ff9a45}
+#dashboard>#walletReconciliationCard{position:relative;overflow:hidden}
+#dashboard>#walletReconciliationCard:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#1b66a7,#73a9db)}
+#dashboard>.card:not(#dashboardActions):not(#commissionSummaryCard):not(#walletReconciliationCard){min-height:100%}
+#dashboard>.card:not(#dashboardActions):not(#commissionSummaryCard):not(#walletReconciliationCard)>h2{display:flex;align-items:center;gap:10px}
+#dashboard>.card:not(#dashboardActions):not(#commissionSummaryCard):not(#walletReconciliationCard)>h2:before{content:"";flex:0 0 7px;height:25px;border-radius:6px;background:#ff8b28}
+#dashboard>.admin-section{min-width:0}
+#dashboard>.admin-section .section-card{padding:clamp(17px,2vw,25px)}
+#dashboard>.admin-section .section-card>p:first-child{max-width:900px}
+#dashboard .section-card>h3{display:flex;align-items:center;gap:9px}
+#dashboard .section-card>h3:before{content:"";width:6px;height:19px;border-radius:5px;background:#f28a2d}
+#dashboard #pendingRiders>.item,#dashboard #approvedRiders>.item,
+#dashboard #depositRequests>.item,#dashboard #walletTransactions>.item,
+#dashboard #notifications>.item,#dashboard #cancellationRequests>.item{position:relative}
+#dashboard #pendingRiders>.item:hover,#dashboard #approvedRiders>.item:hover,
+#dashboard #depositRequests>.item:hover,#dashboard #walletTransactions>.item:hover,
+#dashboard #notifications>.item:hover,#dashboard #cancellationRequests>.item:hover{border-color:#c6d7eb;box-shadow:0 8px 20px rgba(8,43,104,.07)}
+#dashboard .section-card :is(button,a){overflow-wrap:anywhere}
+#dashboard .section-card :is(input,select,textarea){max-width:100%}
+#dashboard .section-card .notice[role=status]{position:relative}
+#dashboard #paymentSettingsForm{padding:17px;border:1px solid #e2eaf4;border-radius:14px;background:#f9fbfe}
+#dashboard #paymentSettingsForm button{justify-self:start;min-width:190px}
+#dashboard #walletReconciliationCard #walletReconciliationResults{margin-top:13px}
+#dashboard #walletReconciliationCard .reconciliation-summary{margin:14px 0}
+#dashboard #walletReconciliationCard .reconciliation-metric{min-height:88px;display:flex;flex-direction:column;justify-content:center;gap:5px}
+#dashboard #walletReconciliationCard .reconciliation-metric span{font-size:.7rem;color:#71839b}
+#dashboard #walletReconciliationCard .reconciliation-row+ .reconciliation-row{margin-top:8px}
+#dashboard .admin-section summary{transition:background .16s ease}
+#dashboard .admin-section summary:hover{background:#edf4fd}
+#dashboard .admin-section[open] summary{position:sticky;top:135px;z-index:5}
+#dashboard .admin-section .section-card{overflow-wrap:anywhere}
+#dashboard .admin-section .section-card>div[id]{min-width:0}
+#dashboard .admin-section .section-card>div[id]:empty{display:none}
+#dashboard .section-card .meta{font-size:.76rem}
+#dashboard .section-card h3:not(:first-child){margin-top:24px}
+#dashboard .section-card>button.secondary{margin:4px 7px 8px 0}
+#dashboard .section-card>button.secondary:focus-visible{outline-offset:3px}
+#dashboard #adminSectionSearch{min-height:47px;font-size:.92rem}
+#dashboard #adminSectionSearchCount{font-variant-numeric:tabular-nums}
+#dashboard #clearAdminSectionSearch{min-height:42px}
+@media(min-width:1100px){
+ #dashboard>.card:not(#dashboardActions):not(#commissionSummaryCard):not(#walletReconciliationCard){grid-column:span 6}
+ #dashboard>.admin-section{grid-column:span 6}
+ #dashboard>#commissionSummaryCard,#dashboard>#walletReconciliationCard{grid-column:1/-1}
+ #dashboard>.admin-section#adminAccountCountCard{grid-column:span 6}
+}
+@media(max-width:850px){
+ #dashboard{display:flex;flex-direction:column;gap:13px}
+ #dashboard>*{width:100%;min-width:0}
+ #dashboard>#kl-admin-quicknav{top:0}
+ #dashboard>.admin-hero{min-height:0}
+ #dashboard>.admin-hero .admin-hero-art{min-height:145px}
+ #dashboard>.admin-section[open] summary{top:0}
+}
+@media(max-width:480px){
+ #dashboard>#commissionSummaryCard .commission-grid{grid-template-columns:1fr}
+ #dashboard>#commissionSummaryCard .commission-metric{min-height:78px}
+ #dashboard>#walletReconciliationCard .reconciliation-summary{grid-template-columns:1fr}
+ #dashboard>#dashboardActions{gap:8px}
+ #dashboard>#dashboardActions button{width:100%}
+ #dashboard>.admin-hero{padding:20px 15px}
+ #dashboard>.admin-hero h2{font-size:1.85rem}
+ #dashboard>.admin-section summary{padding:13px 11px}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
