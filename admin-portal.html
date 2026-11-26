@@ -4,96 +4,152 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Kawutey Logistics — Administrator Access</title>
+<meta name="theme-color" content="#082b68">
+<title>Kawutey Logistics — Secure Admin Access</title>
 <style>
-:root{--blue:#0A2F6B;--orange:#FF6A00;--border:#d0d7e2}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#eef2f7;color:#10264b;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;display:grid;place-items:center;padding:18px}
-main{width:min(100%,520px)}header,.panel{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 16px rgba(10,47,107,.08);margin-bottom:14px}
-h1{font-size:1.35rem;color:var(--blue);margin:0}header p{margin:6px 0 0;color:#5d6675}
-h2{font-size:1.1rem;color:var(--blue);margin:0 0 12px}
-.tabs{display:flex;gap:8px;margin:16px 0}.tabs button{flex:1}
-button{border:0;border-radius:9px;padding:12px 15px;background:var(--blue);color:#fff;font:inherit;font-weight:650;cursor:pointer}
-button.secondary{background:#fff;color:var(--blue);border:1px solid var(--border)}
+:root{--navy:#082b68;--navy2:#061b42;--orange:#ff7900;--ink:#132c50;--muted:#71819a;--line:#dce6f2}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:26px;background:#f2f5fa;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center}
+.shell{width:min(1120px,100%);min-height:min(720px,calc(100vh - 52px));display:grid;grid-template-columns:1.06fr .94fr;background:#fff;border-radius:30px;overflow:hidden;box-shadow:0 28px 80px rgba(5,28,68,.16);border:1px solid #e3eaf4}
+.visual{position:relative;isolation:isolate;overflow:hidden;padding:42px;color:white;background:radial-gradient(circle at 80% 12%,rgba(255,121,0,.34),transparent 26%),radial-gradient(circle at 8% 90%,rgba(45,124,219,.32),transparent 35%),linear-gradient(145deg,#061a40 0%,#082b68 58%,#0d438b 100%);display:flex;flex-direction:column;justify-content:space-between}
+.visual:before,.visual:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(255,255,255,.13);border-radius:50%;width:470px;height:470px;right:-180px;top:110px}
+.visual:after{width:340px;height:340px;right:-110px;top:175px;border-color:rgba(255,121,0,.35)}
+.brand{display:flex;align-items:center;gap:13px;font-weight:850;letter-spacing:.01em}
+.brand-mark{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#ff9b35,#ff6b00);display:grid;place-items:center;box-shadow:0 9px 22px rgba(255,121,0,.3);font-size:20px}
+.brand small{display:block;color:#b9cce8;font-size:10px;letter-spacing:.2em;margin-top:3px}
+.hero{max-width:520px;margin:46px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:8px 12px;background:rgba(255,255,255,.08);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#ffd3ae}
+.dot{width:7px;height:7px;border-radius:50%;background:#ff8a24;box-shadow:0 0 0 5px rgba(255,138,36,.15)}
+h1{font-size:clamp(2.2rem,4.2vw,3.75rem);line-height:1.03;letter-spacing:-.055em;margin:22px 0 17px}
+.hero p{font-size:15px;line-height:1.8;color:#cfdbed;max-width:430px;margin:0}
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:34px;max-width:470px}
+.feature{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.075);backdrop-filter:blur(12px);padding:14px;border-radius:15px}
+.feature strong{display:block;font-size:13px;margin-bottom:4px}.feature span{font-size:11px;color:#bdcce1}
+.visual-foot{font-size:11px;color:#a9bdd9;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.auth-side{padding:clamp(26px,5vw,62px);display:flex;flex-direction:column;justify-content:center}
+.auth-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}
+.auth-label{font-size:11px;letter-spacing:.15em;font-weight:850;color:var(--orange);text-transform:uppercase}
+.secure{font-size:11px;color:#6d7e95;display:flex;align-items:center;gap:6px}
+.secure:before{content:"";width:7px;height:7px;border-radius:50%;background:#24a36a}
+h2{font-size:clamp(1.65rem,3vw,2.15rem);letter-spacing:-.045em;color:var(--navy);margin:0 0 9px}
+.intro{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 26px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#f0f4fa;padding:5px;border-radius:13px;margin-bottom:24px}
+.tabs button{border:0;border-radius:10px;padding:11px 8px;background:transparent;color:#71819a;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.tabs button.active{background:#fff;color:var(--navy);box-shadow:0 3px 12px rgba(8,43,104,.09)}
+form{display:grid;gap:8px}
+form h2{font-size:1.5rem}
+label{font-size:12px;font-weight:800;color:#294366;margin-top:8px}
+input{width:100%;height:49px;border:1px solid #d7e1ee;border-radius:12px;padding:0 14px;font:inherit;color:var(--ink);background:#fbfcfe;outline:none;transition:.18s}
+input:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,121,0,.12);background:#fff}
+.input-with-toggle{display:flex;gap:8px;align-items:center}.input-with-toggle input{min-width:0;flex:1}
+button.primary{height:51px;border:0;border-radius:12px;margin-top:17px;background:linear-gradient(100deg,#ff7900,#ff9634);color:#fff;font:inherit;font-weight:850;box-shadow:0 10px 22px rgba(255,121,0,.22);cursor:pointer;transition:transform .18s,box-shadow .18s}
+button.primary:hover{transform:translateY(-1px);box-shadow:0 13px 26px rgba(255,121,0,.3)}
 button:disabled{opacity:.6;cursor:not-allowed}
-label{display:block;font-weight:650;margin:13px 0 6px}
-input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;font:inherit}
-.input-with-toggle{display:flex;gap:8px;align-items:stretch}.input-with-toggle input{min-width:0;flex:1}.toggle-visibility{flex:0 0 auto;min-width:76px;padding:10px 12px;background:#fff;color:var(--blue);border:1px solid var(--border);font-weight:600}
-form>button{margin-top:16px;width:100%}
-.notice{padding:12px;border-radius:9px;background:#e8f0fe;margin-top:14px}.error{background:#fce8e6;color:#8a1c13}.success{background:#d1e7dd;color:#0f5132}
-.hidden{display:none!important}.small{font-size:.88rem;color:#5d6675}.back{color:var(--blue)}
+.toggle-visibility{flex:0 0 auto;height:45px;padding:0 13px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-weight:750;cursor:pointer}
+.notice{padding:12px 14px;border-radius:11px;background:#edf4ff;color:#264b7d;margin-top:14px;font-size:12px;line-height:1.6}
+.error{background:#fff0ee;color:#9a2c21}.success{background:#e9f8ef;color:#17643c}
+.hidden{display:none!important}.small{font-size:11px;line-height:1.7;color:#8592a5;margin-top:24px}
+@media(max-width:760px){
+ body{padding:0;background:#f2f5fa;display:block}
+ .shell{min-height:100vh;width:100%;display:flex;flex-direction:column;border:0;border-radius:0;box-shadow:none}
+ .visual{min-height:300px;padding:24px 22px 25px}
+ .brand-mark{width:42px;height:42px;border-radius:13px}
+ .hero{margin:31px 0 20px}
+ h1{font-size:2.15rem;max-width:430px;margin:14px 0 10px}
+ .hero p{font-size:12px;line-height:1.6}
+ .feature-grid{display:none}
+ .visual-foot{font-size:10px}
+ .auth-side{padding:27px 22px 34px;flex:1}
+ .auth-top{margin-bottom:22px}
+ .intro{margin-bottom:19px}
+}
+@media(max-width:360px){.visual{padding:20px 17px}.auth-side{padding:23px 17px}.visual-foot span:last-child{display:none}}
 </style>
 </head>
-<body><main>
-<header><h1>Kawutey Logistics</h1><p>Private administrator access</p></header>
-<section class="panel">
-<div class="tabs"><button type="button" id="showSignIn">Admin Sign In</button><button type="button" class="secondary" id="showSignUp">Admin Sign Up</button></div>
-<form id="signInForm">
-<h2>Admin Sign In</h2>
-<label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="username" required>
-<label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required>
-<button id="signInButton">Sign In</button>
-</form>
-<form id="signUpForm" class="hidden">
-<h2>Admin Sign Up</h2>
-<p class="small">Administrator registration requires an invitation code. A maximum of four administrator accounts is permitted.</p>
-<label for="fullName">Full name</label><input id="fullName" maxlength="120" autocomplete="name" required>
-<label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required>
-<label for="registerPassword">Password (at least 14 characters)</label><div class="input-with-toggle"><input id="registerPassword" type="password" minlength="14" maxlength="128" autocomplete="new-password" required><button class="toggle-visibility" type="button" id="toggleRegisterPassword" aria-controls="registerPassword" aria-pressed="false">Show</button></div>
-<label for="invitationCode">Private invitation code</label><div class="input-with-toggle"><input id="invitationCode" type="password" maxlength="256" autocomplete="off" required><button class="toggle-visibility" type="button" id="toggleInvitationCode" aria-controls="invitationCode" aria-pressed="false">Show</button></div>
-<button id="signUpButton">Create Admin Account</button>
-</form>
-<div id="message" class="notice hidden" role="status" aria-live="polite"></div>
+<body><main class="shell">
+<section class="visual" aria-label="Kawutey Logistics administrator introduction">
+ <div class="brand"><div class="brand-mark" aria-hidden="true">KL</div><div>KAWUTEY LOGISTICS<small>DELIVERY • TRUST • CONTROL</small></div></div>
+ <div class="hero">
+  <span class="eyebrow"><i class="dot"></i> Private operations access</span>
+  <h1>Every delivery.<br>One command centre.</h1>
+  <p>Stay in control of your logistics operations. Review activity, support your teams and oversee the movement of every package from one secure workspace.</p>
+  <div class="feature-grid">
+   <div class="feature"><strong>Operations overview</strong><span>Keep an eye on delivery activity</span></div>
+   <div class="feature"><strong>Team management</strong><span>Manage vendors and riders</span></div>
+   <div class="feature"><strong>Financial oversight</strong><span>Review wallets and transactions</span></div>
+   <div class="feature"><strong>Secure administration</strong><span>Restricted access for authorised staff</span></div>
+  </div>
+ </div>
+ <div class="visual-foot"><span>GHANA • KAWUTEY LOGISTICS</span><span>YOUR PACKAGE, OUR PRIORITY.</span></div>
 </section>
-<p class="small">Authorised administrators only. Do not share your invitation code or password.</p>
+<section class="auth-side">
+ <div class="auth-top"><span class="auth-label">Administrator portal</span><span class="secure">Secure sign-in</span></div>
+ <h2>Welcome back</h2><p class="intro">Sign in to continue to your operations workspace. Access is restricted to authorised administrators.</p>
+ <div class="tabs"><button type="button" id="showSignIn" class="active">Admin Sign In</button><button type="button" id="showSignUp">Admin Sign Up</button></div>
+ <form id="signInForm">
+  <h2>Sign in to your account</h2>
+  <label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="username" placeholder="name@company.com" required>
+  <label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+  <button class="primary" id="signInButton">Access administrator workspace</button>
+ </form>
+ <form id="signUpForm" class="hidden">
+  <h2>Create administrator account</h2><p class="small">Administrator registration requires an invitation code. A maximum of four administrator accounts is permitted.</p>
+  <label for="fullName">Full name</label><input id="fullName" maxlength="120" autocomplete="name" placeholder="Your full name" required>
+  <label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" placeholder="name@company.com" required>
+  <label for="registerPassword">Password (at least 14 characters)</label><div class="input-with-toggle"><input id="registerPassword" type="password" minlength="14" maxlength="128" autocomplete="new-password" placeholder="Create a strong password" required><button class="toggle-visibility" type="button" id="toggleRegisterPassword" aria-controls="registerPassword" aria-pressed="false">Show</button></div>
+  <label for="invitationCode">Private invitation code</label><div class="input-with-toggle"><input id="invitationCode" type="password" maxlength="256" autocomplete="off" placeholder="Enter invitation code" required><button class="toggle-visibility" type="button" id="toggleInvitationCode" aria-controls="invitationCode" aria-pressed="false">Show</button></div>
+  <button class="primary" id="signUpButton">Create administrator account</button>
+ </form>
+ <div id="message" class="notice hidden" role="status" aria-live="polite"></div>
+ <p class="small">Authorised administrators only. Never share your password or private invitation code.</p>
+</section>
 </main>
 <script>
 const $=id=>document.getElementById(id);
 const showMessage=(message,kind)=>{const el=$("message");el.textContent=message;el.className="notice "+(kind||"");};
 function selectView(view){
-  const signIn=view==="signin";
-  $("signInForm").classList.toggle("hidden",!signIn);
-  $("signUpForm").classList.toggle("hidden",signIn);
-  $("showSignIn").classList.toggle("secondary",!signIn);
-  $("showSignUp").classList.toggle("secondary",signIn);
-  $("message").classList.add("hidden");
+ const signIn=view==="signin";
+ $("signInForm").classList.toggle("hidden",!signIn);
+ $("signUpForm").classList.toggle("hidden",signIn);
+ $("showSignIn").classList.toggle("active",signIn);
+ $("showSignUp").classList.toggle("active",!signIn);
+ $("message").classList.add("hidden");
 }
 $("showSignIn").addEventListener("click",()=>selectView("signin"));
 $("showSignUp").addEventListener("click",()=>selectView("signup"));
 function attachVisibilityToggle(inputId,buttonId){
-  const field=$(inputId),button=$(buttonId);
-  button.addEventListener("click",()=>{
-    const reveal=field.type==="password";
-    field.type=reveal?"text":"password";
-    button.textContent=reveal?"Hide":"Show";
-    button.setAttribute("aria-pressed",String(reveal));
-    button.setAttribute("aria-label",(reveal?"Hide ":"Show ")+(inputId==="registerPassword"?"password":"invitation code"));
-  });
+ const field=$(inputId),button=$(buttonId);
+ button.addEventListener("click",()=>{
+  const reveal=field.type==="password";field.type=reveal?"text":"password";
+  button.textContent=reveal?"Hide":"Show";button.setAttribute("aria-pressed",String(reveal));
+  button.setAttribute("aria-label",(reveal?"Hide ":"Show ")+(inputId==="registerPassword"?"password":"invitation code"));
+ });
 }
 attachVisibilityToggle("registerPassword","toggleRegisterPassword");
 attachVisibilityToggle("invitationCode","toggleInvitationCode");
 $("signInForm").addEventListener("submit",async event=>{
-  event.preventDefault();$("signInButton").disabled=true;
-  try{
-    const response=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:$("loginEmail").value,password:$("loginPassword").value})});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(data.error||"Sign-in failed.");
-    if(data.user?.role!=="admin")throw new Error("This account is not an administrator.");
-    sessionStorage.setItem("kl_admin_token",data.token);
-    location.assign("/admin-dashboard?adminPortal="+encodeURIComponent(location.pathname));
-  }catch(error){showMessage(error.message,"error");}
-  finally{$("signInButton").disabled=false;}
+ event.preventDefault();$("signInButton").disabled=true;
+ try{
+  const response=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:$("loginEmail").value,password:$("loginPassword").value})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||"Sign-in failed.");
+  if(data.user?.role!=="admin")throw new Error("This account is not an administrator.");
+  sessionStorage.setItem("kl_admin_token",data.token);
+  location.assign("/admin-dashboard?adminPortal="+encodeURIComponent(location.pathname));
+ }catch(error){showMessage(error.message,"error");}
+ finally{$("signInButton").disabled=false;}
 });
 $("signUpForm").addEventListener("submit",async event=>{
-  event.preventDefault();$("signUpButton").disabled=true;
-  try{
-    const response=await fetch("/api/admin/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fullName:$("fullName").value,email:$("registerEmail").value,password:$("registerPassword").value,invitationCode:$("invitationCode").value})});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(data.error||"Registration failed.");
-    const createdEmail=$("registerEmail").value;
-    $("signUpForm").reset();selectView("signin");$("loginEmail").value=createdEmail;
-    showMessage(data.message+" "+data.remainingSlots+" administrator slot(s) remain.","success");
-  }catch(error){showMessage(error.message,"error");}
-  finally{$("signUpButton").disabled=false;}
+ event.preventDefault();$("signUpButton").disabled=true;
+ try{
+  const response=await fetch("/api/admin/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fullName:$("fullName").value,email:$("registerEmail").value,password:$("registerPassword").value,invitationCode:$("invitationCode").value})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||"Registration failed.");
+  const createdEmail=$("registerEmail").value;
+  $("signUpForm").reset();selectView("signin");$("loginEmail").value=createdEmail;
+  showMessage(data.message+" "+data.remainingSlots+" administrator slot(s) remain.","success");
+ }catch(error){showMessage(error.message,"error");}
+ finally{$("signUpButton").disabled=false;}
 });
 </script>
 </body></html>
