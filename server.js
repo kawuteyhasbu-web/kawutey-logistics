@@ -256,19 +256,62 @@ app.get("/api/rider/connect/riders", authenticate, roles("rider"), asyncRoute(as
   res.json({ riders: result.rows });
 }));
 
-app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+app.get("/api/rider/connect/conversations", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query(`
-    SELECT m.id, m.sender_id, m.recipient_id, m.message, m.created_at,
+    SELECT peer.id AS rider_id, peer.full_name, rp.rider_code,
+      latest.message AS last_message, latest.created_at AS last_message_at,
+      latest.sender_id AS last_sender_id,
+      COALESCE(unread.unread_count,0)::int AS unread_count
+    FROM (
+      SELECT CASE WHEN sender_id=$1 THEN recipient_id ELSE sender_id END AS peer_id,
+        MAX(id) AS latest_id
+      FROM rider_messages
+      WHERE sender_id=$1 OR recipient_id=$1
+      GROUP BY CASE WHEN sender_id=$1 THEN recipient_id ELSE sender_id END
+    ) threads
+    JOIN users peer ON peer.id=threads.peer_id AND peer.role='rider' AND peer.status='active'
+    LEFT JOIN rider_profiles rp ON rp.user_id=peer.id
+    JOIN rider_messages latest ON latest.id=threads.latest_id
+    LEFT JOIN LATERAL (
+      SELECT COUNT(*) AS unread_count FROM rider_messages
+      WHERE sender_id=peer.id AND recipient_id=$1 AND read_at IS NULL
+    ) unread ON TRUE
+    ORDER BY latest.created_at DESC, latest.id DESC
+  `, [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ conversations: result.rows });
+}));
+
+app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const peerId = Number(req.query.with);
+  if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id)) {
+    return res.status(400).json({ error: "Choose a valid Rider Connect conversation." });
+  }
+  const result = await pool.query(`
+    SELECT m.id, m.sender_id, m.recipient_id, m.message, m.created_at, m.read_at,
       sender.full_name AS sender_name, recipient.full_name AS recipient_name
     FROM rider_messages m
     JOIN users sender ON sender.id=m.sender_id
     JOIN users recipient ON recipient.id=m.recipient_id
-    WHERE m.sender_id=$1 OR m.recipient_id=$1
-    ORDER BY m.created_at DESC, m.id DESC
-    LIMIT 100
-  `, [req.user.id]);
+    WHERE (m.sender_id=$1 AND m.recipient_id=$2)
+       OR (m.sender_id=$2 AND m.recipient_id=$1)
+    ORDER BY m.created_at ASC, m.id ASC
+    LIMIT 200
+  `, [req.user.id, peerId]);
   res.set("Cache-Control", "private, no-store");
   res.json({ messages: result.rows });
+}));
+
+app.post("/api/rider/connect/read", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const peerId = Number(req.body?.peerId);
+  if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id)) {
+    return res.status(400).json({ error: "Choose a valid Rider Connect conversation." });
+  }
+  await pool.query(
+    "UPDATE rider_messages SET read_at=NOW() WHERE sender_id=$1 AND recipient_id=$2 AND read_at IS NULL",
+    [peerId, req.user.id]
+  );
+  res.json({ ok: true });
 }));
 
 app.post("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
@@ -1135,6 +1178,8 @@ async function startServer() {
     await pool.query("CREATE TABLE IF NOT EXISTS payment_mode_audit (id BIGSERIAL PRIMARY KEY, admin_user_id BIGINT NOT NULL, manual_backup_enabled BOOLEAN NOT NULL, reason TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_deposit_audit (id BIGSERIAL PRIMARY KEY, wallet_transaction_id BIGINT NOT NULL, admin_user_id BIGINT NOT NULL, decision TEXT NOT NULL CHECK (decision IN ('approve','reject')), created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     await pool.query("CREATE TABLE IF NOT EXISTS rider_messages (\n  id BIGSERIAL PRIMARY KEY,\n  sender_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  recipient_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  message TEXT NOT NULL CHECK (length(btrim(message)) BETWEEN 1 AND 2000),\n  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n  CHECK (sender_id <> recipient_id)\n);\nCREATE INDEX IF NOT EXISTS rider_messages_sender_created_idx ON rider_messages(sender_id, created_at DESC, id DESC);\nCREATE INDEX IF NOT EXISTS rider_messages_recipient_created_idx ON rider_messages(recipient_id, created_at DESC, id DESC);");
+    await pool.query("ALTER TABLE rider_messages ADD COLUMN IF NOT EXISTS read_at TIMESTAMPTZ");
+    await pool.query("CREATE INDEX IF NOT EXISTS rider_messages_unread_idx ON rider_messages(recipient_id, sender_id, created_at DESC) WHERE read_at IS NULL");
     console.log("Database connection and rider profile storage verified.");
     app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
   } catch (error) {
