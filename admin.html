@@ -697,6 +697,29 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboard .card{min-width:0;overflow-wrap:anywhere}
 @media(max-width:620px){#dashboard .card{padding:15px}#dashboard :is(th,td){padding:9px 10px}#dashboard button{max-width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* KL redesign batch 6: administrator section navigation and operational scanning */
+.wrap>.head{position:relative;gap:16px}
+.wrap>.head .brand{min-width:0}
+.wrap>.head .brand h1{line-height:1.15}
+.wrap>.head .brand small{display:block;font-size:.7rem}
+#dashboardActions{position:sticky;top:10px;z-index:5;backdrop-filter:blur(12px);background:rgba(255,255,255,.92)}
+#dashboardActions #logoutButton{margin:0}
+.admin-section{transition:border-color .16s ease,box-shadow .16s ease}
+.admin-section:hover{border-color:#c5d6ed;box-shadow:0 7px 18px rgba(10,47,107,.07)}
+.admin-section>summary{min-height:58px;font-size:.96rem;line-height:1.4}
+.admin-section>summary:focus-visible{outline-offset:-4px!important;border-radius:12px}
+.admin-section[open]>summary{color:#0a347b;background:linear-gradient(100deg,#f2f6ff,#fff8f1)}
+.admin-section .section-card{padding:clamp(14px,2.2vw,22px)}
+#dashboard .commission-toolbar{padding:14px;border:1px solid #e3eaf4;border-radius:13px;background:#f8faff}
+#dashboard .commission-toolbar input{margin-top:6px}
+#dashboard .commission-toolbar button{min-height:42px}
+#dashboard #commissionReportStatus{line-height:1.6;overflow-wrap:anywhere}
+#dashboard #commissionReportHistory{display:grid;gap:8px}
+#dashboard #commissionReportHistory .report-row{padding:12px;border:1px solid #e6edf5;border-radius:11px;background:#fff}
+#dashboard #commissionReportHistory .report-row:last-child{border-bottom:1px solid #e6edf5}
+@media(max-width:620px){#dashboardActions{top:5px}#dashboard .commission-toolbar{display:grid;grid-template-columns:minmax(0,1fr)}#dashboard .commission-toolbar label{min-width:0}#dashboard .commission-toolbar button{width:100%}}
+@media(prefers-reduced-motion:reduce){.admin-section{transition:none}}
 </style>
 </head>
 <body><main class="wrap">
