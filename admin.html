@@ -552,6 +552,56 @@ body{background:linear-gradient(180deg,#edf3fb 0,#f5f7fb 280px,#f1f4f9 100%)}
 }
 
 </style>
+<style>
+
+/* KL administrator: account, pickup oversight, notifications and audit detail */
+#adminAccountCountCard{position:relative;overflow:hidden;background:linear-gradient(125deg,#fff 0%,#f2f7ff 100%)}
+#adminAccountCount{font-size:clamp(2rem,5vw,3rem);font-weight:850;letter-spacing:-.055em;color:#082b68;line-height:1.1}
+#adminAccountCountCard h2{margin-bottom:8px}
+#cancellationRequests,#notifications,#paymentModeAudit,#commissionReportEntries,#commissionReportHistory{
+ display:grid;gap:11px;min-width:0
+}
+#cancellationRequests>*,#notifications>*,#paymentModeAudit>*,#commissionReportEntries>*,#commissionReportHistory>*{
+ min-width:0;padding:15px 16px;border:1px solid #dce6f2;border-radius:13px;
+ background:linear-gradient(135deg,#fff,#f8faff);overflow-wrap:anywhere;
+ box-shadow:0 3px 12px rgba(8,43,104,.035)
+}
+#cancellationRequests>*:hover,#notifications>*:hover,#paymentModeAudit>*:hover,
+#commissionReportEntries>*:hover,#commissionReportHistory>*:hover{
+ border-color:#c3d5eb;box-shadow:0 7px 18px rgba(8,43,104,.065)
+}
+#notifications{border-left:3px solid #ff7900;padding-left:12px}
+#notifications .tag,#cancellationRequests .tag{margin-left:6px;vertical-align:middle}
+#paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px}
+#paymentSettingsForm label{min-width:0;color:#24456f;font-weight:750}
+#paymentSettingsForm input,#paymentSettingsForm select{width:100%;min-width:0}
+#paymentSettingsForm button,#paymentSettingsForm .form-actions{grid-column:1/-1}
+#paymentModeAudit>*{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+#commissionReportEntries>*{border-left:3px solid #0b4b9d}
+#commissionReportHistory>*{border-left:3px solid #ff7900}
+#dashboard .section-card>h3{color:#173b6c;letter-spacing:-.02em}
+#dashboard .section-card p{line-height:1.6}
+#dashboard .section-card :is(small,.meta){color:#64748b}
+#dashboard .section-card button{min-height:40px}
+#dashboard .section-card button.secondary{background:#fff;color:#0a347b;border:1px solid #d3dfed}
+#dashboard .section-card button:not(:disabled):hover{filter:brightness(1.04)}
+#dashboard .section-card :is(input,select,textarea){width:100%;min-width:0}
+#dashboard .section-card .item>div{min-width:0}
+#dashboard .section-card img{object-fit:cover}
+@media(max-width:680px){
+ #paymentSettingsForm{grid-template-columns:minmax(0,1fr)}
+ #paymentSettingsForm button,#paymentSettingsForm .form-actions{grid-column:auto}
+ #cancellationRequests>*,#notifications>*,#paymentModeAudit>*,
+ #commissionReportEntries>*,#commissionReportHistory>*{padding:12px}
+ #paymentModeAudit>*{align-items:flex-start;flex-direction:column}
+ #adminAccountCountCard{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ #cancellationRequests>*,#notifications>*,#paymentModeAudit>*,
+ #commissionReportEntries>*,#commissionReportHistory>*{transition:none}
+}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
