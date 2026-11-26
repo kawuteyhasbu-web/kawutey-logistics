@@ -682,16 +682,49 @@ app.post("/api/rider/deposits/:id/submit", authenticate, roles("rider"), asyncRo
   if (!["MTN MoMo","Telecel Cash","AT Money"].includes(network)) return res.status(400).json({ error: "Choose a supported Mobile Money network." });
   if (!/^0\d{9}$/.test(momoNumber)) return res.status(400).json({ error: "Enter a valid 10-digit Ghana Mobile Money number." });
   if (providerReference.length < 4 || providerReference.length > 100) return res.status(400).json({ error: "Enter the transaction reference shown by your Mobile Money provider." });
-  const settings = await pool.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1");
-  const intent = await pool.query("SELECT id FROM wallet_transactions WHERE id=$1 AND rider_id=$2 AND type='deposit' AND status='pending' AND provider_reference IS NULL AND description='MANUAL_AWAITING_PAYMENT'", [req.params.id, req.user.id]);
-  if (!intent.rowCount) return res.status(404).json({ error: "Pending deposit reference not found, or payment details have already been submitted." });
-  if (!settings.rows[0]?.manual_backup_enabled) return res.status(403).json({ error: "Manual deposit submissions are currently paused. Contact the administrator." });
-  const duplicate = await pool.query("SELECT id FROM wallet_transactions WHERE type='deposit' AND lower(provider_reference)=lower($1) AND status IN ('pending','successful') LIMIT 1", [providerReference]);
-  if (duplicate.rowCount) return res.status(409).json({ error: "That Mobile Money transaction reference has already been submitted." });
-  const result = await pool.query("UPDATE wallet_transactions SET provider_reference=$1,description=$2 WHERE id=$3 AND rider_id=$4 AND provider_reference IS NULL RETURNING id,amount_pesewas,status,reference,provider_reference,description,created_at",
-    [providerReference, "Manual Mobile Money | Network: " + network + " | Sender: " + momoNumber, req.params.id, req.user.id]);
-  if (!result.rowCount) return res.status(409).json({ error: "This deposit request has already been submitted." });
-  res.json({ message: "Payment details submitted. Your wallet will be credited only after the administrator verifies receipt.", deposit: result.rows[0] });
+
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    // Serialize requests with the same provider reference to close the duplicate-check race.
+    await client.query("SELECT pg_advisory_xact_lock(hashtextextended(lower($1), 0))", [providerReference]);
+    const settings = await client.query("SELECT manual_backup_enabled FROM payment_settings WHERE id=1");
+    if (!settings.rows[0]?.manual_backup_enabled) {
+      await client.query("ROLLBACK");
+      return res.status(403).json({ error: "Manual deposit submissions are currently paused. Contact the administrator." });
+    }
+    const intent = await client.query(
+      "SELECT id FROM wallet_transactions WHERE id=$1 AND rider_id=$2 AND type='deposit' AND status='pending' AND provider_reference IS NULL AND description='MANUAL_AWAITING_PAYMENT' FOR UPDATE",
+      [req.params.id, req.user.id]
+    );
+    if (!intent.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Pending deposit reference not found, or payment details have already been submitted." });
+    }
+    const duplicate = await client.query(
+      "SELECT id FROM wallet_transactions WHERE type='deposit' AND lower(provider_reference)=lower($1) AND status IN ('pending','successful') LIMIT 1",
+      [providerReference]
+    );
+    if (duplicate.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "That Mobile Money transaction reference has already been submitted." });
+    }
+    const result = await client.query(
+      "UPDATE wallet_transactions SET provider_reference=$1,description=$2 WHERE id=$3 AND rider_id=$4 AND provider_reference IS NULL RETURNING id,amount_pesewas,status,reference,provider_reference,description,created_at",
+      [providerReference, "Manual Mobile Money | Network: " + network + " | Sender: " + momoNumber, req.params.id, req.user.id]
+    );
+    if (!result.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "This deposit request has already been submitted." });
+    }
+    await client.query("COMMIT");
+    res.json({ message: "Payment details submitted. Your wallet will be credited only after the administrator verifies receipt.", deposit: result.rows[0] });
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    throw error;
+  } finally {
+    client.release();
+  }
 }));
 
 app.get("/api/rider/deposits", authenticate, roles("rider"), asyncRoute(async (req, res) => {
