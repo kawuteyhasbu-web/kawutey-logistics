@@ -115,6 +115,15 @@ CREATE TABLE IF NOT EXISTS rider_messages (
 );
 ALTER TABLE rider_messages ADD COLUMN IF NOT EXISTS read_at TIMESTAMPTZ;
 CREATE INDEX IF NOT EXISTS rider_messages_unread_idx ON rider_messages(recipient_id, sender_id, created_at DESC) WHERE read_at IS NULL;
+CREATE TABLE IF NOT EXISTS rider_conversation_preferences (
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  peer_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  archived BOOLEAN NOT NULL DEFAULT FALSE,
+  muted BOOLEAN NOT NULL DEFAULT FALSE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(user_id,peer_id),
+  CHECK(user_id <> peer_id)
+);
 CREATE TABLE IF NOT EXISTS exchange_requests (
   id BIGSERIAL PRIMARY KEY,
   assignment_id BIGINT NOT NULL REFERENCES assignments(id),
