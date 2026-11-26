@@ -2019,6 +2019,108 @@ nav.tabs .tab-btn.active{background:#082b68;color:#fff;box-shadow:0 6px 15px rgb
  #pickupFormArea .package-row{grid-template-columns:1fr 88px;padding:8px}
 }
 </style>
+<style id="kl-experience-finish-visual-system-2026-11">
+/* KAWUTEY DESIGN SYSTEM — final polish of landing, access and service workspaces */
+:root{--kl-primary:#082b68;--kl-primary-deep:#061a40;--kl-accent:#ff7900;--kl-accent-soft:#fff0e4;--kl-text:#132c50;--kl-subtle:#70819a;--kl-stroke:#dce6f2}
+.kl-home{display:block}
+.kl-home .kl-hero{min-height:490px;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);padding:clamp(34px,5.5vw,74px);border-radius:28px}
+.kl-home .kl-hero-copy{position:relative;z-index:2}
+.kl-home .kl-hero h2{max-width:680px;font-size:clamp(3rem,6.2vw,5.8rem);line-height:.94}
+.kl-home .kl-hero-description{font-size:1.05rem;max-width:540px}
+.kl-home .kl-hero-art{position:relative;min-height:350px;border-radius:26px}
+.kl-home .kl-art-orbit{position:absolute;width:270px;height:270px;border:1px solid rgba(255,255,255,.19);border-radius:50%;box-shadow:0 0 0 26px rgba(255,255,255,.035),0 0 0 56px rgba(255,255,255,.025)}
+.kl-home .kl-art-card{position:relative;z-index:1;width:min(300px,78%);padding:36px 25px;border-radius:25px;transform:rotate(-4deg)}
+.kl-home .kl-art-mark{width:75px;height:75px;border-radius:22px;font-size:1.8rem}
+.kl-home .kl-art-card strong{font-size:1.28rem}
+.kl-home .kl-art-bubble{z-index:2;right:5%;bottom:10%}
+.kl-home .kl-trust-strip{margin:20px 0 64px}
+.kl-home .kl-trust-strip>div{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.kl-home .kl-trust-strip>div:hover{transform:translateY(-3px);border-color:#f4c49e;box-shadow:0 12px 25px rgba(8,43,104,.08)}
+.kl-home .kl-audience{padding:15px 0 52px}
+.kl-home .kl-audience-card{position:relative;overflow:hidden;min-height:255px;display:flex;flex-direction:column;align-items:flex-start}
+.kl-home .kl-audience-card:after{content:"";position:absolute;right:-38px;bottom:-76px;width:180px;height:180px;border:1px solid #e4ebf4;border-radius:50%;box-shadow:0 0 0 18px #f8faff,0 0 0 38px #fbfcfe;pointer-events:none}
+.kl-home .kl-audience-card .btn{position:relative;z-index:1;margin-top:auto}
+.kl-home .kl-vendor-card{border-top:4px solid var(--kl-accent)}
+.kl-home .kl-rider-card{border-top:4px solid #2463a7}
+.kl-home .kl-content-grid article,.kl-home .kl-steps-grid article{transition:transform .18s ease,box-shadow .18s ease}
+.kl-home .kl-content-grid article:hover,.kl-home .kl-steps-grid article:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(8,43,104,.08)}
+.kl-home .kl-bottom-cta{position:relative;overflow:hidden;box-shadow:0 14px 32px rgba(8,43,104,.12)}
+.kl-home .kl-bottom-cta:after{content:"KL";position:absolute;right:5%;top:50%;transform:translateY(-50%);font-size:clamp(5rem,12vw,10rem);font-weight:950;letter-spacing:-.1em;color:rgba(255,255,255,.055);pointer-events:none}
+.kl-footer{gap:28px;padding:30px 12px 15px}
+.kl-footer>div{min-width:0}
+.kl-footer-contact a,.kl-social a{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;padding:5px 0}
+.kl-footer-contact a:before{content:"";width:6px;height:6px;border-radius:50%;background:#ff8b28}
+.kl-social a{color:#d96c08}
+.kl-content-page .kl-page-hero{min-height:245px;display:flex;flex-direction:column;justify-content:center;padding:clamp(30px,5vw,55px)}
+.kl-content-page .kl-content-grid{margin:20px 0}
+.kl-content-page .kl-steps-grid article{border:1px solid var(--kl-stroke);border-radius:17px;background:#fff;box-shadow:0 7px 22px rgba(8,43,104,.045)}
+.kl-content-page .kl-steps-grid article b{font-size:.95rem}
+.kl-content-page .kl-page-cta{position:relative;flex-wrap:wrap;overflow:hidden}
+.kl-content-page .kl-page-cta h3{flex:1 1 100%}
+.kl-content-page .kl-page-cta button{position:relative;z-index:1}
+#vendorAuthCard,#riderAuthCard{position:relative;overflow:hidden}
+#vendorAuthCard:before,#riderAuthCard:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#082b68 0 62%,#ff7900 62% 100%)}
+#vendorAuthCard>h2,#riderAuthCard>h2{padding-top:8px}
+#vendorAuthCard .alert,#riderAuthCard .alert{font-size:.84rem;line-height:1.65}
+#vendorAuthCard form .form-group,#riderAuthCard form .form-group{display:flex;flex-direction:column;justify-content:flex-end}
+#vendorAuthCard form .form-group small,#riderAuthCard form .form-group small{margin-top:5px;color:#7587a0;font-size:.72rem;line-height:1.45}
+#vendorAuthCard form button[type=submit],#riderAuthCard form button[type=submit]{min-height:49px;box-shadow:0 7px 17px rgba(255,121,0,.15)}
+#vendorAuthCard [data-vendor-view],#riderAuthCard [data-rider-view]{font-weight:850;text-decoration:none}
+#vendorAuthCard [data-vendor-view]:hover,#riderAuthCard [data-rider-view]:hover{text-decoration:underline}
+#vendorDashboard,#riderDashboard{grid-template-columns:repeat(12,minmax(0,1fr))}
+#vendorDashboard>* ,#riderDashboard>*{min-width:0}
+#vendorDashboard>h3,#vendorDashboard>p,#vendorDashboard>button,
+#riderDashboard>h2,#riderDashboard>p{grid-column:1/-1}
+#vendorDashboard>.card,#riderDashboard>.card{grid-column:span 6}
+#vendorDashboard .dashboard-panel,#riderDashboard .dashboard-panel{overflow:hidden}
+#vendorDashboard .dashboard-panel-toggle,#riderDashboard .dashboard-panel-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#vendorDashboard .dashboard-panel-content,#riderDashboard .dashboard-panel-content{min-width:0}
+#vendorDashboard .dashboard-panel-content>h4,#riderDashboard .dashboard-panel-content>h4{color:#123e73}
+#vendorDashboard .pickup-item,#vendorDashboard .history-item,#riderDashboard .assignment-item,#riderDashboard .history-item{transition:border-color .16s ease,box-shadow .16s ease}
+#vendorDashboard .pickup-item:hover,#vendorDashboard .history-item:hover,#riderDashboard .assignment-item:hover,#riderDashboard .history-item:hover{border-color:#bfd1e7;box-shadow:0 7px 18px rgba(8,43,104,.07)}
+#vendorDashboard .pickup-item :is(button,a),#vendorDashboard .history-item :is(button,a),#riderDashboard .assignment-item :is(button,a),#riderDashboard .history-item :is(button,a){overflow-wrap:anywhere}
+#vendorDashboard .dashboard-panel-content>form,#riderDashboard .dashboard-panel-content>form{max-width:100%}
+#vendorDashboard .dashboard-panel-content :is(input,select,textarea),#riderDashboard .dashboard-panel-content :is(input,select,textarea){max-width:100%}
+#riderDashboard .wallet-box{isolation:isolate}
+#riderDashboard .wallet-box>*{position:relative;z-index:1}
+#riderDashboard .wallet-box .wallet-stats .stat-box{min-height:82px;display:flex;flex-direction:column;justify-content:center}
+#riderDashboard #messagesArea{min-height:220px}
+#riderDashboard #messagesArea :is(button,input,textarea){border-radius:10px}
+@media(min-width:1050px){
+ .kl-home .kl-hero{margin-top:8px}
+ #vendorDashboard>.dashboard-panel,#riderDashboard>.dashboard-panel{grid-column:1/-1}
+ #vendorDashboard>.card,#riderDashboard>.card{grid-column:span 6}
+}
+@media(max-width:850px){
+ .kl-home .kl-hero{min-height:0;grid-template-columns:1fr;padding:35px 27px}
+ .kl-home .kl-hero-art{min-height:250px}
+ #vendorDashboard>.card,#riderDashboard>.card{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .kl-home .kl-hero{padding:25px 18px;border-radius:18px}
+ .kl-home .kl-hero h2{font-size:clamp(2.55rem,12vw,3.4rem)}
+ .kl-home .kl-hero-art{min-height:205px}
+ .kl-home .kl-art-orbit{width:175px;height:175px}
+ .kl-home .kl-art-card{width:205px;padding:21px 15px}
+ .kl-home .kl-art-mark{width:52px;height:52px;border-radius:15px;font-size:1.3rem}
+ .kl-home .kl-art-card strong{font-size:1rem}
+ .kl-home .kl-art-bubble{right:2%;bottom:6%;font-size:.6rem;padding:8px 10px}
+ .kl-home .kl-trust-strip{margin:12px 0 36px}
+ .kl-home .kl-audience{padding-bottom:30px}
+ .kl-home .kl-audience-card{min-height:0}
+ .kl-home .kl-bottom-cta:after{right:2%;top:10%;font-size:5rem}
+ .kl-footer{gap:16px;padding:23px 5px 12px}
+ .kl-content-page .kl-page-hero{min-height:190px;padding:25px 20px}
+ .kl-content-page .kl-page-cta{display:grid;grid-template-columns:1fr;gap:8px}
+ .kl-content-page .kl-page-cta button{width:100%;margin:0}
+ #vendorDashboard,#riderDashboard{display:flex;flex-direction:column}
+ #vendorDashboard>* ,#riderDashboard>*{width:100%}
+ #vendorDashboard>.card,#riderDashboard>.card{width:100%}
+ #vendorDashboard .dashboard-panel,#riderDashboard .dashboard-panel{width:100%}
+ #vendorDashboard .wallet-box,#riderDashboard .wallet-box{width:100%}
+ #vendorAuthCard form .form-group,#riderAuthCard form .form-group{min-width:0}
+}
+</style>
 </head>
 <body>
   <div class="container">
