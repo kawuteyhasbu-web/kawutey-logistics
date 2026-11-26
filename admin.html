@@ -1032,6 +1032,43 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 }
 
 </style>
+
+<style id="kl-admin-responsive-quick-navigation">
+#kl-admin-quicknav{
+ position:sticky;top:10px;z-index:50;display:flex;align-items:center;gap:8px;
+ margin:14px 0;padding:9px;border:1px solid #dfe7f1;border-radius:15px;
+ background:rgba(255,255,255,.96);box-shadow:0 8px 22px rgba(8,43,104,.08);
+ overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain;
+ -webkit-overflow-scrolling:touch;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+}
+#kl-admin-quicknav a{
+ flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:39px;
+ padding:8px 13px;border:1px solid #e1e8f1;border-radius:999px;background:#f7f9fc;
+ color:#24466e;text-decoration:none;font-size:.78rem;font-weight:850;white-space:nowrap
+}
+#kl-admin-quicknav a:hover,#kl-admin-quicknav a:focus-visible{
+ border-color:#f28c28;background:#fff5eb;color:#9b4d0b;outline-offset:2px
+}
+#dashboard [id]{scroll-margin-top:88px}
+@media(max-width:700px){
+ #kl-admin-quicknav{
+  top:5px;margin:10px -2px 13px;padding:8px;border-radius:13px;gap:7px;
+  box-shadow:0 5px 16px rgba(8,43,104,.09)
+ }
+ #kl-admin-quicknav a{min-height:42px;padding:9px 12px;font-size:.76rem}
+ #dashboardActions{padding:13px!important;border-radius:15px!important;gap:9px}
+ #dashboardActions .admin-search-label{min-width:100%!important}
+ #dashboardActions #logoutButton{margin-left:0;width:100%}
+ #commissionSummaryCard,#dashboard .card,#dashboard .admin-section{border-radius:15px}
+ #dashboard .commission-grid{gap:9px}
+ #dashboard .commission-metric{min-width:0;padding:13px!important}
+ #dashboard .commission-metric strong{overflow-wrap:anywhere;font-size:clamp(1.1rem,5vw,1.65rem)}
+ #dashboard :is(input,select,textarea){max-width:100%;min-width:0}
+ #dashboard :is(button,a){max-width:100%;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){#kl-admin-quicknav{scroll-behavior:auto!important}}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
@@ -1051,6 +1088,16 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
   <div class="route-caption">YOUR PACKAGE<br><strong>OUR PRIORITY</strong></div>
  </div>
 </section>
+<nav id="kl-admin-quicknav" aria-label="Administrator quick navigation">
+ <a href="#commissionSummaryCard">Overview</a>
+ <a href="#cancellationRequests">Cancellations</a>
+ <a href="#notifications">Notifications</a>
+ <a href="#paymentSettingsForm">Payments</a>
+ <a href="#walletTransactions">Wallets</a>
+ <a href="#depositRequests">Deposits</a>
+ <a href="#pendingRiders">Rider approvals</a>
+ <a href="#approvedRiders">Rider directory</a>
+</nav>
 <div class="card" id="dashboardActions"><label class="admin-search-label" for="adminSectionSearch">Find an administrator section<input id="adminSectionSearch" type="search" placeholder="Search vendors, refunds, riders, reports…" autocomplete="off"></label><span id="adminSectionSearchCount" class="meta" aria-live="polite">All sections shown</span><button type="button" class="secondary" id="clearAdminSectionSearch" hidden>Clear search</button><button type="button" class="secondary" id="logoutButton">Log out</button></div>
 <section class="card" id="commissionSummaryCard">
 <h2>Today's Rider Commission Collections</h2>
