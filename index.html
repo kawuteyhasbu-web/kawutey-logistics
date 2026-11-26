@@ -1462,6 +1462,36 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 }
 
 </style>
+<style>
+
+/* Batch 4: rider wallet, deposit and transaction history visual redesign */
+#riderDashboard .wallet-box{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18);border-radius:21px;background:linear-gradient(135deg,#061d49 0%,#0a3b80 68%,#14529b 100%);box-shadow:0 14px 30px rgba(8,43,104,.18)}
+#riderDashboard .wallet-box:after{content:"";position:absolute;right:-52px;top:-75px;width:190px;height:190px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 0 50px rgba(255,255,255,.025);pointer-events:none}
+#riderDashboard .wallet-box h3{position:relative;z-index:1;color:#fff;letter-spacing:.01em}
+#riderDashboard .wallet-box .balance{position:relative;z-index:1;font-weight:900;letter-spacing:-.035em;text-shadow:0 2px 10px rgba(0,0,0,.12)}
+#riderDashboard .wallet-stats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:16px}
+#riderDashboard .wallet-stats .stat-box{min-width:0;padding:12px 10px;border:1px solid rgba(255,255,255,.17);border-radius:13px;background:rgba(255,255,255,.10);backdrop-filter:blur(6px)}
+#riderDashboard .wallet-stats .value{font-weight:900;font-size:1.02rem;overflow-wrap:anywhere}
+#riderDashboard .wallet-stats .label{font-size:.72rem;line-height:1.35;color:rgba(255,255,255,.83)}
+#riderDashboard .wallet-box [data-action="showDepositForm"]{background:linear-gradient(100deg,#ff7900,#ff9b39);border:0;color:#fff;font-weight:850;box-shadow:0 6px 15px rgba(255,121,0,.22)}
+#riderDashboard #depositFormArea,#riderDashboard #transactionHistoryArea{border:1px solid #dce6f2;border-radius:17px;background:linear-gradient(150deg,#fff,#f7faff);box-shadow:0 7px 20px rgba(8,43,104,.05)}
+#riderDashboard #depositRefDisplay{display:inline-block;padding:5px 9px;border-radius:8px;background:#ff7900;color:#fff;font-weight:900;letter-spacing:.05em}
+#riderDashboard #depositHistory>*,#riderDashboard #secureDepositHistory>*,#riderDashboard #secureWalletTransactionHistory>*{padding:12px;border:1px solid #e0e8f2;border-radius:12px;background:#fff;margin:8px 0;overflow-wrap:anywhere}
+#riderDashboard #secureDepositHistory,#riderDashboard #secureWalletTransactionHistory{display:grid;gap:8px;min-width:0}
+#riderDashboard #secureDepositHistory>*,#riderDashboard #secureWalletTransactionHistory>*{border:1px solid #dce6f2;border-radius:13px;background:#fff;padding:13px;box-shadow:0 3px 10px rgba(8,43,104,.035)}
+@media(max-width:650px){
+ #riderDashboard .wallet-box{padding:17px;border-radius:18px}
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #riderDashboard .wallet-stats .stat-box{padding:11px;border-radius:12px}
+ #riderDashboard .wallet-stats .value{font-size:.98rem}
+ #riderDashboard .wallet-stats .label{font-size:.7rem}
+ #riderDashboard .wallet-box>div[style*="margin-top"]{display:grid;grid-template-columns:1fr;gap:8px}
+ #riderDashboard .wallet-box>div[style*="margin-top"] button{width:100%;min-height:47px;margin:0}
+ #riderDashboard #depositFormArea,#riderDashboard #transactionHistoryArea{padding:14px!important;border-radius:15px}
+ #riderDashboard #depositFormArea button,#riderDashboard #transactionHistoryArea button{width:100%;min-height:46px}
+}
+
+</style>
 </head>
 <body>
   <div class="container">
