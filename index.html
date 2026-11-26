@@ -1666,6 +1666,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
     let secureAssignmentPollTimer = null;
     let riderConnectPollTimer = null;
     let activeRiderConnectPeerId = null;
+    let riderConnectUnreadSnapshot = null;
     let secureRiderWatchId = null;
     let secureSeenNearbyOffers = new Set();
 
@@ -1766,6 +1767,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
         secureUpdateLocation: updateSecureRiderLocation,
         secureEnableNearbyAlerts: enableSecureNearbyAlerts,
         refreshRiderConnect: loadRiderConnect,
+        enableRiderMessageAlerts,
         openRiderConversation,
         paystackDeposit: startPaystackDeposit,
         createManualDeposit: createSecureManualIntent
@@ -2832,6 +2834,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       if (secureAssignmentPollTimer) { clearInterval(secureAssignmentPollTimer); secureAssignmentPollTimer = null; }
       if (riderConnectPollTimer) { clearInterval(riderConnectPollTimer); riderConnectPollTimer = null; }
       activeRiderConnectPeerId = null;
+      riderConnectUnreadSnapshot = null;
       if (secureRiderWatchId !== null && navigator.geolocation) { navigator.geolocation.clearWatch(secureRiderWatchId); secureRiderWatchId = null; }
       secureRiderLocation = null;
       secureSeenNearbyOffers = new Set();
@@ -2844,6 +2847,46 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       document.getElementById("riderDashboard").classList.add("hidden");
       document.getElementById("riderAuthCard").classList.remove("hidden");
       showRiderLogin();
+    }
+
+    async function enableRiderMessageAlerts() {
+      const status = document.getElementById("connectNotificationStatus");
+      if (!("Notification" in window)) {
+        if (status) status.textContent = "This browser does not support notifications. Unread counts will still appear in Rider Connect.";
+        return;
+      }
+      try {
+        const permission = await Notification.requestPermission();
+        if (status) status.textContent = permission === "granted"
+          ? "Message notifications are enabled on this device."
+          : "Notifications were not enabled. Unread counts will still appear in Rider Connect.";
+      } catch (_) {
+        if (status) status.textContent = "Could not enable notifications in this browser.";
+      }
+    }
+
+    function notifyRiderConnectUnread(conversations) {
+      const current = {};
+      conversations.forEach(c => { current[String(c.rider_id)] = Number(c.unread_count || 0); });
+      if (riderConnectUnreadSnapshot && "Notification" in window && Notification.permission === "granted") {
+        conversations.forEach(c => {
+          const peerId = String(c.rider_id);
+          const count = current[peerId];
+          const previous = Number(riderConnectUnreadSnapshot[peerId] || 0);
+          if (count > previous && Number(peerId) !== Number(activeRiderConnectPeerId)) {
+            const notification = new Notification("New Rider Connect message", {
+              body: c.full_name + " sent you a message.",
+              tag: "rider-connect-" + peerId
+            });
+            notification.onclick = () => {
+              window.focus();
+              openRiderConnectPeer(peerId);
+              notification.close();
+            };
+          }
+        });
+      }
+      riderConnectUnreadSnapshot = current;
     }
 
     function renderRiderConnectThreads(conversations) {
@@ -2892,6 +2935,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
           riderData.riders.map(r => '<option value="' + Number(r.id) + '">' + escapeHtml(r.full_name) + ' (' + escapeHtml(r.rider_code) + ')</option>').join("");
         if (previous && riderData.riders.some(r => String(r.id) === previous)) select.value = previous;
         const conversations = conversationData.conversations || [];
+        notifyRiderConnectUnread(conversations);
         if (activeRiderConnectPeerId && !riderData.riders.some(r => Number(r.id) === Number(activeRiderConnectPeerId))) activeRiderConnectPeerId = null;
         if (!activeRiderConnectPeerId && conversations.length) activeRiderConnectPeerId = Number(conversations[0].rider_id);
         renderRiderConnectThreads(conversations);
