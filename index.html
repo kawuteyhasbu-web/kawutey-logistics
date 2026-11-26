@@ -162,7 +162,38 @@
     @media(max-width:800px){.container{padding:13px}.kl-hero{grid-template-columns:1fr}.kl-hero-copy{padding:36px 27px 20px}.kl-hero-art{min-height:260px}.kl-art-card{left:20%;right:20%;top:17%}.kl-trust-strip{grid-template-columns:1fr 1fr;margin-bottom:34px}.kl-trust-strip>div:nth-child(2){border-right:0}.kl-trust-strip>div:nth-child(-n+2){border-bottom:1px solid #e5ebf4;padding-bottom:14px}.kl-trust-strip>div:nth-child(n+3){padding-top:14px}.kl-footer{grid-template-columns:1fr 1fr}.kl-social{grid-column:1/-1}}
     @media(max-width:560px){.kl-audience-grid{grid-template-columns:1fr}.kl-bottom-cta{align-items:flex-start;flex-direction:column;padding:22px}.kl-footer{grid-template-columns:1fr}.kl-social{grid-column:auto}.kl-trust-strip>div{padding-left:10px;padding-right:7px;grid-template-columns:31px 1fr}.kl-highlight-icon{width:29px;height:29px}.kl-trust-strip strong{font-size:.79rem}.kl-trust-strip small{font-size:.67rem}.kl-hero h2{font-size:2.65rem}.kl-hero-copy{padding:31px 22px 15px}}
 
-  </style>
+  
+    /* Portal and registration visual system — existing IDs and behaviour retained */
+    .tabs{position:sticky;top:0;z-index:20;background:rgba(243,246,251,.94);backdrop-filter:blur(14px);padding:12px 4px;border-radius:0 0 15px 15px}
+    .section:not(#home){animation:klSectionIn .28s ease both}
+    @keyframes klSectionIn{from{opacity:.55;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    #vendorAuthCard,#riderAuthCard{max-width:790px;margin:18px auto 28px;padding:clamp(22px,4vw,38px);border-radius:22px}
+    #vendorAuthCard>h2,#riderAuthCard>h2{font-size:clamp(1.45rem,3vw,2rem);letter-spacing:-.035em;line-height:1.2;margin-bottom:18px}
+    #vendorRegSection>h3,#riderRegSection>h3,#vendorLoginSection>h3,#riderLoginSection>h3{font-size:1.2rem;margin:15px 0 10px}
+    #vendorRegForm,#riderRegForm,#vendorLoginForm,#riderLoginForm{display:grid;grid-template-columns:1fr 1fr;column-gap:17px;align-items:end}
+    #vendorRegForm .form-group,#riderRegForm .form-group,#vendorLoginForm .form-group,#riderLoginForm .form-group{min-width:0}
+    #vendorRegForm button,#riderRegForm button,#vendorLoginForm button,#riderLoginForm button{grid-column:1/-1;justify-self:start;margin-top:6px}
+    #vendorRegForm input,#riderRegForm input,#vendorLoginForm input,#riderLoginForm input{background:#fbfdff;border-color:#d8e2f0}
+    #vendorRegForm input:focus,#riderRegForm input:focus,#vendorLoginForm input:focus,#riderLoginForm input:focus{background:#fff}
+    #vendorDashboard,#riderDashboard{margin-top:20px}
+    #vendorDashboard>h3,#riderDashboard>h3{font-size:1.5rem;letter-spacing:-.035em}
+    #vendorDashboard>.btn,#riderDashboard>.btn{box-shadow:0 7px 18px rgba(8,43,104,.12)}
+    .dashboard-panel{border-radius:17px!important;border-color:#e0e8f3!important;box-shadow:0 8px 24px rgba(8,43,104,.055)!important}
+    .dashboard-panel-toggle{padding:18px 20px!important;font-size:.97rem!important}
+    .dashboard-panel-content{background:#fff}
+    .wallet-box{box-shadow:0 12px 28px rgba(8,43,104,.16)}
+    .pickup-item,.assignment-item,.rider-card,.msg-box{border-radius:14px;border-color:#e0e8f3;background:#fbfcff}
+    .alert{border-radius:12px}
+    footer{color:#64748b}
+    @media(max-width:650px){
+      .tabs{overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start}
+      .tab-btn{white-space:nowrap;padding:10px 14px}
+      #vendorRegForm,#riderRegForm,#vendorLoginForm,#riderLoginForm{grid-template-columns:1fr}
+      #vendorRegForm button,#riderRegForm button,#vendorLoginForm button,#riderLoginForm button{grid-column:1}
+      #vendorAuthCard,#riderAuthCard{padding:20px 16px}
+    }
+
+</style>
 </head>
 <body>
   <div class="container">
