@@ -1508,6 +1508,60 @@ body{background:radial-gradient(ellipse at 50% -15%,#e7effb 0,transparent 48%),#
 #loginMessage:not(.hidden){padding:11px 13px;border-radius:10px;background:#f0f6ff;color:#28537f;font-size:.83rem;line-height:1.55}
 @media(max-width:600px){#loginCard{margin:20px 12px;padding:23px 17px;border-radius:18px}}
 </style>
+<style id="kl-admin-finance-control-visual-pass-2026-11">
+/* ADMIN FINANCE & CONTROL DESK — payments, notifications, approvals and refunds */
+#dashboard .notification-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:13px;border:1px solid #e1e9f3;border-radius:13px;background:#f8faff}
+#dashboard .notification-toolbar #notificationCount{margin-right:auto;font-weight:800}
+#dashboard .notification-toolbar .notification-filter{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #e2eaf3;border-radius:9px;background:#fff;color:#45617f;font-size:.76rem}
+#dashboard .notification-toolbar button,#dashboard .card>button.secondary{min-height:39px;padding:9px 12px;border:1px solid #d6e2ef;border-radius:9px;background:#fff;color:#1c4b7c;font-size:.76rem;font-weight:850}
+#dashboard .notification-toolbar button:hover,#dashboard .card>button.secondary:hover{border-color:#f0a15d;background:#fff8f1}
+#dashboard #notifications{display:grid;gap:9px;margin-top:12px}
+#dashboard #notifications>*{min-width:0;padding:13px 15px;border:1px solid #e2eaf3;border-radius:12px;background:#fff;overflow-wrap:anywhere}
+#dashboard #paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;padding:18px;border:1px solid #dce6f2;border-radius:15px;background:linear-gradient(145deg,#f8fbff,#fff)}
+#dashboard #paymentSettingsForm>label{display:flex;flex-direction:column;gap:7px;color:#345477;font-size:.77rem;font-weight:850}
+#dashboard #paymentSettingsForm>label:has(input[type=checkbox]){grid-column:1/-1;flex-direction:row;align-items:center;padding:11px;border-radius:10px;background:#f2f6fc}
+#dashboard #paymentSettingsForm input:not([type=checkbox]){width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid #d8e3ef;border-radius:9px;background:#fff}
+#dashboard #paymentSettingsForm button{grid-column:1/-1;justify-self:start;min-height:43px;padding:10px 16px;border:0;border-radius:10px;background:#0b3979;color:#fff;font-weight:850}
+#dashboard #walletReconciliationCard,#dashboard .card:has(#walletTransactions),#dashboard .card:has(#depositRequests){border:1px solid #dce6f2;border-radius:17px;background:linear-gradient(150deg,#fff,#f9fbff);box-shadow:0 8px 23px rgba(8,43,104,.05)}
+#dashboard #walletReconciliationStatus,#dashboard #walletTransactionsStatus,#dashboard #depositStatus{margin:12px 0;padding:11px 13px;border-radius:10px;line-height:1.55}
+#dashboard #walletReconciliationResults{display:grid;gap:10px}
+#dashboard #walletReconciliationResults>*,#dashboard #walletTransactions>*,#dashboard #depositRequests>*,#dashboard #pendingRiders>*,#dashboard #approvedRiders>*{min-width:0;padding:14px;border:1px solid #e1e9f2;border-radius:12px;background:#fff;overflow-wrap:anywhere}
+#dashboard #walletTransactions,#dashboard #depositRequests,#dashboard #pendingRiders,#dashboard #approvedRiders{display:grid;gap:9px;margin-top:12px}
+#dashboard .refund-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px;padding:14px;border:1px solid #f1d9c2;border-radius:12px;background:#fffaf5}
+#dashboard .refund-controls label{display:grid;gap:7px;color:#75491f;font-size:.76rem;font-weight:850}
+#dashboard .refund-controls select,#dashboard .refund-controls textarea{width:100%;min-width:0;padding:10px 12px;border:1px solid #e5d4c3;border-radius:9px;background:#fff;color:#493b2d}
+#dashboard .refund-controls textarea{min-height:78px;resize:vertical}
+#dashboard .refund-controls button{min-height:43px;padding:10px 14px;border:0;border-radius:9px;background:#df7418;color:#fff;font-weight:900}
+#dashboard .refund-controls button:hover{background:#c9610c}
+#dashboard .rider-photo-slot{width:100%;max-width:180px;min-height:140px;border:1px dashed #c8d7e8;border-radius:13px;background:#f7faff;overflow:hidden}
+#dashboard .section-card :is(button,input,select,textarea):focus-visible{outline:3px solid rgba(255,132,24,.3);outline-offset:2px}
+#dashboard .section-card button{min-height:38px;border-radius:9px}
+#dashboard .section-card :is(input,select,textarea){min-height:40px;border:1px solid #d9e3ef;border-radius:9px}
+#dashboard .admin-section{border:1px solid #dce6f2;border-radius:15px;background:#fff;box-shadow:0 6px 19px rgba(8,43,104,.04)}
+#dashboard .admin-section>summary{display:flex;align-items:center;gap:10px;min-height:54px;padding:13px 16px;color:#123d72;font-size:.9rem;font-weight:900;list-style:none;cursor:pointer}
+#dashboard .admin-section>summary::-webkit-details-marker{display:none}
+#dashboard .admin-section>summary:after{content:"+";display:grid;place-items:center;width:25px;height:25px;margin-left:auto;border-radius:8px;background:#fff0e4;color:#d66d0d;font-size:1.1rem}
+#dashboard .admin-section[open]>summary:after{content:"−"}
+#dashboard .admin-section[open]>.section-card{border-top:1px solid #e7edf5;border-radius:0 0 14px 14px}
+#dashboard .section-card{padding:16px}
+#dashboard .section-card>h3{color:#103b70;font-size:.98rem}
+#dashboard .section-card .meta{line-height:1.6}
+@media(max-width:760px){
+ #dashboard .notification-toolbar{align-items:stretch}
+ #dashboard .notification-toolbar #notificationCount{flex:1 1 100%}
+ #dashboard .notification-toolbar button{flex:1 1 100%}
+ #dashboard #paymentSettingsForm{grid-template-columns:1fr;padding:13px}
+ #dashboard #paymentSettingsForm>label:has(input[type=checkbox]){grid-column:1}
+ #dashboard #paymentSettingsForm button{grid-column:1;width:100%}
+ #dashboard .refund-controls{padding:11px}
+}
+@media(max-width:430px){
+ #dashboard .notification-toolbar .notification-filter{width:100%}
+ #dashboard .admin-section>summary{padding:12px}
+ #dashboard .section-card{padding:12px}
+ #dashboard .refund-controls button{width:100%}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
