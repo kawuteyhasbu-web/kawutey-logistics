@@ -964,6 +964,32 @@ button:focus-visible,.btn:focus-visible,.tab-btn:focus-visible,a:focus-visible{o
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+
+
+/* Batch 2: pickup requests, rider offers and active delivery cards */
+#pickupFormArea{border:1px solid #dbe6f3!important;border-radius:18px!important;background:linear-gradient(150deg,#fff 0%,#f6f9ff 100%)!important;box-shadow:0 12px 28px rgba(8,43,104,.07)}
+#pickupFormArea>h4{display:flex;align-items:center;gap:9px;color:#082b68}
+#pickupFormArea>h4:before{content:"";width:5px;height:22px;border-radius:6px;background:#ff7900}
+#pickupForm .form-group{padding:3px 0}
+#pickupForm .form-group label{font-weight:850;color:#173e73}
+#pickupForm .package-row{border:1px solid #e0e8f2;background:#fff;box-shadow:0 3px 10px rgba(8,43,104,.035)}
+#pickupForm button[type=submit]{background:linear-gradient(100deg,#ff7900,#ff9a36);border:0;color:#fff;box-shadow:0 7px 16px rgba(255,121,0,.2)}
+#pickupHistory{gap:12px}
+#pickupHistory>article,#pickupHistory>.pickup-item,#pickupHistory>.card,#pickupHistory>div{border:1px solid #dce5f2;border-radius:15px;background:#fff;box-shadow:0 5px 16px rgba(8,43,104,.045);padding:14px;min-width:0;overflow-wrap:anywhere}
+#secureAvailableAssignments>*,#secureAcceptedAssignments>*{position:relative;border:1px solid #d9e5f3!important;border-radius:16px!important;background:linear-gradient(145deg,#fff,#f6f9ff)!important;box-shadow:0 6px 18px rgba(8,43,104,.05)}
+#secureAvailableAssignments button,#secureAcceptedAssignments button{background:linear-gradient(100deg,#ff7900,#ff9630);color:#fff;border:0;box-shadow:0 5px 13px rgba(255,121,0,.18)}
+#secureAvailableAssignments button.btn-outline,#secureAcceptedAssignments button.btn-outline{background:#fff;color:#0b3978;border:1px solid #cbd9eb;box-shadow:none}
+#secureRiderLocationStatus,#secureAssignmentMessage{border-radius:12px}
+@media(max-width:650px){
+ #pickupFormArea{margin-left:0;margin-right:0;padding:14px!important;border-radius:16px!important}
+ #pickupForm .form-group{gap:6px}
+ #pickupForm input,#pickupForm textarea{font-size:16px;min-height:48px;border-radius:12px}
+ #pickupForm>button[type=submit]{width:100%;min-height:51px;font-size:1rem}
+ #pickupHistory>article,#pickupHistory>.pickup-item,#pickupHistory>.card,#pickupHistory>div{padding:13px;border-radius:14px}
+ #secureAvailableAssignments>*,#secureAcceptedAssignments>*{padding:14px!important;border-radius:15px!important}
+ #secureAvailableAssignments button,#secureAcceptedAssignments button{width:100%;min-height:47px}
+}
+
 </style>
 <style>
 /* Kawutey Logistics — public portal visual refinement */
