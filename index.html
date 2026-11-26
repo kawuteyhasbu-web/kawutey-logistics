@@ -920,6 +920,135 @@ header:after,.header:after{content:"";position:absolute;right:-90px;top:-175px;w
 @media(prefers-reduced-motion:reduce){#riderDashboard .dashboard-panel-icon{transition:none}}
 
 </style>
+<style>
+/* Kawutey Logistics — public portal visual refinement */
+:root{
+  --kl-ink:#10284d;
+  --kl-muted:#62738b;
+  --kl-line:#dce5f0;
+  --kl-surface:#fff;
+  --kl-soft:#f3f7fc;
+  --kl-orange:#ff6a00;
+}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{color:var(--kl-ink);background:linear-gradient(180deg,#eaf1fa 0,#f4f7fb 340px,#f5f7fa 100%)}
+.container{max-width:1120px}
+header{border:1px solid rgba(10,47,107,.08);box-shadow:0 10px 30px rgba(10,47,107,.09);backdrop-filter:blur(10px)}
+.logo-area img{object-fit:contain}
+.logo-text h1{letter-spacing:-.035em}
+.tabs{gap:9px;align-items:center}
+.tab-btn{min-height:43px;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.tab-btn:focus-visible,.btn:focus-visible,.toggle-password:focus-visible{outline:3px solid rgba(255,106,0,.35);outline-offset:2px}
+.tab-btn.active{box-shadow:0 5px 13px rgba(10,47,107,.18)}
+.card{border:1px solid rgba(10,47,107,.075);box-shadow:0 8px 24px rgba(10,47,107,.055);border-radius:17px;transition:box-shadow .18s ease,border-color .18s ease}
+.card h2{letter-spacing:-.025em}
+.card h3{letter-spacing:-.015em}
+.form-group label{color:#294363}
+input,select,textarea{background:#fff;border-color:#d3deeb;transition:border-color .16s ease,box-shadow .16s ease}
+input:focus,select:focus,textarea:focus{border-color:var(--kl-orange);box-shadow:0 0 0 4px rgba(255,106,0,.12)}
+.btn{min-height:43px;font-weight:700;letter-spacing:.005em;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 16px rgba(10,47,107,.12)}
+.btn:disabled{cursor:not-allowed;opacity:.62}
+.alert{border-radius:11px;line-height:1.5}
+img{max-width:100%}
+table{border-collapse:separate;border-spacing:0}
+th{font-weight:700}
+td,th{vertical-align:middle}
+@media(min-width:900px){
+ .container{padding:22px}
+ .card{padding:24px}
+}
+@media(max-width:640px){
+ .container{padding:12px}
+ header{padding:12px;border-radius:13px;align-items:flex-start}
+ .logo-area{gap:9px}
+ .logo-area img{height:43px}
+ .logo-text h1{font-size:1.12rem}
+ .header-right{text-align:left;width:100%;padding-left:2px}
+ .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .tab-btn{width:100%;padding:10px 9px;font-size:.84rem}
+ .card{padding:16px;border-radius:14px}
+ input,select,textarea{font-size:16px}
+ .btn{width:auto;max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
+
+
+/* Vendor order, rider assignment and communication detail polish */
+#vendorDashboard .pickup-item,#riderDashboard .pickup-item,
+#riderDashboard .assignment-item{
+ position:relative;
+ padding:17px 18px;
+ margin:0 0 13px;
+ border:1px solid #dfe8f4;
+ border-radius:15px;
+ background:linear-gradient(145deg,#fff 0%,#f8faff 100%);
+ box-shadow:0 5px 16px rgba(8,43,104,.045);
+ transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+#vendorDashboard .pickup-item:hover,#riderDashboard .pickup-item:hover,
+#riderDashboard .assignment-item:hover{
+ border-color:#c6d7ed;
+ box-shadow:0 9px 22px rgba(8,43,104,.075);
+}
+#vendorDashboard .pickup-item h4,#riderDashboard .pickup-item h4,
+#riderDashboard .assignment-item h4{color:#082b68;letter-spacing:-.015em}
+#vendorDashboard .pickup-item p,#riderDashboard .pickup-item p,
+#riderDashboard .assignment-item p{color:#536783;line-height:1.6}
+#vendorDashboard .pickup-item .status,#riderDashboard .pickup-item .status,
+#riderDashboard .assignment-item .status{padding:5px 11px;font-size:.73rem;font-weight:800;letter-spacing:.015em}
+#vendorDashboard .rider-card{align-items:center;padding:17px;border-radius:16px;background:linear-gradient(110deg,#fff,#f7faff)}
+#vendorDashboard .rider-card img{width:70px;height:70px;box-shadow:0 3px 10px rgba(8,43,104,.12)}
+#riderDashboard .history-item{align-items:center;padding:14px 2px;border-bottom-color:#e8eef6}
+#riderDashboard .msg-box{padding:16px 17px;border-radius:15px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 4px 14px rgba(8,43,104,.035)}
+#riderDashboard #connectMessage{min-height:104px;resize:vertical}
+#riderDashboard #connectRecipient{min-height:45px}
+#riderDashboard #connectSendButton{min-width:132px}
+#riderDashboard .wallet-box{position:relative;overflow:hidden}
+#riderDashboard .wallet-box:after{content:"";position:absolute;width:210px;height:210px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-75px;top:-105px;box-shadow:0 0 0 25px rgba(255,255,255,.035),0 0 0 52px rgba(255,255,255,.025);pointer-events:none}
+#riderDashboard .wallet-box>*{position:relative;z-index:1}
+@media(max-width:650px){
+ #vendorDashboard .pickup-item,#riderDashboard .pickup-item,#riderDashboard .assignment-item{padding:14px;border-radius:13px}
+ #vendorDashboard .rider-card{gap:12px;padding:14px}
+ #vendorDashboard .rider-card img{width:58px;height:58px}
+ #riderDashboard #connectSendButton{width:100%}
+}
+
+/* KL public portal: final visual consistency and accessibility pass */
+:root{--kl-shadow:0 12px 30px rgba(8,37,82,.075);--kl-radius:18px}
+body{min-height:100vh}
+header,.card{overflow-wrap:anywhere}
+header{border-radius:18px}
+.tabs{position:relative}
+.tab-btn{border-radius:12px}
+.tab-btn.active{font-weight:800}
+.card{background:rgba(255,255,255,.97)}
+.card>h2,.card>h3{color:#102f60}
+.form-group{min-width:0}
+.form-group input,.form-group select,.form-group textarea{width:100%;min-width:0;min-height:44px;border-radius:10px}
+button,.btn{touch-action:manipulation}
+button:disabled,.btn:disabled{transform:none!important;box-shadow:none!important}
+.alert[role=alert]{border-left:4px solid #ff7900}
+:focus-visible{scroll-margin:20px}
+@media(min-width:1000px){
+ .tabs{flex-wrap:wrap}
+ .card{box-shadow:var(--kl-shadow)}
+}
+@media(max-width:640px){
+ header{gap:12px}
+ .tabs{position:static}
+ .tab-btn{min-height:46px}
+ .card{margin-bottom:14px}
+ .form-group{margin-bottom:13px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+
+</style>
 </head>
 <body>
   <div class="container">
@@ -2479,100 +2608,3 @@ header:after,.header:after{content:"";position:absolute;right:-90px;top:-175px;w
   </script>
 </body>
 </html>
-
-
-/* Kawutey Logistics — public portal visual refinement */
-:root{
-  --kl-ink:#10284d;
-  --kl-muted:#62738b;
-  --kl-line:#dce5f0;
-  --kl-surface:#fff;
-  --kl-soft:#f3f7fc;
-  --kl-orange:#ff6a00;
-}
-html{scroll-behavior:smooth;scroll-padding-top:18px}
-body{color:var(--kl-ink);background:linear-gradient(180deg,#eaf1fa 0,#f4f7fb 340px,#f5f7fa 100%)}
-.container{max-width:1120px}
-header{border:1px solid rgba(10,47,107,.08);box-shadow:0 10px 30px rgba(10,47,107,.09);backdrop-filter:blur(10px)}
-.logo-area img{object-fit:contain}
-.logo-text h1{letter-spacing:-.035em}
-.tabs{gap:9px;align-items:center}
-.tab-btn{min-height:43px;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
-.tab-btn:focus-visible,.btn:focus-visible,.toggle-password:focus-visible{outline:3px solid rgba(255,106,0,.35);outline-offset:2px}
-.tab-btn.active{box-shadow:0 5px 13px rgba(10,47,107,.18)}
-.card{border:1px solid rgba(10,47,107,.075);box-shadow:0 8px 24px rgba(10,47,107,.055);border-radius:17px;transition:box-shadow .18s ease,border-color .18s ease}
-.card h2{letter-spacing:-.025em}
-.card h3{letter-spacing:-.015em}
-.form-group label{color:#294363}
-input,select,textarea{background:#fff;border-color:#d3deeb;transition:border-color .16s ease,box-shadow .16s ease}
-input:focus,select:focus,textarea:focus{border-color:var(--kl-orange);box-shadow:0 0 0 4px rgba(255,106,0,.12)}
-.btn{min-height:43px;font-weight:700;letter-spacing:.005em;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
-.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 16px rgba(10,47,107,.12)}
-.btn:disabled{cursor:not-allowed;opacity:.62}
-.alert{border-radius:11px;line-height:1.5}
-img{max-width:100%}
-table{border-collapse:separate;border-spacing:0}
-th{font-weight:700}
-td,th{vertical-align:middle}
-@media(min-width:900px){
- .container{padding:22px}
- .card{padding:24px}
-}
-@media(max-width:640px){
- .container{padding:12px}
- header{padding:12px;border-radius:13px;align-items:flex-start}
- .logo-area{gap:9px}
- .logo-area img{height:43px}
- .logo-text h1{font-size:1.12rem}
- .header-right{text-align:left;width:100%;padding-left:2px}
- .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
- .tab-btn{width:100%;padding:10px 9px;font-size:.84rem}
- .card{padding:16px;border-radius:14px}
- input,select,textarea{font-size:16px}
- .btn{width:auto;max-width:100%}
-}
-@media(prefers-reduced-motion:reduce){
- html{scroll-behavior:auto}
- *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
-}
-
-
-/* Vendor order, rider assignment and communication detail polish */
-#vendorDashboard .pickup-item,#riderDashboard .pickup-item,
-#riderDashboard .assignment-item{
- position:relative;
- padding:17px 18px;
- margin:0 0 13px;
- border:1px solid #dfe8f4;
- border-radius:15px;
- background:linear-gradient(145deg,#fff 0%,#f8faff 100%);
- box-shadow:0 5px 16px rgba(8,43,104,.045);
- transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
-}
-#vendorDashboard .pickup-item:hover,#riderDashboard .pickup-item:hover,
-#riderDashboard .assignment-item:hover{
- border-color:#c6d7ed;
- box-shadow:0 9px 22px rgba(8,43,104,.075);
-}
-#vendorDashboard .pickup-item h4,#riderDashboard .pickup-item h4,
-#riderDashboard .assignment-item h4{color:#082b68;letter-spacing:-.015em}
-#vendorDashboard .pickup-item p,#riderDashboard .pickup-item p,
-#riderDashboard .assignment-item p{color:#536783;line-height:1.6}
-#vendorDashboard .pickup-item .status,#riderDashboard .pickup-item .status,
-#riderDashboard .assignment-item .status{padding:5px 11px;font-size:.73rem;font-weight:800;letter-spacing:.015em}
-#vendorDashboard .rider-card{align-items:center;padding:17px;border-radius:16px;background:linear-gradient(110deg,#fff,#f7faff)}
-#vendorDashboard .rider-card img{width:70px;height:70px;box-shadow:0 3px 10px rgba(8,43,104,.12)}
-#riderDashboard .history-item{align-items:center;padding:14px 2px;border-bottom-color:#e8eef6}
-#riderDashboard .msg-box{padding:16px 17px;border-radius:15px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 4px 14px rgba(8,43,104,.035)}
-#riderDashboard #connectMessage{min-height:104px;resize:vertical}
-#riderDashboard #connectRecipient{min-height:45px}
-#riderDashboard #connectSendButton{min-width:132px}
-#riderDashboard .wallet-box{position:relative;overflow:hidden}
-#riderDashboard .wallet-box:after{content:"";position:absolute;width:210px;height:210px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-75px;top:-105px;box-shadow:0 0 0 25px rgba(255,255,255,.035),0 0 0 52px rgba(255,255,255,.025);pointer-events:none}
-#riderDashboard .wallet-box>*{position:relative;z-index:1}
-@media(max-width:650px){
- #vendorDashboard .pickup-item,#riderDashboard .pickup-item,#riderDashboard .assignment-item{padding:14px;border-radius:13px}
- #vendorDashboard .rider-card{gap:12px;padding:14px}
- #vendorDashboard .rider-card img{width:58px;height:58px}
- #riderDashboard #connectSendButton{width:100%}
-}
