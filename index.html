@@ -631,6 +631,32 @@ footer a:hover{color:#ff8a24}
 @media(max-width:680px){:root{scroll-padding-top:68px}html{scroll-behavior:auto}header{backdrop-filter:blur(8px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}footer a{transition:none}}
 
+
+/* Support and contact experience: clear contact paths and readable help steps */
+.kl-content-page .kl-page-hero{padding:clamp(25px,4vw,44px);border-radius:22px;background:radial-gradient(circle at 88% 10%,rgba(65,145,232,.28),transparent 34%),linear-gradient(125deg,#071f4a,#0b4389 72%,#145da1);box-shadow:0 16px 36px rgba(8,43,104,.13)}
+.kl-content-page .kl-page-hero .kl-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.1);color:#ffb36c;font-weight:900;letter-spacing:.13em}
+.kl-content-page .kl-page-hero h2{max-width:780px;margin:15px 0 10px;color:#fff;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.12;letter-spacing:-.045em}
+.kl-content-page .kl-page-hero p{max-width:700px;margin:0;color:#e1ecfb;font-size:1rem;line-height:1.75}
+.kl-steps-grid{gap:14px;margin:22px 0}
+.kl-steps-grid article{position:relative;min-width:0;padding:22px;border:1px solid #dce6f2;border-radius:17px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 7px 20px rgba(8,43,104,.045)}
+.kl-steps-grid article>b{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;background:#fff0e3;color:#d96300;font-size:.85rem;font-weight:950}
+.kl-steps-grid article h3{margin:15px 0 8px;color:#10396f;font-size:1.08rem;letter-spacing:-.02em}
+.kl-steps-grid article p{margin:0;color:#657791;line-height:1.7}
+.kl-contact-grid{gap:13px;margin:22px 0}
+.kl-contact-grid>a{display:flex;min-width:0;flex-direction:column;gap:7px;padding:20px;border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 7px 20px rgba(8,43,104,.045);text-decoration:none;transition:transform .16s ease,border-color .16s ease}
+.kl-contact-grid>a:hover{transform:translateY(-2px);border-color:#a9c2e2}
+.kl-contact-grid>a small{color:#e36c00;font-weight:900;letter-spacing:.13em}
+.kl-contact-grid>a strong{color:#10396f;font-size:clamp(1rem,2vw,1.2rem);overflow-wrap:anywhere}
+.kl-contact-grid>a span{color:#687b94;font-size:.88rem}
+.kl-page-cta{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;margin:24px 0 8px;padding:clamp(19px,3vw,27px);border:1px solid #d7e4f3;border-radius:18px;background:linear-gradient(115deg,#f3f7fd,#fff)}
+.kl-page-cta h3{width:100%;margin:0;color:#10396f;font-size:1.2rem}
+.kl-page-cta p{flex-basis:100%;margin:0;color:#647791;line-height:1.65}
+.kl-page-cta a{color:#0d4d91;font-weight:800;text-decoration:none;overflow-wrap:anywhere}
+.kl-page-cta a:hover{text-decoration:underline;color:#e36c00}
+.kl-page-cta .btn{min-height:43px;border-radius:10px}
+@media(max-width:620px){.kl-content-page .kl-page-hero{padding:23px 18px;border-radius:17px}.kl-steps-grid article{padding:17px}.kl-contact-grid>a{padding:16px}.kl-page-cta{align-items:stretch;flex-direction:column}.kl-page-cta .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.kl-contact-grid>a{transition:none}.kl-contact-grid>a:hover{transform:none}}
+
 </style>
 </head>
 <body>
