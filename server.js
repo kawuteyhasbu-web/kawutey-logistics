@@ -1059,6 +1059,7 @@ async function startServer() {
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS related_transaction_id BIGINT REFERENCES wallet_transactions(id)");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS refund_reason TEXT");
+    await pool.query("ALTER TABLE assignments ADD COLUMN IF NOT EXISTS delivered_at TIMESTAMPTZ");
     await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction ON wallet_transactions(related_transaction_id) WHERE type='refund' AND status='successful'");
     await pool.query(`CREATE TABLE IF NOT EXISTS pickup_cancellation_requests (
       id BIGSERIAL PRIMARY KEY,
