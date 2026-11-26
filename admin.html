@@ -1046,6 +1046,7 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
  padding:8px 13px;border:1px solid #e1e8f1;border-radius:999px;background:#f7f9fc;
  color:#24466e;text-decoration:none;font-size:.78rem;font-weight:850;white-space:nowrap
 }
+#kl-admin-quicknav a[aria-current="location"]{border-color:#f28c28;background:linear-gradient(110deg,#fff0e3,#fff8f1);color:#984707;box-shadow:inset 0 0 0 1px rgba(242,140,40,.12)}
 #kl-admin-quicknav a:hover,#kl-admin-quicknav a:focus-visible{
  border-color:#f28c28;background:#fff5eb;color:#9b4d0b;outline-offset:2px
 }
@@ -1445,6 +1446,26 @@ $("pendingRiders").addEventListener("click",async e=>{
   try{await api("/api/admin/riders/"+btn.dataset.approveRider+"/approve",{method:"POST"});show($("riderStatus"),"Rider approved successfully.","success");await loadPendingRiders();}
   catch(err){show($("riderStatus"),err.message,"error");btn.disabled=false;}
 });
+// Keep the administrator quick-navigation tab in sync with the visible section.
+const adminQuickNav=$("kl-admin-quicknav");
+if(adminQuickNav){
+ const quickLinks=[...adminQuickNav.querySelectorAll("a[href^='#']")];
+ const quickTargets=quickLinks.map(link=>$(link.getAttribute("href").slice(1))).filter(Boolean);
+ function setActiveAdminQuickLink(targetId){
+  const activeLink=quickLinks.find(link=>link.getAttribute("href")==="#"+targetId);
+  if(!activeLink)return;
+  quickLinks.forEach(link=>{if(link===activeLink)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");});
+  activeLink.scrollIntoView({block:"nearest",inline:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+ }
+ quickLinks.forEach(link=>link.addEventListener("click",()=>setActiveAdminQuickLink(link.getAttribute("href").slice(1))));
+ if("IntersectionObserver" in window){
+  const quickNavObserver=new IntersectionObserver(entries=>{
+   const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+   if(visible)setActiveAdminQuickLink(visible.target.id);
+  },{rootMargin:"-100px 0px -65% 0px",threshold:[0,.15,.35,.6]});
+  quickTargets.forEach(target=>quickNavObserver.observe(target));
+ }
+}
 // Live filtering for the administrator's operational sections.
 const adminSearchInput=$("adminSectionSearch");
 const adminSearchCount=$("adminSectionSearchCount");
