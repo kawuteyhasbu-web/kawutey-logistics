@@ -781,6 +781,43 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
   finally { client.release(); }
 }));
 
+app.get("/api/admin/wallet-reconciliation", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const result = await pool.query(`
+    SELECT u.id AS rider_id,u.full_name,r.rider_code,w.balance_pesewas,
+      COALESCE(SUM(t.amount_pesewas) FILTER (WHERE t.status='successful'),0)::bigint AS ledger_balance_pesewas,
+      COUNT(t.id) FILTER (WHERE t.status='successful')::int AS successful_transaction_count,
+      COUNT(t.id) FILTER (WHERE t.status='pending')::int AS pending_transaction_count,
+      MAX(t.created_at) AS latest_transaction_at
+    FROM wallets w
+    JOIN users u ON u.id=w.rider_id
+    JOIN rider_profiles r ON r.user_id=u.id
+    LEFT JOIN wallet_transactions t ON t.rider_id=w.rider_id
+    GROUP BY u.id,u.full_name,r.rider_code,w.balance_pesewas
+    ORDER BY u.full_name,u.id
+  `);
+  const rows = result.rows.map(row => ({
+    riderId: row.rider_id,
+    riderName: row.full_name,
+    riderCode: row.rider_code,
+    walletBalancePesewas: Number(row.balance_pesewas),
+    ledgerBalancePesewas: Number(row.ledger_balance_pesewas),
+    differencePesewas: Number(row.balance_pesewas) - Number(row.ledger_balance_pesewas),
+    successfulTransactionCount: row.successful_transaction_count,
+    pendingTransactionCount: row.pending_transaction_count,
+    latestTransactionAt: row.latest_transaction_at
+  }));
+  const mismatches = rows.filter(row => row.differencePesewas !== 0);
+  res.set("Cache-Control", "private, no-store");
+  res.json({
+    checkedAt: new Date().toISOString(),
+    riderCount: rows.length,
+    matchedCount: rows.length - mismatches.length,
+    mismatchCount: mismatches.length,
+    mismatches,
+    pendingTransactionCount: rows.reduce((sum, row) => sum + row.pendingTransactionCount, 0)
+  });
+}));
+
 app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at,
       t.related_transaction_id,t.refund_reason,t.reviewed_by,t.reviewed_at,
