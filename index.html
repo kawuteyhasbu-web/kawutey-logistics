@@ -438,6 +438,44 @@ button:disabled{cursor:not-allowed;opacity:.58}
 @media(max-width:680px){.container{padding:11px}.tabs{top:4px;gap:6px}.tab-btn{padding:9px 11px;font-size:.82rem}}
 @media(prefers-reduced-motion:reduce){button,.btn,.tab-btn{transition:none}}
 
+
+/* Support and portal page visual hierarchy pass */
+.kl-content-page{max-width:1040px;margin:0 auto;padding:clamp(14px,2.5vw,26px)}
+.kl-page-hero{position:relative;overflow:hidden;padding:clamp(26px,5vw,48px);border-radius:22px;background:radial-gradient(circle at 88% 12%,rgba(45,126,215,.38),transparent 31%),linear-gradient(120deg,#071f4a,#0b4389 68%,#1262aa);color:#fff;box-shadow:0 16px 36px rgba(8,43,104,.16)}
+.kl-page-hero:after{content:"KL";position:absolute;right:4%;bottom:-.36em;color:rgba(255,255,255,.065);font-size:clamp(8rem,22vw,15rem);font-weight:950;line-height:1;letter-spacing:-.09em;pointer-events:none}
+.kl-page-hero>*{position:relative;z-index:1}
+.kl-page-hero .kl-eyebrow{color:#ffb36e;font-size:.72rem;font-weight:900;letter-spacing:.16em}
+.kl-page-hero h2{max-width:760px;margin:12px 0;color:#fff;font-size:clamp(2rem,5vw,3.35rem);line-height:1.08;letter-spacing:-.045em}
+.kl-page-hero p{max-width:650px;color:#e0ebfb;font-size:1rem;line-height:1.75}
+.kl-steps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:20px 0}
+.kl-steps-grid article{position:relative;min-width:0;padding:23px 21px;border:1px solid #dfe8f4;border-radius:17px;background:linear-gradient(180deg,#fff,#f9fbff);box-shadow:0 8px 22px rgba(8,43,104,.05)}
+.kl-steps-grid article>b{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#fff0e4;color:#d96600;font-size:.82rem}
+.kl-steps-grid article h3{margin:15px 0 8px;color:#0a2f6b;font-size:1.08rem}
+.kl-steps-grid article p{color:#657791;font-size:.92rem;line-height:1.7}
+.kl-page-cta{display:flex;align-items:flex-start;flex-direction:column;gap:9px;margin-top:18px;padding:clamp(22px,3.5vw,32px);border:1px solid #dce6f2;border-radius:18px;background:linear-gradient(115deg,#fff,#f3f7fd)}
+.kl-page-cta h3{margin:0;color:#082b68;font-size:1.35rem}
+.kl-page-cta p{max-width:760px;color:#657791;line-height:1.7}
+.kl-page-cta a{color:#1455a0;font-weight:800;overflow-wrap:anywhere;text-decoration:none}
+.kl-page-cta a:hover{text-decoration:underline}
+.kl-contact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:20px 0}
+.kl-contact-grid>a{display:flex;flex-direction:column;gap:7px;min-width:0;padding:20px;border:1px solid #dce6f2;border-radius:16px;background:#fff;box-shadow:0 7px 20px rgba(8,43,104,.05);text-decoration:none;transition:transform .18s ease,box-shadow .18s ease}
+.kl-contact-grid>a:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(8,43,104,.1)}
+.kl-contact-grid small{color:#e36c00;font-weight:900;letter-spacing:.13em}
+.kl-contact-grid strong{color:#082b68;font-size:1.04rem;overflow-wrap:anywhere}
+.kl-contact-grid span{color:#718198;font-size:.84rem}
+#vendor,#rider{max-width:1120px;margin:0 auto}
+#vendor .card,#rider .card{border:1px solid #dce6f2;border-radius:18px;box-shadow:0 9px 26px rgba(8,43,104,.055)}
+#vendorAuthCard,#riderAuthCard{overflow:hidden}
+#vendor .card>h2,#rider .card>h2{font-size:clamp(1.35rem,3vw,1.8rem);line-height:1.25}
+#vendorRegSection,#riderRegSection{padding-top:8px}
+#vendorRegForm,#riderRegForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+#vendorRegForm .form-group,#riderRegForm .form-group{min-width:0}
+#vendorRegForm input,#riderRegForm input,#vendorRegForm select,#riderRegForm select{width:100%;min-width:0}
+#vendorRegForm button,#riderRegForm button{align-self:end}
+@media(max-width:760px){.kl-steps-grid{grid-template-columns:1fr}.kl-contact-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.kl-content-page{padding:10px}.kl-page-hero{border-radius:17px;padding:27px 21px}.kl-page-hero:after{right:0}.kl-steps-grid{gap:10px}.kl-steps-grid article{padding:19px}.kl-contact-grid{gap:9px}#vendorRegForm,#riderRegForm{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.kl-contact-grid>a{transition:none}.kl-contact-grid>a:hover{transform:none}}
+
 </style>
 </head>
 <body>
