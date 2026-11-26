@@ -701,12 +701,17 @@
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
               ${riderBlock}
-              ${p.assignment_status === "available" && !p.rider_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
+              ${p.cancellation_status ? `<p style="margin-top:10px;"><strong>Cancellation request:</strong> ${escapeHtml(String(p.cancellation_status).toUpperCase())}</p>${p.cancellation_reason_type ? `<p><strong>Reason:</strong> ${escapeHtml(({customer_cancelled:"Customer cancelled the order",incorrect_pickup_details:"Incorrect pickup details",package_unavailable:"Package unavailable or not ready"})[p.cancellation_reason_type] || p.cancellation_reason_type)}</p>` : ""}${p.cancellation_explanation ? `<p><strong>Explanation:</strong> ${escapeHtml(p.cancellation_explanation)}</p>` : ""}${p.cancellation_admin_note ? `<p><strong>Administrator's note:</strong> ${escapeHtml(p.cancellation_admin_note)}</p>` : ""}` : ""}
+              ${!["cancelled","completed"].includes(p.assignment_status) && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
+              ${p.assignment_status === "available" && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
               <small>Request submitted: ${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
             </div>`;
         }).join("");
         area.querySelectorAll(".delete-pickup-button").forEach(button => {
           button.addEventListener("click", () => deletePickupRequest(button.dataset.pickupId));
+        });
+        area.querySelectorAll(".cancel-pickup-button").forEach(button => {
+          button.addEventListener("click", () => requestPickupCancellation(button.dataset.pickupId, button));
         });
         for (const p of mine) {
           if (!p.rider_name || !p.rider_has_photo) continue;
@@ -731,6 +736,28 @@
       } catch (error) {
         area.innerHTML = "<p style='color:#b02a37;'>Could not load pickup requests. " + escapeHtml(error.message) + "</p>";
       }
+    }
+    async function requestPickupCancellation(pickupId, button) {
+      if (!currentVendor) return alert("Please log in again.");
+      const choice = window.prompt("Choose the reason for cancellation by entering a number:\n1. Customer cancelled the order\n2. Incorrect pickup details\n3. Package unavailable or not ready");
+      if (choice === null) return;
+      const reasons = { "1":"customer_cancelled", "2":"incorrect_pickup_details", "3":"package_unavailable" };
+      if (!reasons[choice.trim()]) return alert("Please choose 1, 2 or 3.");
+      const explanation = window.prompt("Briefly explain why this pickup should be cancelled (10–500 characters):");
+      if (explanation === null) return;
+      if (explanation.trim().length < 10 || explanation.trim().length > 500) return alert("Please enter an explanation between 10 and 500 characters.");
+      if (!window.confirm("Send this cancellation request to the administrator? Your pickup will remain active until the administrator approves it.")) return;
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/vendor/pickups/" + encodeURIComponent(pickupId) + "/cancellation-request", {
+          method: "POST", body: JSON.stringify({ reasonType: reasons[choice.trim()], explanation: explanation.trim() })
+        });
+        alert(result.message);
+        await renderPickups();
+      } catch (error) {
+        alert(error.message);
+        await renderPickups();
+      } finally { if (button.isConnected) button.disabled = false; }
     }
     async function deletePickupRequest(pickupId) {
       if (!currentVendor) return alert("Please log in again.");
