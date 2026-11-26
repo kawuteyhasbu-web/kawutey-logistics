@@ -249,7 +249,7 @@ app.get("/api/rider/profile/photo", authenticate, roles("rider"), asyncRoute(asy
 // Rider Connect: private, authenticated rider-to-rider messaging.
 app.get("/api/rider/connect/riders", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query(
-    "SELECT u.id, u.full_name, u.location, rp.rider_code FROM users u JOIN rider_profiles rp ON rp.user_id=u.id WHERE u.role='rider' AND u.status='active' AND u.id<>$1 ORDER BY u.full_name ASC",
+    "SELECT u.id, u.full_name, u.location, rp.rider_code FROM users u LEFT JOIN rider_profiles rp ON rp.user_id=u.id WHERE u.role='rider' AND u.status='active' AND u.id<>$1 ORDER BY u.full_name ASC",
     [req.user.id]
   );
   res.set("Cache-Control", "private, no-store");
