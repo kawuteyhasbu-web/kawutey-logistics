@@ -1596,6 +1596,46 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 }
 </style>
 
+<style id="kl-operational-cards-refinement">
+/* Clearer operational cards for live pickup and rider communication workflows. */
+#vendorDashboard .pickup-item{
+ min-width:0;padding:16px;border:1px solid #dfe8f4;border-left:4px solid #ff7900;
+ border-radius:15px;background:#fff;box-shadow:0 6px 18px rgba(8,43,104,.045)
+}
+#vendorDashboard .pickup-item-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#vendorDashboard .pickup-item-heading>strong{color:#0b326b;font-size:.98rem}
+#vendorDashboard .pickup-item-details{margin-top:10px;color:#526780;line-height:1.6;overflow-wrap:anywhere}
+#vendorDashboard .pickup-item-details p{margin:7px 0}
+#riderDashboard .assignment-item{
+ min-width:0;margin:10px 0;padding:16px;border:1px solid #dfe8f4;
+ border-left:4px solid #ff7900;border-radius:15px;background:linear-gradient(135deg,#fff,#f8faff);
+ box-shadow:0 6px 18px rgba(8,43,104,.045);overflow-wrap:anywhere;line-height:1.6
+}
+#riderDashboard .assignment-item>strong{display:block;margin-bottom:6px;color:#0b326b;font-size:1rem}
+#riderDashboard .assignment-item p{margin:7px 0;color:#526780}
+#riderDashboard .assignment-item button{min-height:45px;margin-top:8px}
+#riderDashboard #riderConnectPanel{border-top:4px solid #ff7900}
+#riderDashboard #riderConnectPanel>p{color:#61738b;line-height:1.55}
+#riderDashboard .connect-start{padding:14px;border:1px solid #e1e9f4;border-radius:14px;background:#f7f9fd}
+#riderDashboard .connect-start-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:8px}
+#riderDashboard .connect-start-row select{flex:1 1 210px}
+#riderDashboard .connect-inbox-filters{display:flex;gap:8px;flex-wrap:wrap}
+#riderDashboard .connect-inbox-filters button{min-height:40px}
+#riderDashboard .connect-layout{min-width:0;gap:12px}
+#riderDashboard .connect-threads,#riderDashboard .connect-chat{
+ min-width:0;border:1px solid #e1e9f4;border-radius:14px;background:#fbfcff
+}
+#riderDashboard #connectThreads{overflow-wrap:anywhere}
+#riderDashboard #connectMessages{overflow-wrap:anywhere;overscroll-behavior:contain}
+#riderDashboard #connectMessages :is(p,div){max-width:100%;overflow-wrap:anywhere}
+@media(max-width:650px){
+ #vendorDashboard .pickup-item,#riderDashboard .assignment-item{padding:13px;border-radius:13px}
+ #riderDashboard .connect-start-row>*{width:100%;min-width:0}
+ #riderDashboard .connect-layout{grid-template-columns:minmax(0,1fr)}
+ #riderDashboard .connect-threads,#riderDashboard .connect-chat{width:100%}
+}
+</style>
+
 <style id="kl-mobile-native-portal-navigation">
 /* Phone-native portal finish: persistent section navigation and stronger workspace hierarchy */
 @media(max-width:650px){
