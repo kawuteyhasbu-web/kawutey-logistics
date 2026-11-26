@@ -608,7 +608,7 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
 app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at,
       t.related_transaction_id,t.refund_reason,t.reviewed_by,t.reviewed_at,
-      cancellation.explanation AS cancellation_explanation,
+      cancellation.reason_type AS cancellation_reason_type,cancellation.explanation AS cancellation_explanation,
       refund.id AS refund_transaction_id,refund.reference AS refund_reference,refund.created_at AS refund_created_at,
       refund.reviewed_by AS refund_reviewed_by,refund.reviewed_at AS refund_reviewed_at,
       reviewer.full_name AS reviewer_name
@@ -617,7 +617,7 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
     JOIN rider_profiles r ON r.user_id=u.id
     LEFT JOIN wallet_transactions refund ON refund.related_transaction_id=t.id AND refund.type='refund' AND refund.status='successful'
     LEFT JOIN users reviewer ON reviewer.id=refund.reviewed_by
-    LEFT JOIN LATERAL (SELECT explanation FROM pickup_cancellation_requests WHERE assignment_id=t.package_assignment_id AND status='approved' ORDER BY reviewed_at DESC NULLS LAST,created_at DESC LIMIT 1) cancellation ON TRUE
+    LEFT JOIN LATERAL (SELECT reason_type,explanation FROM pickup_cancellation_requests WHERE assignment_id=t.package_assignment_id AND status='approved' ORDER BY reviewed_at DESC NULLS LAST,created_at DESC LIMIT 1) cancellation ON TRUE
     ORDER BY t.created_at DESC,t.id DESC LIMIT 300`);
   res.set("Cache-Control", "private, no-store");
   res.json({ transactions: result.rows.map(t => ({
@@ -625,7 +625,7 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
     type:t.type, amountGhs:Number(t.amount_pesewas)/100, status:t.status, reference:t.reference,
     providerReference:t.provider_reference, packageAssignmentId:t.package_assignment_id,
     description:t.description, createdAt:t.created_at,
-    relatedTransactionId:t.related_transaction_id, refundReason:t.refund_reason, cancellationExplanation:t.cancellation_explanation,
+    relatedTransactionId:t.related_transaction_id, refundReason:t.refund_reason, cancellationReasonType:t.cancellation_reason_type, cancellationExplanation:t.cancellation_explanation,
     reviewedBy:t.refund_reviewed_by, reviewedAt:t.refund_reviewed_at, reviewedByName:t.reviewer_name,
     hasSuccessfulRefund:Boolean(t.refund_transaction_id), refundReference:t.refund_reference,
     refundCreatedAt:t.refund_created_at
