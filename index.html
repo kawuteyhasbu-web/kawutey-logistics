@@ -473,6 +473,7 @@
         secureRefreshWalletTransactions: loadSecureRiderWalletTransactions,
         secureUpdateLocation: updateSecureRiderLocation,
         secureEnableNearbyAlerts: enableSecureNearbyAlerts,
+        refreshRiderConnect: loadRiderConnect,
         paystackDeposit: startPaystackDeposit,
         createManualDeposit: createSecureManualIntent
       };
@@ -899,7 +900,7 @@
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small><div id="secureRecentDeposit" class="recent-deposit-box"><span class="recent-deposit-label">Most recent successful deposit</span><strong id="secureRecentDepositAmount">No verified deposits yet</strong><span id="secureRecentDepositDetails">A deposit will appear here after secure payment confirmation.</span></div></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small><div id="secureRecentDeposit" class="recent-deposit-box"><span class="recent-deposit-label">Most recent successful deposit</span><strong id="secureRecentDepositAmount">No verified deposits yet</strong><span id="secureRecentDepositDetails">A deposit will appear here after secure payment confirmation.</span></div></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><section class="card" style="padding:16px;"><h3>Rider Connect — Communication with Other Riders</h3><p>Send a private message to another approved Kawutey Logistics rider. Messages are visible only to the sender and recipient.</p><label for="connectRecipient">Choose a rider</label><select id="connectRecipient"><option value="">Loading approved riders…</option></select><label for="connectMessage">Your message</label><textarea id="connectMessage" rows="3" maxlength="2000" placeholder="Write your message (up to 2,000 characters)"></textarea><button type="button" class="btn btn-accent" id="connectSendButton" data-action="sendMessage">Send message</button><button type="button" class="btn btn-outline" data-action="refreshRiderConnect">Refresh messages</button><p id="connectStatus" class="alert alert-info" role="status">Loading Rider Connect…</p><div id="connectMessages" aria-live="polite"></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.querySelectorAll(".wallet-box, section.card").forEach((panel, index) => {
         const heading = panel.querySelector("h3");
         const title = heading ? heading.textContent.trim() : (index === 0 ? "Wallet Overview" : "Rider Dashboard Section");
@@ -952,6 +953,7 @@
       startSecureAssignmentPolling();
       await loadSecureDepositOptions();
       await loadSecureRiderDeposits();
+      await loadRiderConnect();
     }
 
     async function updateSecureRiderLocation() {
@@ -1529,17 +1531,64 @@
       showRiderLogin();
     }
 
-    function sendMessage() {
+    async function loadRiderConnect() {
+      const status = document.getElementById("connectStatus");
+      const select = document.getElementById("connectRecipient");
+      const area = document.getElementById("connectMessages");
+      if (!status || !select || !area || !sessionStorage.getItem("kl_rider_token")) return;
+      status.textContent = "Loading approved riders and messages…";
+      try {
+        const [riderData, messageData] = await Promise.all([
+          apiRequest("/api/rider/connect/riders", { riderAuth: true }),
+          apiRequest("/api/rider/connect/messages", { riderAuth: true })
+        ]);
+        const previous = select.value;
+        select.innerHTML = '<option value="">-- Choose an approved rider --</option>' +
+          riderData.riders.map(r => '<option value="' + Number(r.id) + '">' + escapeHtml(r.full_name) + ' (' + escapeHtml(r.rider_code) + ')</option>').join("");
+        if (previous && riderData.riders.some(r => String(r.id) === previous)) select.value = previous;
+        const items = messageData.messages || [];
+        area.innerHTML = items.length ? '<h4>Recent messages</h4>' + items.map(m => {
+          const sent = Number(m.sender_id) === Number(currentRider.id);
+          return '<article class="msg-box"><strong>' + (sent ? 'To: ' + escapeHtml(m.recipient_name) : 'From: ' + escapeHtml(m.sender_name)) + '</strong><p style="white-space:pre-wrap;">' + escapeHtml(m.message) + '</p><small>' + escapeHtml(formatGhanaDateTime(m.created_at)) + '</small></article>';
+        }).join("") : '<p>No Rider Connect messages yet.</p>';
+        status.textContent = riderData.riders.length ? "Rider Connect is ready. Messages are private between the two riders." : "No other approved riders are available yet.";
+        status.className = "alert alert-info";
+      } catch (error) {
+        status.textContent = error.message || "Could not load Rider Connect.";
+        status.className = "alert alert-warning";
+      }
+    }
+
+    async function sendMessage() {
       if (!currentRider) return;
-      const toId = document.getElementById('messageTo').value;
-      const text = document.getElementById('messageText').value.trim();
-      if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
-      const toRider = riders.find(r => r.id == toId);
-      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: formatGhanaDateTime() });
-      localStorage.setItem('kl_messages', JSON.stringify(messages));
-      document.getElementById('messageText').value = '';
-      updateRiderDashboard();
-      alert('Message sent successfully!');
+      const select = document.getElementById("connectRecipient");
+      const field = document.getElementById("connectMessage");
+      const button = document.getElementById("connectSendButton");
+      const status = document.getElementById("connectStatus");
+      if (!select || !field || !button || !status) return;
+      const recipientId = select.value;
+      const message = field.value.trim();
+      if (!recipientId || !message) {
+        status.textContent = "Choose an approved rider and write a message first.";
+        status.className = "alert alert-warning";
+        return;
+      }
+      button.disabled = true;
+      try {
+        await apiRequest("/api/rider/connect/messages", {
+          method: "POST", riderAuth: true,
+          body: JSON.stringify({ recipientId: Number(recipientId), message })
+        });
+        field.value = "";
+        status.textContent = "Message sent successfully.";
+        status.className = "alert alert-info";
+        await loadRiderConnect();
+      } catch (error) {
+        status.textContent = error.message || "Your message could not be sent.";
+        status.className = "alert alert-warning";
+      } finally {
+        button.disabled = false;
+      }
     }
     async function restoreVendorSession() {
       try {
