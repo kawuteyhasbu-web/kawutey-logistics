@@ -107,6 +107,28 @@ button.secondary{background:#fff;color:var(--primary);border:1px solid #d5e0ef}
  .admin-section .section-card{padding:14px}
 }
 
+
+/* Final small-screen safeguards for dense admin data and action groups */
+#dashboard .section-card{min-width:0}
+#dashboard table{display:block;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap}
+#dashboard table th,#dashboard table td{padding:10px 12px;vertical-align:top}
+#dashboard .item{min-width:0;overflow-wrap:anywhere}
+#dashboard .item button{margin:7px 7px 0 0}
+#dashboard .commission-toolbar{align-items:stretch}
+#dashboard .commission-toolbar label{min-width:min(100%,220px)}
+#dashboard input,#dashboard select,#dashboard textarea{max-width:100%}
+#dashboard .report-row{align-items:flex-start;flex-wrap:wrap}
+#dashboard .report-row>*{min-width:0;overflow-wrap:anywhere}
+@media(max-width:680px){
+ #dashboard .section-card{overflow-x:hidden}
+ #dashboard .commission-metric{padding:13px}
+ #dashboard .commission-total strong{font-size:1.65rem}
+ #dashboard button{max-width:100%;white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
 </style><script src="/admin-password.js" defer></script>
 </head>
 <body><main class="wrap">
