@@ -1098,6 +1098,35 @@ footer{color:#718096}
 @media(max-width:700px){.container{width:100%;padding:12px}.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tab-btn{width:100%;padding:10px 8px;font-size:.86rem}.card{padding:15px;border-radius:14px}header{padding:15px;border-radius:15px}.dashboard-panel{border-radius:14px}.dashboard-panel-toggle{min-height:54px;padding:14px;font-size:.93rem}.dashboard-panel-content{padding:13px}.wallet-box{border-radius:15px}.wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.btn,button,.dashboard-panel-icon{transition:none!important}}
 
+
+/* KL redesign batch 2: vendor order lifecycle and rider workspace refinement */
+#vendorAuthCard,#riderAuthCard{border:1px solid var(--kl-line);border-radius:19px;background:linear-gradient(150deg,#fff,#f8faff);box-shadow:0 12px 30px rgba(8,43,104,.065)}
+#vendorAuthCard .card,#riderAuthCard .card{box-shadow:none;background:transparent;border:0}
+#vendorRegForm,#riderRegForm,#vendorLoginForm,#riderLoginForm{display:grid;gap:3px}
+#vendorRegForm .form-group,#riderRegForm .form-group,#vendorLoginForm .form-group,#riderLoginForm .form-group{min-width:0}
+#vendorRegForm label,#riderRegForm label,#vendorLoginForm label,#riderLoginForm label{color:#294363;font-weight:750}
+#vendorRegForm input,#riderRegForm input,#vendorLoginForm input,#riderLoginForm input{min-height:46px;border-radius:11px}
+#vendorRegBtn,#riderRegBtn{width:100%;min-height:48px;font-weight:850}
+#photoPreview{max-width:min(100%,240px);max-height:240px;object-fit:cover;border:3px solid #fff;border-radius:15px;box-shadow:0 0 0 1px var(--kl-line),0 8px 20px rgba(8,43,104,.09)}
+#pickupFormArea,#depositFormArea,#transactionHistoryArea,#riderConnectPanel{min-width:0;border:1px solid var(--kl-line);border-radius:16px;background:linear-gradient(145deg,#fff,#f9fbff);box-shadow:0 5px 17px rgba(8,43,104,.04)}
+#pickupFormArea{padding:clamp(14px,2vw,21px)}
+#pickupForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+#pickupForm .form-group{min-width:0;margin:0}
+#pickupForm .form-group:has(#pkg-desc),#pickupForm .form-group:has(#pickup-time),#pickupForm button{grid-column:1/-1}
+#pickupForm :is(input,select,textarea){width:100%;min-width:0;min-height:46px;border-radius:10px}
+#pickupForm textarea{min-height:94px;resize:vertical}
+#pickupForm button{min-height:48px;font-weight:850}
+#pickupHistory,#availableAssignments,#acceptedAssignments,#secureAvailableAssignments,#secureAcceptedAssignments,#depositHistory,#secureDepositHistory,#secureWalletTransactionHistory,#connectMessages{display:grid;gap:11px;min-width:0}
+#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item,#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{margin:0;padding:16px;border:1px solid var(--kl-line);border-radius:14px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 4px 13px rgba(8,43,104,.035)}
+#pickupHistory .pickup-item :is(p,small),#availableAssignments .assignment-item :is(p,small),#acceptedAssignments .assignment-item :is(p,small){line-height:1.6;overflow-wrap:anywhere}
+#riderDashboard .wallet-box,#vendorDashboard .wallet-box{margin-bottom:4px}
+#riderConnectPanel{padding:clamp(14px,2vw,20px)}
+#riderConnectPanel .msg-box,#connectMessages .msg-box{padding:14px;border:1px solid var(--kl-line);border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#connectMessages .msg-box p{line-height:1.65}
+#riderConnectPanel :is(select,textarea){width:100%;min-width:0}
+#riderConnectPanel textarea{min-height:105px;resize:vertical}
+@media(max-width:700px){#pickupForm{grid-template-columns:minmax(0,1fr)}#pickupForm .form-group:has(#pkg-desc),#pickupForm .form-group:has(#pickup-time),#pickupForm button{grid-column:auto}#pickupForm button{width:100%}#pickupFormArea,#depositFormArea,#transactionHistoryArea,#riderConnectPanel{border-radius:14px}#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item{padding:13px}}
+@media(prefers-reduced-motion:reduce){#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item{transition:none}}
 </style>
 </head>
 <body>
