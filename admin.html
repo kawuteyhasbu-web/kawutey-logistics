@@ -1474,6 +1474,20 @@ clearAdminSearchButton.addEventListener("click",()=>{
   filterAdminSections();
   adminSearchInput.focus();
 });
+// Keyboard access: Ctrl/Cmd+K focuses section search; Escape clears it.
+document.addEventListener("keydown",event=>{
+  const isSearchShortcut=(event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k";
+  if(isSearchShortcut){
+    event.preventDefault();
+    adminSearchInput.focus();
+    adminSearchInput.select();
+    return;
+  }
+  if(event.key==="Escape"&&document.activeElement===adminSearchInput&&adminSearchInput.value){
+    adminSearchInput.value="";
+    filterAdminSections();
+  }
+});
 function returnToAdminAccess(){sessionStorage.removeItem(tokenKey);const portal=new URLSearchParams(location.search).get("adminPortal");if(portal&&/^\/[A-Za-z0-9_-]{24,100}$/.test(portal)){location.assign(portal);return;} $("dashboard").classList.add("hidden");$("loginCard").classList.remove("hidden");} $("logoutButton").addEventListener("click",returnToAdminAccess); const adminPortalFromUrl=new URLSearchParams(location.search).get("adminPortal"); if(adminPortalFromUrl&&/^\/[A-Za-z0-9_-]{24,100}$/.test(adminPortalFromUrl)){ $("adminSignupLink").href=adminPortalFromUrl; $("adminSignupLink").addEventListener("click",e=>{e.preventDefault();location.assign(adminPortalFromUrl);}); } else { $("adminSignupAccess").classList.add("hidden"); }
 $("notifications").addEventListener("click",async e=>{const btn=e.target.closest("[data-read]");if(!btn)return;btn.disabled=true;try{await api("/api/admin/notifications/"+btn.dataset.read+"/read",{method:"PATCH"});await loadNotifications();}catch(err){show($("status"),err.message,"error");btn.disabled=false;}});
 (async()=>{if(sessionStorage.getItem(tokenKey)){try{const d=await api("/api/me");if(d.user.role==="admin")openDashboard();else sessionStorage.removeItem(tokenKey);}catch{sessionStorage.removeItem(tokenKey);}}})();
