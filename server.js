@@ -549,12 +549,13 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
   const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at,
       t.related_transaction_id,t.refund_reason,t.reviewed_by,t.reviewed_at,
       refund.id AS refund_transaction_id,refund.reference AS refund_reference,refund.created_at AS refund_created_at,
+      refund.reviewed_by AS refund_reviewed_by,refund.reviewed_at AS refund_reviewed_at,
       reviewer.full_name AS reviewer_name
     FROM wallet_transactions t
     JOIN users u ON u.id=t.rider_id
     JOIN rider_profiles r ON r.user_id=u.id
-    LEFT JOIN users reviewer ON reviewer.id=t.reviewed_by
     LEFT JOIN wallet_transactions refund ON refund.related_transaction_id=t.id AND refund.type='refund' AND refund.status='successful'
+    LEFT JOIN users reviewer ON reviewer.id=refund.reviewed_by
     ORDER BY t.created_at DESC,t.id DESC LIMIT 300`);
   res.set("Cache-Control", "private, no-store");
   res.json({ transactions: result.rows.map(t => ({
@@ -563,7 +564,7 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
     providerReference:t.provider_reference, packageAssignmentId:t.package_assignment_id,
     description:t.description, createdAt:t.created_at,
     relatedTransactionId:t.related_transaction_id, refundReason:t.refund_reason,
-    reviewedBy:t.reviewed_by, reviewedAt:t.reviewed_at, reviewedByName:t.reviewer_name,
+    reviewedBy:t.refund_reviewed_by, reviewedAt:t.refund_reviewed_at, reviewedByName:t.reviewer_name,
     hasSuccessfulRefund:Boolean(t.refund_transaction_id), refundReference:t.refund_reference,
     refundCreatedAt:t.refund_created_at
   })) });
