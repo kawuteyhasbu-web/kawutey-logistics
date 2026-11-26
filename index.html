@@ -1774,6 +1774,74 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 }
 </style>
 
+<style id="kl-visual-system-refresh-2026-11">
+/* KAWUTEY VISUAL SYSTEM — coordinated desktop and mobile experience */
+:root{--kl-ink:#102b50;--kl-navy:#082b68;--kl-blue:#124b91;--kl-orange:#ff7900;--kl-muted:#6b7d95;--kl-border:#dce6f2;--kl-surface:#fff;--kl-soft:#f5f8fd}
+html{scroll-behavior:smooth}
+body{color:var(--kl-ink);background:linear-gradient(180deg,#f5f8fd 0,#f8faff 280px,#f3f6fb 100%)}
+header{border-radius:0 0 20px 20px;box-shadow:0 9px 30px rgba(8,43,104,.09)}
+main{width:min(1240px,calc(100% - 36px));margin-inline:auto}
+#vendorDashboard,#riderDashboard{gap:18px}
+#vendorDashboard>.card,#riderDashboard>.card,.dashboard-panel{
+ border-color:var(--kl-border)!important;background:var(--kl-surface);
+ box-shadow:0 8px 26px rgba(8,43,104,.055)!important;
+}
+#vendorDashboard .dashboard-panel-toggle,#riderDashboard .dashboard-panel-toggle{
+ min-height:60px;padding:17px 20px!important;font-weight:850;
+ background:linear-gradient(105deg,#f6f9fe,#fff);color:var(--kl-navy);
+}
+#vendorDashboard .dashboard-panel-toggle:hover,#riderDashboard .dashboard-panel-toggle:hover{background:#eef4fc}
+#vendorDashboard .dashboard-panel-icon,#riderDashboard .dashboard-panel-icon{
+ border:1px solid #ffdfc4;background:#fff2e8;color:#ed7100;
+}
+#vendorDashboard .dashboard-panel-content,#riderDashboard .dashboard-panel-content{padding:20px}
+#vendorDashboard .pickup-item,#vendorDashboard .history-item,
+#riderDashboard .assignment-item,#riderDashboard .history-item{
+ border:1px solid #e0e8f2;border-radius:15px;background:#fff;
+ box-shadow:0 4px 14px rgba(8,43,104,.035);padding:15px;
+}
+#vendorDashboard :is(input,select,textarea),#riderDashboard :is(input,select,textarea){
+ border-color:#ccd9e9;border-radius:11px;background:#fff;
+}
+#vendorDashboard :is(input,select,textarea):focus,#riderDashboard :is(input,select,textarea):focus{
+ border-color:var(--kl-orange);box-shadow:0 0 0 3px rgba(255,121,0,.12);outline:0;
+}
+#vendorDashboard button,#riderDashboard button{transition:transform .16s ease,box-shadow .16s ease}
+#vendorDashboard button:not(:disabled):hover,#riderDashboard button:not(:disabled):hover{transform:translateY(-1px)}
+#vendorDashboard .btn-primary,#riderDashboard .btn-primary{background:linear-gradient(105deg,#f87500,#ff9636)}
+#riderDashboard .wallet-box{
+ border:1px solid rgba(255,255,255,.16);
+ background:radial-gradient(circle at 94% 0,rgba(255,145,48,.25),transparent 31%),linear-gradient(125deg,#061d49,#0a3979 62%,#14569a)!important;
+}
+#riderDashboard .wallet-stats .stat-box{backdrop-filter:blur(8px)}
+#riderDashboard .dashboard-panel-content>h3{font-size:1.05rem}
+#vendorDashboard .alert,#riderDashboard .alert{border-radius:13px}
+#pickupHistory,#riderDashboard #secureAvailableAssignments,#riderDashboard #secureAcceptedAssignments{gap:12px}
+@media(min-width:1050px){
+ main{padding-bottom:50px}
+ #vendorDashboard,#riderDashboard{gap:20px}
+ #vendorDashboard>.dashboard-panel,#riderDashboard>.dashboard-panel{border-radius:19px}
+ #vendorDashboard .dashboard-panel-content,#riderDashboard .dashboard-panel-content{padding:23px}
+}
+@media(max-width:760px){
+ body{background:#f4f7fc}
+ main{width:calc(100% - 22px)}
+ header{border-radius:0 0 15px 15px}
+ #vendorDashboard,#riderDashboard{gap:12px}
+ #vendorDashboard .dashboard-panel-toggle,#riderDashboard .dashboard-panel-toggle{min-height:54px;padding:14px!important}
+ #vendorDashboard .dashboard-panel-content,#riderDashboard .dashboard-panel-content{padding:13px}
+ #vendorDashboard .pickup-item,#vendorDashboard .history-item,#riderDashboard .assignment-item,#riderDashboard .history-item{padding:13px;border-radius:13px}
+ #vendorDashboard button,#riderDashboard button{min-height:44px}
+ #riderDashboard .wallet-box{padding:18px!important}
+}
+@media(max-width:390px){
+ main{width:calc(100% - 16px)}
+ #riderDashboard .wallet-stats{gap:7px}
+ #riderDashboard .wallet-stats .stat-box{padding:10px 8px}
+ #vendorDashboard .dashboard-panel-toggle,#riderDashboard .dashboard-panel-toggle{font-size:.9rem!important}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#vendorDashboard button,#riderDashboard button{transition:none}}
+</style>
 </head>
 <body>
   <div class="container">
