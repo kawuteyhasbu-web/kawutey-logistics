@@ -26,6 +26,8 @@ if (!jwtSecret || jwtSecret.length < 32) {
   console.error("JWT_SECRET must be set to a random value of at least 32 characters.");
   process.exit(1);
 }
+// Render terminates TLS and forwards requests through one trusted proxy.
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(helmet({
   contentSecurityPolicy: {
