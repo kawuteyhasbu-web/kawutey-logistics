@@ -729,6 +729,14 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboardActions button{margin:0;min-height:40px}
 #dashboard>details.admin-section[hidden]{display:none!important}
 @media(max-width:650px){#dashboardActions{grid-template-columns:minmax(0,1fr) auto;gap:8px}#dashboardActions .admin-search-label{grid-column:1/-1}#dashboardActions #adminSectionSearchCount{white-space:normal}#dashboardActions #logoutButton{grid-column:2;grid-row:2}}
+
+/* KL redesign batch 8: faster administrator section discovery */
+#dashboardActions #adminSectionSearch{background-image:linear-gradient(90deg,transparent,transparent);transition:border-color .16s ease,box-shadow .16s ease}
+#dashboardActions #adminSectionSearch:focus{border-color:#f28a35;box-shadow:0 0 0 3px rgba(242,138,53,.13)}
+#dashboardActions #adminSectionSearchCount{font-size:.76rem;font-weight:750;color:#5e718b}
+#dashboard>details.admin-section[open]>summary{border-bottom:1px solid #e6edf5}
+#dashboard>details.admin-section[hidden]{display:none!important}
+#dashboard>details.admin-section:not([hidden]){scroll-margin-top:100px}
 </style>
 </head>
 <body><main class="wrap">
@@ -778,9 +786,32 @@ function compactDashboardSections(){
     dashboard.insertBefore(details,card);details.append(summary,card);card.classList.add("section-card");
   });
 }
-function filterAdminSections(){const input=$("adminSectionSearch");if(!input)return;const query=input.value.trim().toLowerCase();let visible=0;document.querySelectorAll("#dashboard > details.admin-section").forEach(section=>{const match=!query||section.textContent.toLowerCase().includes(query);section.hidden=!match;if(match)visible++;});$("adminSectionSearchCount").textContent=query?visible+" matching section"+(visible===1?"":"s"):"All sections shown";$("clearAdminSectionSearch").hidden=!query;}
+function filterAdminSections(){
+  const input=$("adminSectionSearch");if(!input)return;
+  const query=input.value.trim().toLowerCase();let visible=0;
+  document.querySelectorAll("#dashboard > details.admin-section").forEach(section=>{
+    const match=!query||section.textContent.toLowerCase().includes(query);
+    section.hidden=!match;
+    if(query&&match){
+      if(!section.dataset.searchWasOpen)section.dataset.searchWasOpen=section.open?"true":"false";
+      section.open=true;
+    }else if(!query&&section.dataset.searchWasOpen){
+      section.open=section.dataset.searchWasOpen==="true";
+      delete section.dataset.searchWasOpen;
+    }
+    if(match)visible++;
+  });
+  $("adminSectionSearchCount").textContent=query?(visible+" matching section"+(visible===1?"":"s")):"All sections shown";
+  $("clearAdminSectionSearch").hidden=!query;
+}
 $("adminSectionSearch").addEventListener("input",filterAdminSections);
 $("clearAdminSectionSearch").addEventListener("click",()=>{$("adminSectionSearch").value="";filterAdminSections();$("adminSectionSearch").focus();});
+$("adminSectionSearch").addEventListener("keydown",event=>{if(event.key==="Escape"){$("adminSectionSearch").value="";filterAdminSections();}});
+document.addEventListener("keydown",event=>{
+  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"&&!$("dashboard").classList.contains("hidden")){
+    event.preventDefault();$("adminSectionSearch").focus();$("adminSectionSearch").select();
+  }
+});
 function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadAdminAccountCount();loadNotifications();loadDeposits();loadWalletTransactions();loadCancellationRequests();loadPaymentSettings();loadCommissionReport(); if(!commissionRefreshTimer)commissionRefreshTimer=setInterval(()=>{if(!document.hidden&&sessionStorage.getItem(tokenKey))loadCommissionReport();},60000); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function formatGhanaDateTime(value){const date=new Date(value);if(!Number.isFinite(date.getTime()))return "Date unavailable";return new Intl.DateTimeFormat("en-GH",{timeZone:"Africa/Accra",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true}).format(date);}
