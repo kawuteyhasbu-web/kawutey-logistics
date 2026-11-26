@@ -261,7 +261,9 @@ app.get("/api/rider/connect/conversations", authenticate, roles("rider"), asyncR
     SELECT peer.id AS rider_id, peer.full_name, rp.rider_code,
       latest.message AS last_message, latest.created_at AS last_message_at,
       latest.sender_id AS last_sender_id,
-      COALESCE(unread.unread_count,0)::int AS unread_count
+      COALESCE(unread.unread_count,0)::int AS unread_count,
+      COALESCE(prefs.archived,FALSE) AS archived,
+      COALESCE(prefs.muted,FALSE) AS muted
     FROM (
       SELECT CASE WHEN sender_id=$1 THEN recipient_id ELSE sender_id END AS peer_id,
         MAX(id) AS latest_id
@@ -272,6 +274,7 @@ app.get("/api/rider/connect/conversations", authenticate, roles("rider"), asyncR
     JOIN users peer ON peer.id=threads.peer_id AND peer.role='rider' AND peer.status='active'
     LEFT JOIN rider_profiles rp ON rp.user_id=peer.id
     JOIN rider_messages latest ON latest.id=threads.latest_id
+    LEFT JOIN rider_conversation_preferences prefs ON prefs.user_id=$1 AND prefs.peer_id=peer.id
     LEFT JOIN LATERAL (
       SELECT COUNT(*) AS unread_count FROM rider_messages
       WHERE sender_id=peer.id AND recipient_id=$1 AND read_at IS NULL
@@ -280,6 +283,31 @@ app.get("/api/rider/connect/conversations", authenticate, roles("rider"), asyncR
   `, [req.user.id]);
   res.set("Cache-Control", "private, no-store");
   res.json({ conversations: result.rows });
+}));
+
+app.post("/api/rider/connect/preferences", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const peerId = Number(req.body?.peerId);
+  const archived = req.body?.archived;
+  const muted = req.body?.muted;
+  if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id) ||
+      (archived !== undefined && typeof archived !== "boolean") ||
+      (muted !== undefined && typeof muted !== "boolean") ||
+      (archived === undefined && muted === undefined)) {
+    return res.status(400).json({ error: "Choose a valid conversation setting." });
+  }
+  const peer = await pool.query("SELECT id FROM users WHERE id=$1 AND role='rider' AND status='active'", [peerId]);
+  if (!peer.rowCount) return res.status(404).json({ error: "That rider is not available on Rider Connect." });
+  const saved = await pool.query(`
+    INSERT INTO rider_conversation_preferences(user_id,peer_id,archived,muted)
+    VALUES($1,$2,COALESCE($3,FALSE),COALESCE($4,FALSE))
+    ON CONFLICT(user_id,peer_id) DO UPDATE SET
+      archived=COALESCE($3,rider_conversation_preferences.archived),
+      muted=COALESCE($4,rider_conversation_preferences.muted),
+      updated_at=NOW()
+    RETURNING archived,muted
+  `, [req.user.id, peerId, archived ?? null, muted ?? null]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ preferences: saved.rows[0] });
 }));
 
 app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
@@ -1184,6 +1212,7 @@ async function startServer() {
     await pool.query("CREATE TABLE IF NOT EXISTS rider_messages (\n  id BIGSERIAL PRIMARY KEY,\n  sender_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  recipient_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,\n  message TEXT NOT NULL CHECK (length(btrim(message)) BETWEEN 1 AND 2000),\n  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),\n  CHECK (sender_id <> recipient_id)\n);\nCREATE INDEX IF NOT EXISTS rider_messages_sender_created_idx ON rider_messages(sender_id, created_at DESC, id DESC);\nCREATE INDEX IF NOT EXISTS rider_messages_recipient_created_idx ON rider_messages(recipient_id, created_at DESC, id DESC);");
     await pool.query("ALTER TABLE rider_messages ADD COLUMN IF NOT EXISTS read_at TIMESTAMPTZ");
     await pool.query("CREATE INDEX IF NOT EXISTS rider_messages_unread_idx ON rider_messages(recipient_id, sender_id, created_at DESC) WHERE read_at IS NULL");
+    await pool.query("CREATE TABLE IF NOT EXISTS rider_conversation_preferences (user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, peer_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, archived BOOLEAN NOT NULL DEFAULT FALSE, muted BOOLEAN NOT NULL DEFAULT FALSE, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), PRIMARY KEY(user_id,peer_id), CHECK(user_id <> peer_id))");
     console.log("Database connection and rider profile storage verified.");
     app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
   } catch (error) {
