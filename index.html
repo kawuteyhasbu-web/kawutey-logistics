@@ -193,6 +193,19 @@
       #vendorAuthCard,#riderAuthCard{padding:20px 16px}
     }
 
+
+/* Public information pages: consistent with the KL visual identity */
+.kl-content-page{max-width:1160px;margin:0 auto;padding:clamp(22px,5vw,58px) clamp(12px,3vw,30px)}
+.kl-page-hero{padding:clamp(28px,5vw,58px);border-radius:24px;background:linear-gradient(120deg,#082b68,#0b4c9b);color:#fff;box-shadow:0 18px 44px rgba(8,43,104,.16)}
+.kl-page-hero .kl-eyebrow{color:#ffb36e}.kl-page-hero h2{font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.045em;line-height:1.08;max-width:760px;margin:12px 0}.kl-page-hero p{max-width:720px;color:#e4edff;font-size:1.06rem;line-height:1.75}
+.kl-content-grid,.kl-steps-grid,.kl-contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0}
+.kl-content-grid article,.kl-steps-grid article,.kl-contact-grid a{display:block;text-decoration:none;color:#142b50;padding:25px;border:1px solid #e0e8f3;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(8,43,104,.05)}
+.kl-content-grid h3,.kl-steps-grid h3{font-size:1.25rem;margin:10px 0}.kl-content-grid p,.kl-steps-grid p{color:#64748b;line-height:1.7}
+.kl-steps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.kl-steps-grid article>b{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#fff0e4;color:#e66b00}
+.kl-contact-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.kl-contact-grid a{display:flex;flex-direction:column;gap:8px}.kl-contact-grid small,.kl-contact-grid span{color:#64748b}.kl-contact-grid strong{color:#082b68;overflow-wrap:anywhere}
+.kl-page-cta{margin-top:24px;padding:26px;border-radius:18px;background:#f0f5fd;border:1px solid #dfe8f5}.kl-page-cta h3{margin:0 0 12px}.kl-page-cta a{display:inline-block;margin:8px 18px 0 0;color:#0a438e;font-weight:700}
+@media(max-width:720px){.tabs{gap:7px}.kl-content-grid,.kl-steps-grid,.kl-contact-grid{grid-template-columns:1fr}.kl-page-hero{border-radius:18px}}
+
 </style>
 </head>
 <body>
@@ -207,7 +220,7 @@
       </div>
       <div class="header-right">
         <div><strong>Fast. Safe. Delivered.</strong></div>
-        <div>024 226 7974 | 055 104 0353</div>
+        <div>024 226 7974 | 059 111 4638</div>
       </div>
     </header>
 
@@ -215,6 +228,9 @@
       <button class="tab-btn active" data-section="home">Home</button>
       <button class="tab-btn" data-section="vendor">Vendor Portal</button>
       <button class="tab-btn" data-section="rider">Rider Portal</button>
+      <button class="tab-btn" data-section="aboutPage">About Us</button>
+      <button class="tab-btn" data-section="howPage">How It Works</button>
+      <button class="tab-btn" data-section="contactPage">Contact</button>
     </div>
 
     <!-- HOME -->
@@ -252,6 +268,37 @@
       <section class="kl-bottom-cta"><div><span>READY WHEN YOU ARE</span><h2>Let's get your next delivery moving.</h2><p>Choose the portal that matches what you do.</p></div><div><button class="btn btn-accent" data-section="vendor">I'm a Vendor</button><button class="btn kl-outline-light" data-section="rider">I'm a Rider</button></div></section>
       <footer class="kl-footer"><div><strong>Kawutey Logistics</strong><p>Your package, Our priority.</p></div><div class="kl-footer-contact"><a href="tel:0242267974">024 226 7974</a><a href="tel:0591114638">059 111 4638</a><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a></div><div class="kl-social"><span>Follow Kawutey Logistics</span><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer" aria-label="TikTok">@ TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎ Instagram</a><small>@kawuteylogistics4u</small></div></footer>
     </div>
+
+
+    <!-- ABOUT US PAGE -->
+    <section id="aboutPage" class="section hidden kl-content-page">
+      <div class="kl-page-hero"><span class="kl-eyebrow">ABOUT KAWUTEY LOGISTICS</span><h2>Moving packages. Supporting businesses.</h2><p>We help vendors arrange package pickups and give riders a platform to manage delivery opportunities and their work.</p></div>
+      <div class="kl-content-grid">
+        <article><span class="kl-card-kicker">OUR PURPOSE</span><h3>Your package, Our priority.</h3><p>Our focus is to make everyday pickup and delivery coordination clearer for vendors, riders and the people receiving their packages.</p></article>
+        <article><span class="kl-card-kicker">OUR APPROACH</span><h3>Clarity at every step.</h3><p>From submitting a pickup request to following its progress, our platform is designed to keep the important details accessible.</p></article>
+      </div>
+      <div class="kl-page-cta"><h3>Ready to work with Kawutey Logistics?</h3><button class="btn btn-accent" data-section="vendor">Get started as a vendor</button><button class="btn btn-primary" data-section="rider">Join as a rider</button></div>
+    </section>
+    <!-- HOW IT WORKS PAGE -->
+    <section id="howPage" class="section hidden kl-content-page">
+      <div class="kl-page-hero"><span class="kl-eyebrow">A SIMPLE PROCESS</span><h2>How it works</h2><p>Clear steps for vendors and riders, from registration to delivery activity.</p></div>
+      <div class="kl-steps-grid">
+        <article><b>01</b><h3>Create your account</h3><p>Choose the vendor or rider portal and complete the relevant registration details.</p></article>
+        <article><b>02</b><h3>Get set up</h3><p>Vendors can prepare pickup requests. Rider accounts are reviewed before approval.</p></article>
+        <article><b>03</b><h3>Manage delivery activity</h3><p>Vendors follow pickup requests while riders view offers, manage assignments and check their wallet activity.</p></article>
+      </div>
+      <div class="kl-page-cta"><h3>Choose the portal that fits you.</h3><button class="btn btn-accent" data-section="vendor">Vendor portal</button><button class="btn btn-primary" data-section="rider">Rider portal</button></div>
+    </section>
+    <!-- CONTACT PAGE -->
+    <section id="contactPage" class="section hidden kl-content-page">
+      <div class="kl-page-hero"><span class="kl-eyebrow">WE'RE HERE TO HELP</span><h2>Contact Kawutey Logistics</h2><p>Reach out to us about vendor pickups, rider registration or general enquiries.</p></div>
+      <div class="kl-contact-grid">
+        <a href="tel:0242267974"><small>CALL US</small><strong>024 226 7974</strong><span>Speak with our team</span></a>
+        <a href="tel:0591114638"><small>CALL US</small><strong>059 111 4638</strong><span>Speak with our team</span></a>
+        <a href="mailto:kwauteyhasbu@gmail.com"><small>EMAIL US</small><strong>kwauteyhasbu@gmail.com</strong><span>Send us an enquiry</span></a>
+      </div>
+      <div class="kl-page-cta"><h3>Follow our updates</h3><p>Find Kawutey Logistics on TikTok and Instagram.</p><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on Instagram</a></div>
+    </section>
 
     <!-- VENDOR PORTAL -->
     <div id="vendor" class="section hidden">
