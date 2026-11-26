@@ -82,6 +82,27 @@ CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction
 CREATE UNIQUE INDEX IF NOT EXISTS one_commission_per_assignment
   ON wallet_transactions(package_assignment_id)
   WHERE type = 'commission' AND status = 'successful';
+CREATE TABLE IF NOT EXISTS pickup_cancellation_requests (
+  id BIGSERIAL PRIMARY KEY,
+  assignment_id BIGINT NOT NULL REFERENCES assignments(id),
+  vendor_id BIGINT NOT NULL REFERENCES users(id),
+  reason_type TEXT NOT NULL CHECK(reason_type IN ('customer_cancelled','incorrect_pickup_details','package_unavailable')),
+  explanation TEXT NOT NULL CHECK(length(explanation) BETWEEN 10 AND 500),
+  status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected')),
+  admin_note TEXT,
+  contacted_vendor BOOLEAN NOT NULL DEFAULT FALSE,
+  contact_outcome TEXT CHECK(contact_outcome IN ('spoke_confirmed','spoke_not_confirmed','no_answer','not_called')),
+  contacted_by BIGINT REFERENCES users(id),
+  contacted_at TIMESTAMPTZ,
+  reviewed_by BIGINT REFERENCES users(id),
+  reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS one_pending_cancellation_per_assignment
+  ON pickup_cancellation_requests(assignment_id) WHERE status='pending';
+CREATE INDEX IF NOT EXISTS cancellation_requests_status_created_idx
+  ON pickup_cancellation_requests(status,created_at DESC);
+
 CREATE TABLE IF NOT EXISTS rider_messages (
   id BIGSERIAL PRIMARY KEY,
   sender_id BIGINT NOT NULL REFERENCES users(id),
