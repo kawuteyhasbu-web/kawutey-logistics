@@ -1199,6 +1199,27 @@ footer{color:#718096}
 @media(max-width:650px){.container>header{justify-content:center;text-align:center}.container>header .logo-area{justify-content:center}.container>.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.container>.tabs .tab-btn{width:100%;margin:0;padding-inline:8px;font-size:.82rem}.container>header .header-right{text-align:center}}
 @media(prefers-reduced-motion:reduce){.container>.tabs .tab-btn{transition:none}}
 
+/* Rider Connect conversation workspace */
+#riderConnectPanel .connect-start{padding:13px;border:1px solid #e2eaf4;border-radius:13px;background:#f8faff}
+#riderConnectPanel .connect-start-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px}
+#riderConnectPanel .connect-layout{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(0,1.8fr);gap:14px;margin:14px 0}
+#riderConnectPanel .connect-threads,#riderConnectPanel .connect-chat{min-width:0;border:1px solid #e0e8f2;border-radius:13px;background:#fff;padding:12px}
+#riderConnectPanel .connect-threads h4{margin:2px 0 10px;color:#153d70}
+#riderConnectPanel .connect-thread{display:flex;flex-direction:column;gap:9px;min-height:180px;max-height:390px;overflow:auto;padding:8px 3px;overscroll-behavior:contain}
+#riderConnectPanel .connect-thread .msg-box{max-width:88%;padding:10px 12px;border:1px solid #e0e8f2;border-radius:13px;background:#f6f9fe;align-self:flex-start}
+#riderConnectPanel .connect-thread .msg-box.sent{align-self:flex-end;border-color:#c8dcf4;background:#edf5ff}
+#riderConnectPanel .connect-thread .msg-box p{margin:5px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+#riderConnectPanel .connect-thread .msg-box small{color:#718198}
+#riderConnectPanel .connect-thread .msg-box .read-state{display:block;text-align:right;font-size:.7rem}
+#riderConnectPanel .connect-thread-button{display:flex;width:100%;gap:8px;align-items:center;justify-content:space-between;text-align:left;margin:5px 0;padding:10px;border:1px solid #e1e9f3;border-radius:10px;background:#fff;color:#183b68}
+#riderConnectPanel .connect-thread-button.active{border-color:#1768b8;background:#eef5ff}
+#riderConnectPanel .connect-thread-button .unread{flex:0 0 auto;min-width:22px;padding:2px 6px;border-radius:99px;background:#e87517;color:#fff;text-align:center;font-size:.72rem;font-weight:800}
+#riderConnectPanel .connect-thread-button small{display:block;color:#718198;font-weight:500}
+#riderConnectPanel .connect-chat-header{padding:4px 2px 10px;border-bottom:1px solid #e8eef6;color:#123b70;font-weight:800}
+#riderConnectPanel .connect-compose{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+#riderConnectPanel .connect-compose small{color:#718198}
+@media(max-width:680px){#riderConnectPanel .connect-layout{grid-template-columns:minmax(0,1fr)}#riderConnectPanel .connect-threads{max-height:220px;overflow:auto}#riderConnectPanel .connect-start-row{grid-template-columns:minmax(0,1fr)}#riderConnectPanel .connect-compose{align-items:stretch;flex-direction:column}#riderConnectPanel .connect-compose button{width:100%}}
+
 /* KL redesign batch 9: clearer vendor pickup and rider account forms */
 #vendorAuthCard :is(input,select,textarea),#riderAuthCard :is(input,select,textarea),#vendorDashboard :is(input,select,textarea),#riderDashboard :is(input,select,textarea){width:100%;min-width:0;min-height:45px;padding:11px 13px;border:1px solid #d8e2ef;border-radius:11px;background:#fbfcff;color:#17324f;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
 #vendorAuthCard textarea,#riderAuthCard textarea,#vendorDashboard textarea,#riderDashboard textarea{min-height:96px;resize:vertical;line-height:1.55}
@@ -1643,6 +1664,8 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
     let secureRiderLocation = null;
     let securePickupLocation = null;
     let secureAssignmentPollTimer = null;
+    let riderConnectPollTimer = null;
+    let activeRiderConnectPeerId = null;
     let secureRiderWatchId = null;
     let secureSeenNearbyOffers = new Set();
 
@@ -1729,6 +1752,9 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       const riderViewLink = target.closest("[data-rider-view]");
       if (riderViewLink) { event.preventDefault(); riderViewLink.getAttribute("data-rider-view") === "login" ? showRiderLogin() : showRiderReg(); return; }
 
+      const connectPeer = target.closest("[data-connect-peer]");
+      if (connectPeer) { openRiderConnectPeer(connectPeer.getAttribute("data-connect-peer")); return; }
+
       const action = target.getAttribute("data-action");
       const actions = {
         togglePickupForm, logoutVendor, logoutRider, showDepositForm,
@@ -1740,6 +1766,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
         secureUpdateLocation: updateSecureRiderLocation,
         secureEnableNearbyAlerts: enableSecureNearbyAlerts,
         refreshRiderConnect: loadRiderConnect,
+        openRiderConversation,
         paystackDeposit: startPaystackDeposit,
         createManualDeposit: createSecureManualIntent
       };
@@ -1751,6 +1778,13 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       if (secureDeliverButton) { markSecureAssignmentDelivered(secureDeliverButton.getAttribute("data-secure-deliver"), secureDeliverButton); return; }
       const acceptButton = target.closest("[data-accept-assignment]");
       if (acceptButton) acceptAssignment(Number(acceptButton.getAttribute("data-accept-assignment")));
+    });
+
+    document.addEventListener("input", event => {
+      if (event.target.id === "connectMessage") {
+        const counter = document.getElementById("connectCharacterCount");
+        if (counter) counter.textContent = event.target.value.length + " / 2,000";
+      }
     });
 
     document.addEventListener("change", event => {
@@ -2178,7 +2212,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       currentRider = { id: user.id, name: user.full_name, email: user.email, status: user.status, riderCode: profileData.profile.rider_code };
       document.getElementById("riderAuthCard").classList.add("hidden");
       const dashboard = document.getElementById("riderDashboard");
-      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small><div id="secureRecentDeposit" class="recent-deposit-box"><span class="recent-deposit-label">Most recent successful deposit</span><strong id="secureRecentDepositAmount">No verified deposits yet</strong><span id="secureRecentDepositDetails">A deposit will appear here after secure payment confirmation.</span></div></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><section class="card rider-connect-panel" id="riderConnectPanel" style="padding:16px;"><h3>Rider Connect — Communication with Other Riders</h3><p>Send a private message to another approved Kawutey Logistics rider. Messages are visible only to the sender and recipient.</p><label for="connectRecipient">Choose a rider</label><select id="connectRecipient"><option value="">Loading approved riders…</option></select><label for="connectMessage">Your message</label><textarea id="connectMessage" rows="3" maxlength="2000" placeholder="Write your message (up to 2,000 characters)"></textarea><button type="button" class="btn btn-accent" id="connectSendButton" data-action="sendMessage">Send message</button><button type="button" class="btn btn-outline" data-action="refreshRiderConnect">Refresh messages</button><p id="connectStatus" class="alert alert-info" role="status">Loading Rider Connect…</p><div id="connectMessages" aria-live="polite"></div></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
+      dashboard.innerHTML = '<div class="card"><h2>Rider Dashboard</h2><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0;"><img id="secureRiderPhoto" alt="Approved rider profile photograph" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);display:none;"><div id="secureRiderPhotoPlaceholder" aria-label="Profile photograph placeholder" style="width:104px;height:104px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-align:center;font-size:12px;">No photo available</div><div><p id="secureRiderWelcome" style="margin:0 0 8px;"></p><p id="secureRiderCode" style="margin:0;"></p></div></div><div class="wallet-box" style="margin-top:16px;"><div>Available wallet balance</div><div class="balance" id="secureRiderBalance">GH₵0.00</div><small>Acceptance commission: GH₵5 per package</small><div id="secureRecentDeposit" class="recent-deposit-box"><span class="recent-deposit-label">Most recent successful deposit</span><strong id="secureRecentDepositAmount">No verified deposits yet</strong><span id="secureRecentDepositDetails">A deposit will appear here after secure payment confirmation.</span></div></div><section class="card" style="padding:16px;"><h3>Rider Wallet &amp; Deposits</h3><p>Choose the payment method currently enabled by Kawutey Logistics. Your wallet is credited only after payment is verified.</p><p id="secureDepositMessage" class="alert alert-info" role="status">Checking available payment methods…</p><div class="form-group"><label for="secureDepositAmount">Deposit amount (GH₵)</label><input id="secureDepositAmount" type="number" min="5" step="0.01" required style="max-width:260px;"></div><button type="button" class="btn btn-accent" id="securePaystackButton" data-action="paystackDeposit" hidden>Pay securely with Paystack</button><button type="button" class="btn btn-accent" id="secureCreateManualButton" data-action="createManualDeposit" hidden>Create Mobile Money payment reference</button><div id="secureManualInstructions" class="alert alert-info" hidden></div><form id="secureManualSubmitForm" hidden><label for="secureDepositNetwork">Mobile Money network</label><select id="secureDepositNetwork" required><option value="">Choose network</option><option>MTN MoMo</option><option>Telecel Cash</option><option>AT Money</option></select><label for="secureDepositNumber">Sender\'s Mobile Money number</label><input id="secureDepositNumber" type="tel" inputmode="numeric" placeholder="e.g. 0240000000" required maxlength="10" style="max-width:320px;"><label for="secureDepositProviderRef">Actual Mobile Money transaction reference</label><input id="secureDepositProviderRef" type="text" required maxlength="100" placeholder="Enter the reference from your provider\'s receipt"><button class="btn btn-accent" id="secureDepositSubmit" type="submit">Submit payment details for verification</button></form><h4>Deposit History</h4><button type="button" class="btn btn-outline" data-action="secureRefreshDeposits">Refresh deposit history</button><div id="secureDepositHistory">Loading deposit history…</div><h4 style="margin-top:20px;">Wallet Transaction History</h4><p>All verified deposits and successful package commission deductions appear here.</p><button type="button" class="btn btn-outline" data-action="secureRefreshWalletTransactions">Refresh wallet transactions</button><div id="secureWalletTransactionHistory">Loading wallet transactions…</div></section><section class="card" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h3>Available Pickup Requests</h3><button class="btn btn-outline" data-action="secureRefreshAssignments">Refresh</button></div><p>All available pickups are open to every approved rider, regardless of location. Nearby offers are highlighted, but distance does not restrict acceptance.</p><p id="secureRiderLocationStatus" class="alert alert-info">Share your current location to see distance and estimated driving time.</p><button class="btn btn-outline" data-action="secureUpdateLocation">Share / update my location</button><button class="btn btn-outline" data-action="secureEnableNearbyAlerts">Enable nearby pickup alerts</button><p id="secureAssignmentMessage" class="alert alert-info">Loading available pickup requests…</p><div id="secureAvailableAssignments"></div></section><section class="card" style="padding:16px;"><h3>My Accepted Pickups</h3><div id="secureAcceptedAssignments"><p>You have no accepted pickups yet.</p></div></section><section class="card rider-connect-panel" id="riderConnectPanel" style="padding:16px;"><h3>Rider Connect</h3><p>Private conversations between approved Kawutey Logistics riders. Only the two riders in a conversation can view its messages.</p><div class="connect-start"><label for="connectRecipient">Start a conversation</label><div class="connect-start-row"><select id="connectRecipient"><option value="">Loading approved riders…</option></select><button type="button" class="btn btn-outline" data-action="openRiderConversation">Open chat</button></div></div><p id="connectStatus" class="alert alert-info" role="status">Loading your conversations…</p><div class="connect-layout"><aside class="connect-threads" aria-label="Your conversations"><h4>Conversations</h4><div id="connectThreads"><p>No conversations yet.</p></div></aside><section class="connect-chat" aria-label="Selected conversation"><div id="connectChatHeader" class="connect-chat-header">Choose a rider to start chatting</div><div id="connectMessages" class="connect-thread" aria-live="polite"><p>Your private messages will appear here.</p></div><label for="connectMessage">Message</label><textarea id="connectMessage" rows="3" maxlength="2000" placeholder="Write a message (up to 2,000 characters)" disabled></textarea><div class="connect-compose"><small id="connectCharacterCount">0 / 2,000</small><button type="button" class="btn btn-accent" id="connectSendButton" data-action="sendMessage" disabled>Send message</button></div></section></div><button type="button" class="btn btn-outline" data-action="refreshRiderConnect">Refresh conversations</button></section><button class="btn btn-outline" data-action="logoutRider">Logout</button></div>';
       dashboard.querySelectorAll(".wallet-box, section.card").forEach((panel, index) => {
         const heading = panel.querySelector("h3");
         const title = heading ? heading.textContent.trim() : (index === 0 ? "Wallet Overview" : "Rider Dashboard Section");
@@ -2232,6 +2266,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       await loadSecureDepositOptions();
       await loadSecureRiderDeposits();
       await loadRiderConnect();
+      startRiderConnectPolling();
     }
 
     async function updateSecureRiderLocation() {
@@ -2795,6 +2830,8 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 
     function logoutRider() {
       if (secureAssignmentPollTimer) { clearInterval(secureAssignmentPollTimer); secureAssignmentPollTimer = null; }
+      if (riderConnectPollTimer) { clearInterval(riderConnectPollTimer); riderConnectPollTimer = null; }
+      activeRiderConnectPeerId = null;
       if (secureRiderWatchId !== null && navigator.geolocation) { navigator.geolocation.clearWatch(secureRiderWatchId); secureRiderWatchId = null; }
       secureRiderLocation = null;
       secureSeenNearbyOffers = new Set();
@@ -2809,32 +2846,99 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       showRiderLogin();
     }
 
+    function renderRiderConnectThreads(conversations) {
+      const host = document.getElementById("connectThreads");
+      if (!host) return;
+      if (!conversations.length) { host.innerHTML = "<p>No conversations yet. Choose an approved rider above to start one.</p>"; return; }
+      host.innerHTML = conversations.map(c => {
+        const id = Number(c.rider_id), unread = Number(c.unread_count || 0);
+        const active = id === Number(activeRiderConnectPeerId);
+        return '<button type="button" class="connect-thread-button' + (active ? ' active' : '') + '" data-connect-peer="' + id + '"><span><strong>' + escapeHtml(c.full_name) + '</strong><small>' + escapeHtml(c.rider_code || 'Approved rider') + ' · ' + escapeHtml(c.last_message || 'Start a conversation') + '</small></span>' + (unread ? '<span class="unread" aria-label="' + unread + ' unread messages">' + unread + '</span>' : '') + '</button>';
+      }).join("");
+    }
+
+    async function openRiderConversation() {
+      const select = document.getElementById("connectRecipient");
+      const id = Number(select && select.value);
+      if (!Number.isSafeInteger(id) || id < 1 || id === Number(currentRider && currentRider.id)) {
+        const status = document.getElementById("connectStatus");
+        if (status) { status.textContent = "Choose an approved rider first."; status.className = "alert alert-warning"; }
+        return;
+      }
+      activeRiderConnectPeerId = id;
+      await loadRiderConnect();
+    }
+
+    async function openRiderConnectPeer(peerId) {
+      const id = Number(peerId);
+      if (!Number.isSafeInteger(id) || id < 1 || !currentRider || id === Number(currentRider.id)) return;
+      activeRiderConnectPeerId = id;
+      await loadRiderConnect();
+    }
+
     async function loadRiderConnect() {
       const status = document.getElementById("connectStatus");
       const select = document.getElementById("connectRecipient");
       const area = document.getElementById("connectMessages");
-      if (!status || !select || !area || !sessionStorage.getItem("kl_rider_token")) return;
-      status.textContent = "Loading approved riders and messages…";
+      const threads = document.getElementById("connectThreads");
+      if (!status || !select || !area || !threads || !sessionStorage.getItem("kl_rider_token")) return;
       try {
-        const [riderData, messageData] = await Promise.all([
+        const [riderData, conversationData] = await Promise.all([
           apiRequest("/api/rider/connect/riders", { riderAuth: true }),
-          apiRequest("/api/rider/connect/messages", { riderAuth: true })
+          apiRequest("/api/rider/connect/conversations", { riderAuth: true })
         ]);
         const previous = select.value;
         select.innerHTML = '<option value="">-- Choose an approved rider --</option>' +
           riderData.riders.map(r => '<option value="' + Number(r.id) + '">' + escapeHtml(r.full_name) + ' (' + escapeHtml(r.rider_code) + ')</option>').join("");
         if (previous && riderData.riders.some(r => String(r.id) === previous)) select.value = previous;
-        const items = messageData.messages || [];
-        area.innerHTML = items.length ? '<h4>Recent messages</h4>' + items.map(m => {
+        const conversations = conversationData.conversations || [];
+        if (activeRiderConnectPeerId && !riderData.riders.some(r => Number(r.id) === Number(activeRiderConnectPeerId))) activeRiderConnectPeerId = null;
+        if (!activeRiderConnectPeerId && conversations.length) activeRiderConnectPeerId = Number(conversations[0].rider_id);
+        renderRiderConnectThreads(conversations);
+        const header = document.getElementById("connectChatHeader");
+        const field = document.getElementById("connectMessage");
+        const button = document.getElementById("connectSendButton");
+        const charCount = document.getElementById("connectCharacterCount");
+        if (!activeRiderConnectPeerId) {
+          if (header) header.textContent = "Choose a rider to start chatting";
+          area.innerHTML = "<p>Your private messages will appear here.</p>";
+          if (field) field.disabled = true;
+          if (button) button.disabled = true;
+          status.textContent = riderData.riders.length ? "Rider Connect is ready. Start a private conversation." : "No other approved riders are available yet.";
+          status.className = "alert alert-info";
+          return;
+        }
+        const peer = riderData.riders.find(r => Number(r.id) === Number(activeRiderConnectPeerId));
+        if (header) header.textContent = peer ? peer.full_name + " · " + (peer.rider_code || "Approved rider") : "Private conversation";
+        if (field) field.disabled = false;
+        if (button) button.disabled = false;
+        const [messagesData] = await Promise.all([
+          apiRequest("/api/rider/connect/messages?with=" + encodeURIComponent(activeRiderConnectPeerId), { riderAuth: true }),
+          apiRequest("/api/rider/connect/read", { method: "POST", riderAuth: true, body: JSON.stringify({ peerId: activeRiderConnectPeerId }) })
+        ]);
+        const messages = messagesData.messages || [];
+        area.innerHTML = messages.length ? messages.map(m => {
           const sent = Number(m.sender_id) === Number(currentRider.id);
-          return '<article class="msg-box"><strong>' + (sent ? 'To: ' + escapeHtml(m.recipient_name) : 'From: ' + escapeHtml(m.sender_name)) + '</strong><p style="white-space:pre-wrap;">' + escapeHtml(m.message) + '</p><small>' + escapeHtml(formatGhanaDateTime(m.created_at)) + '</small></article>';
-        }).join("") : '<p>No Rider Connect messages yet.</p>';
-        status.textContent = riderData.riders.length ? "Rider Connect is ready. Messages are private between the two riders." : "No other approved riders are available yet.";
+          return '<article class="msg-box' + (sent ? ' sent' : '') + '"><strong>' + (sent ? 'You' : escapeHtml(m.sender_name)) + '</strong><p>' + escapeHtml(m.message) + '</p><small>' + escapeHtml(formatGhanaDateTime(m.created_at)) + '</small>' + (sent ? '<small class="read-state">' + (m.read_at ? 'Seen' : 'Sent') + '</small>' : '') + '</article>';
+        }).join("") : "<p>No messages yet. Send the first message to begin.</p>";
+        area.scrollTop = area.scrollHeight;
+        const activeConversation = conversations.find(c => Number(c.rider_id) === Number(activeRiderConnectPeerId));
+        if (activeConversation) activeConversation.unread_count = 0;
+        renderRiderConnectThreads(conversations);
+        status.textContent = "Your conversation is private. New messages refresh automatically.";
         status.className = "alert alert-info";
+        if (charCount && field) charCount.textContent = field.value.length + " / 2,000";
       } catch (error) {
         status.textContent = error.message || "Could not load Rider Connect.";
         status.className = "alert alert-warning";
       }
+    }
+
+    function startRiderConnectPolling() {
+      if (riderConnectPollTimer) clearInterval(riderConnectPollTimer);
+      riderConnectPollTimer = setInterval(() => {
+        if (currentRider && sessionStorage.getItem("kl_rider_token")) loadRiderConnect();
+      }, 15000);
     }
 
     async function sendMessage() {
