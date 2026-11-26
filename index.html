@@ -1162,6 +1162,22 @@ footer{color:#718096}
 #riderDashboard #secureDepositHistory>*,#riderDashboard #secureWalletTransactionHistory>*{min-width:0;overflow-wrap:anywhere}
 #vendorDashboard :is(button,input,select,textarea),#riderDashboard :is(button,input,select,textarea){max-width:100%}
 @media(max-width:650px){#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#riderDashboard .wallet-box>div:last-child{display:grid;grid-template-columns:minmax(0,1fr)}#riderDashboard .wallet-box button{width:100%}}
+
+/* KL redesign batch 5: public, vendor and rider accessibility and data navigation */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #f28a35!important;outline-offset:3px!important;box-shadow:0 0 0 4px rgba(242,138,53,.16)}
+.container :is(.table-wrap,.table-responsive,.history-table-wrap){max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.container table{width:100%;border-collapse:separate;border-spacing:0;min-width:520px}
+.container th{background:#f2f6fc;color:#153d70;font-size:.78rem;font-weight:850;text-align:left}
+.container :is(th,td){padding:10px 12px;border-bottom:1px solid #e6edf5;vertical-align:middle}
+.container td{font-size:.87rem;line-height:1.55;overflow-wrap:anywhere}
+.container tbody tr:hover{background:#f8faff}
+.container :is(button,input,select,textarea){font:inherit}
+.container :is(input,select,textarea){min-height:44px;border-radius:10px}
+.container :is(.pickup-item,.assignment-item,.msg-box,.stat-box){min-width:0;overflow-wrap:anywhere}
+.container :is(.pickup-item,.assignment-item) :is(button,a){max-width:100%;overflow-wrap:anywhere}
+#home :is(a,button),#aboutPage :is(a,button),#howPage :is(a,button),#contactPage :is(a,button),#vendorSupportPage :is(a,button),#riderSupportPage :is(a,button){min-height:40px}
+@media(max-width:620px){.container{padding:12px}.container :is(th,td){padding:8px 9px}.container :is(button,input,select,textarea){max-width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
