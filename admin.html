@@ -243,6 +243,20 @@ button:disabled{cursor:not-allowed;opacity:.58}
 @media(max-width:600px){.commission-metric{min-height:88px;padding:12px}.commission-toolbar{padding:11px}.commission-toolbar label{min-width:100%}.commission-toolbar button{flex:1}#commissionReportEntries,#commissionReportHistory{padding:11px}}
 
 
+/* Improve table navigation on touch screens without clipping long records */
+#dashboard .table-wrap{
+ max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ -webkit-overflow-scrolling:touch;scrollbar-width:thin
+}
+#dashboard .table-wrap:focus-visible{outline:3px solid rgba(255,121,0,.35);outline-offset:2px}
+#dashboard .table-wrap table{min-width:620px}
+#dashboard .table-wrap th,#dashboard .table-wrap td{padding:11px 13px}
+#dashboard .table-wrap td{overflow-wrap:anywhere}
+@media(max-width:680px){
+ #dashboard .table-wrap{border-radius:12px}
+ #dashboard .table-wrap table{min-width:580px}
+ #dashboard .table-wrap th,#dashboard .table-wrap td{padding:10px}
+}
 /* Admin data views: horizontal overflow protection and compact mobile controls */
 #dashboard table{max-width:100%;border-collapse:separate;border-spacing:0}
 #dashboard .table-wrap,#dashboard [style*="overflow-x:auto"]{max-width:100%;overscroll-behavior-x:contain;border:1px solid #e2eaf4;border-radius:12px}
