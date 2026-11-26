@@ -431,6 +431,59 @@ body{background:radial-gradient(ellipse at 8% 0%,rgba(36,103,180,.09),transparen
 @media(max-width:420px){#commissionSummaryCard .commission-grid{grid-template-columns:minmax(0,1fr)}#commissionSummaryCard .commission-total{grid-column:1}}
 @media(prefers-reduced-motion:reduce){#loginForm input{transition:none}}
 
+
+
+/* Batch 1 redesign: administrator command-centre foundation */
+:root{--kl-admin-navy:#082b68;--kl-admin-deep:#061d49;--kl-admin-orange:#ff7900;--kl-admin-line:#dce5f2;--kl-admin-soft:#f5f8fd}
+html{scroll-behavior:smooth}
+#dashboard{min-width:0;max-width:100%;gap:18px}
+#dashboard>.card,#dashboard .admin-section{min-width:0}
+#dashboard>.card{position:relative}
+#dashboard>.card>h2{display:flex;align-items:center;gap:10px}
+#dashboard>.card>h2:before{content:"";width:5px;height:22px;flex:0 0 5px;border-radius:8px;background:var(--kl-admin-orange)}
+#dashboard .admin-section>summary{min-height:58px}
+#dashboard .admin-section>summary:focus-visible,#dashboard button:focus-visible,#dashboard a:focus-visible{outline:3px solid rgba(255,121,0,.55);outline-offset:3px}
+#dashboard button{min-height:42px;touch-action:manipulation}
+#dashboard input:not([type=checkbox]):not([type=file]),#dashboard select,#dashboard textarea{min-height:44px;max-width:100%}
+#dashboard table{max-width:100%}
+#dashboard .item{overflow-wrap:anywhere}
+#dashboardActions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+@media(min-width:1000px){
+ .wrap{max-width:1440px;padding:28px 34px}
+ #dashboard{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:18px}
+ #dashboard>#commissionSummaryCard,#dashboard>#dashboardActions{grid-column:1/-1}
+ #dashboard>.admin-section{align-self:start}
+}
+@media(max-width:700px){
+ body{background:#f3f6fb}
+ .wrap{width:100%;padding:10px 10px calc(20px + env(safe-area-inset-bottom))}
+ .head{position:sticky;top:0;z-index:25;align-items:center;gap:10px;padding:12px;border-radius:0 0 16px 16px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px)}
+ .brand{min-width:0;gap:8px}.brand img{height:42px;max-width:48px;object-fit:contain}.brand h1{font-size:1.05rem}
+ .head>a{padding:9px 12px;font-size:.78rem;white-space:nowrap}
+ #dashboard{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ #dashboard>#commissionSummaryCard,#dashboard>#dashboardActions{grid-column:1}
+ #dashboard>.card:not(#dashboardActions){padding:15px;border-radius:15px}
+ #dashboardActions{position:sticky;top:65px;z-index:20;justify-content:stretch;gap:7px;padding:9px}
+ #dashboardActions button{flex:1 1 auto;margin:0;min-height:43px}
+ #commissionSummaryCard{padding:16px!important;border-radius:16px}
+ #commissionSummaryCard .commission-toolbar{gap:9px}
+ #commissionSummaryCard .commission-toolbar label{min-width:0}
+ #dashboard .admin-section{border-radius:14px}
+ #dashboard .admin-section>summary{min-height:54px;padding:14px;font-size:.92rem}
+ #dashboard .admin-section .section-card{padding:13px}
+ #dashboard .item{padding:13px;border-radius:12px}
+ #dashboard table{display:block;width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+ #dashboard table td{min-width:110px}
+ #dashboard button{min-height:44px}
+ #loginCard{width:100%;max-width:100%;margin:18px auto;padding:21px 16px}
+}
+@media(max-width:380px){
+ .wrap{padding-left:8px;padding-right:8px}
+ .head{padding:10px}.brand h1{font-size:.96rem}
+ #dashboard>.card:not(#dashboardActions){padding:13px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
 </style><script src="/admin-password.js" defer></script>
 <style>
 /* KL administrator interface — refined command-centre visual layer */
