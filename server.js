@@ -243,6 +243,53 @@ app.get("/api/rider/profile/photo", authenticate, roles("rider"), asyncRoute(asy
   res.send(result.rows[0].photo_data);
 }));
 
+
+// Rider Connect: private, authenticated rider-to-rider messaging.
+app.get("/api/rider/connect/riders", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const result = await pool.query(
+    "SELECT u.id, u.full_name, u.location, rp.rider_code FROM users u JOIN rider_profiles rp ON rp.user_id=u.id WHERE u.role='rider' AND u.status='active' AND u.id<>$1 ORDER BY u.full_name ASC",
+    [req.user.id]
+  );
+  res.set("Cache-Control", "private, no-store");
+  res.json({ riders: result.rows });
+}));
+
+app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const result = await pool.query(`
+    SELECT m.id, m.sender_id, m.recipient_id, m.message, m.created_at,
+      sender.full_name AS sender_name, recipient.full_name AS recipient_name
+    FROM rider_messages m
+    JOIN users sender ON sender.id=m.sender_id
+    JOIN users recipient ON recipient.id=m.recipient_id
+    WHERE m.sender_id=$1 OR m.recipient_id=$1
+    ORDER BY m.created_at DESC, m.id DESC
+    LIMIT 100
+  `, [req.user.id]);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ messages: result.rows });
+}));
+
+app.post("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(async (req, res) => {
+  const recipientId = Number(req.body?.recipientId);
+  const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
+  if (!Number.isSafeInteger(recipientId) || recipientId < 1 || recipientId === Number(req.user.id)) {
+    return res.status(400).json({ error: "Choose another approved rider." });
+  }
+  if (!message || message.length > 2000) {
+    return res.status(400).json({ error: "Messages must contain between 1 and 2,000 characters." });
+  }
+  const recipient = await pool.query(
+    "SELECT id FROM users WHERE id=$1 AND role='rider' AND status='active'",
+    [recipientId]
+  );
+  if (!recipient.rowCount) return res.status(404).json({ error: "That rider is not available on Rider Connect." });
+  const inserted = await pool.query(
+    "INSERT INTO rider_messages(sender_id,recipient_id,message) VALUES($1,$2,$3) RETURNING id,sender_id,recipient_id,message,created_at",
+    [req.user.id, recipientId, message]
+  );
+  res.status(201).json({ message: inserted.rows[0] });
+}));
+
 app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT rider_code,approved_at,(photo_data IS NOT NULL AND octet_length(photo_data)>0) AS has_photo,photo_mime,octet_length(photo_data) AS photo_bytes FROM rider_profiles WHERE user_id=$1", [req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: "Rider profile not found." });
