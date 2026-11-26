@@ -2276,6 +2276,30 @@ nav.tabs .tab-btn.active{background:#082b68;color:#fff;box-shadow:0 6px 15px rgb
  #vendorDashboard>.card,#riderDashboard>.card{padding:14px!important}
 }
 </style>
+<style id="kl-visual-system-2026-11-26">
+:root{--kl-navy:#102b4e;--kl-navy-2:#183d67;--kl-orange:#f47b20;--kl-ink:#17283b;--kl-muted:#64748b;--kl-line:#e5ebf2;--kl-soft:#f5f8fc;--kl-radius:18px}
+:where(section,.section,.panel,.card,.dashboard-card,.history-card,.assignment-card,.wallet-card,.support-card,.connect-panel){scroll-margin-top:84px}
+:where(.card,.dashboard-card,.history-card,.assignment-card,.wallet-card,.support-card,.connect-panel,.stat-card,.info-card){border:1px solid var(--kl-line);border-radius:var(--kl-radius);box-shadow:0 8px 26px rgba(16,43,78,.055)}
+:where(input,select,textarea){border-radius:12px!important;border:1px solid #d8e1ec!important;min-height:44px;transition:border-color .18s,box-shadow .18s}
+:where(input,select,textarea):focus{border-color:var(--kl-orange)!important;box-shadow:0 0 0 3px rgba(244,123,32,.13)!important;outline:0}
+:where(button,.btn,a.button){transition:transform .18s,box-shadow .18s,background-color .18s}
+:where(button,.btn,a.button):not(:disabled):active{transform:translateY(1px)}
+:where(table){border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+:where(th){background:#f3f6fa;color:#40536a;font-size:.78rem;letter-spacing:.035em;text-transform:uppercase}
+:where(td,th){padding:12px 14px;border-bottom:1px solid #e9eef4}
+:where(tbody tr:hover){background:#f8fafd}
+:where(.badge,.status-badge,.pill){border-radius:999px;font-weight:700;letter-spacing:.01em}
+:where(.alert,.notice,.empty-state){border-radius:14px}
+:where(.section-title,.panel-title,.card-title){color:var(--kl-navy);letter-spacing:-.02em}
+@media(max-width:720px){
+ :where(.card,.dashboard-card,.history-card,.assignment-card,.wallet-card,.support-card,.connect-panel,.stat-card,.info-card){border-radius:15px}
+ :where(td,th){padding:10px 11px}
+ :where(input,select,textarea){font-size:16px!important}
+ :where(button,.btn,a.button){min-height:42px}
+ :where(.table-responsive,.table-wrap){max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media(prefers-reduced-motion:reduce){:where(*,*::before,*::after){scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
 </head>
 <body>
   <div class="container">
