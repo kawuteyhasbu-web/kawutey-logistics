@@ -1618,6 +1618,33 @@ body{color:var(--kl-brand-ink)}
 :where(#paymentSettingsForm) input:focus-visible{outline:3px solid rgba(255,121,0,.22);outline-offset:1px}
 @media(max-width:720px){:where(#commissionSummaryCard,#cancellationRequests,#notifications,#paymentSettingsForm,#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders){scroll-margin-top:126px}:where(#notifications .item,#cancellationRequests .item){padding:13px}}
 </style>
+<style id="kl-bulk-admin-command-centre-visual-2026-11">
+:root{--kl-admin-deep:#071f4a;--kl-admin-navy:#0a2f6b;--kl-admin-orange:#ff7900;--kl-admin-line:#dce5f0}
+#dashboard{max-width:1440px;margin-inline:auto}
+#dashboardActions{position:relative;display:flex;align-items:center;gap:12px;padding:17px!important;border:1px solid var(--kl-admin-line)!important;border-radius:17px!important;background:linear-gradient(115deg,#fff,#f7faff)!important;box-shadow:0 9px 25px rgba(7,31,74,.055)!important}
+#dashboardActions .admin-search-label{flex:1;min-width:220px;color:var(--kl-admin-deep);font-weight:800}
+#dashboardActions .admin-search-label input{margin-top:7px;min-height:46px;border-radius:12px}
+#dashboardActions #adminSectionSearchCount{white-space:nowrap}
+#dashboard>section.card{margin-top:18px;border:1px solid var(--kl-admin-line);border-radius:19px;box-shadow:0 9px 27px rgba(7,31,74,.05)}
+#dashboard>section.card>h2{color:var(--kl-admin-deep);letter-spacing:-.035em}
+#dashboard .commission-grid{gap:13px}
+#dashboard .commission-metric{min-width:0;border:1px solid #e1e9f3;border-radius:16px;background:linear-gradient(150deg,#fff,#f7faff);box-shadow:0 5px 17px rgba(7,31,74,.035)}
+#dashboard .commission-metric.commission-total{border-color:#f3d2b5;background:linear-gradient(145deg,#fff8f1,#fff)}
+#dashboard .commission-metric strong{font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+#dashboard .commission-toolbar{align-items:end;gap:12px;padding:15px;border:1px solid #e5ebf3;border-radius:15px;background:#f8fafd}
+#dashboard .commission-toolbar label{min-width:180px;flex:1;color:#3d5572;font-size:.83rem;font-weight:750}
+#dashboard .commission-toolbar input{margin-top:6px;min-height:44px;border-radius:11px}
+#dashboard .commission-toolbar button{min-height:44px;border-radius:11px}
+#dashboard :where(h3){color:var(--kl-admin-navy);letter-spacing:-.02em}
+#dashboard :where(.notice,.alert){border-radius:13px}
+#dashboard :where(table){border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e4ebf3;border-radius:13px}
+#dashboard :where(th){background:#f0f4f9;color:#3b526e;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase}
+#dashboard :where(td,th){padding:12px 13px;border-bottom:1px solid #e9eef5}
+#dashboard :where(tbody tr:hover){background:#f7faff}
+#dashboard :where(button){border-radius:11px}
+#dashboard :where(input,select,textarea):focus-visible{outline:3px solid rgba(255,121,0,.25);outline-offset:2px}
+@media(max-width:760px){#dashboardActions{display:grid;grid-template-columns:1fr;gap:10px;padding:13px!important}#dashboardActions .admin-search-label{min-width:0}#dashboardActions #adminSectionSearchCount{white-space:normal}#dashboard>section.card{border-radius:15px;margin-top:13px}#dashboard .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#dashboard .commission-metric{padding:13px!important}#dashboard .commission-toolbar{display:grid;grid-template-columns:1fr;padding:12px}#dashboard .commission-toolbar label{min-width:0}#dashboard .commission-toolbar button{width:100%}#dashboard :where(td,th){padding:10px;font-size:.78rem}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
