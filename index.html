@@ -1178,6 +1178,26 @@ footer{color:#718096}
 #home :is(a,button),#aboutPage :is(a,button),#howPage :is(a,button),#contactPage :is(a,button),#vendorSupportPage :is(a,button),#riderSupportPage :is(a,button){min-height:40px}
 @media(max-width:620px){.container{padding:12px}.container :is(th,td){padding:8px 9px}.container :is(button,input,select,textarea){max-width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* KL redesign batch 6: public navigation and portal section navigation */
+.container>header{position:relative;gap:14px;padding:15px clamp(14px,2.5vw,22px);border:1px solid #e1e9f3;border-radius:17px;background:linear-gradient(110deg,#fff,#f4f8ff);box-shadow:0 8px 22px rgba(10,47,107,.07)}
+.container>header .logo-area{min-width:0}
+.container>header .logo-text{min-width:0}
+.container>header .logo-text h1{line-height:1.15;letter-spacing:-.035em}
+.container>header .logo-text span{display:block;letter-spacing:.09em}
+.container>header .header-right{max-width:100%;line-height:1.55}
+.container>.tabs{position:relative;gap:8px;padding:5px 0 9px;margin:0 0 16px;border-bottom:1px solid #dce6f2}
+.container>.tabs .tab-btn{min-height:42px;padding:9px 14px;border:1px solid #dce6f2;border-radius:999px;background:#fff;color:#23466f;font-weight:800;box-shadow:0 2px 6px rgba(8,43,104,.035)}
+.container>.tabs .tab-btn.active{border-color:#0b3979;background:linear-gradient(105deg,#082b68,#125093);color:#fff;box-shadow:0 6px 14px rgba(8,43,104,.16)}
+.container>.tabs .tab-btn:hover:not(.active){border-color:#f28a35;background:#fff9f3;color:#a95012}
+.container>.tabs .tab-btn:focus-visible{outline-offset:2px!important}
+#home,#aboutPage,#howPage,#contactPage,#vendorSupportPage,#riderSupportPage{scroll-margin-top:16px}
+#vendorDashboard,#riderDashboard{scroll-margin-top:16px}
+#vendorDashboard>h2,#riderDashboard>h2{font-size:clamp(1.25rem,2.3vw,1.65rem);letter-spacing:-.035em}
+#vendorDashboard>.card>h3,#riderDashboard>.card>h3{font-size:1.04rem;letter-spacing:-.02em}
+#vendorDashboard .card,#riderDashboard .card{border:1px solid #e2eaf4;border-radius:16px;box-shadow:0 7px 20px rgba(8,43,104,.045)}
+@media(max-width:650px){.container>header{justify-content:center;text-align:center}.container>header .logo-area{justify-content:center}.container>.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.container>.tabs .tab-btn{width:100%;margin:0;padding-inline:8px;font-size:.82rem}.container>header .header-right{text-align:center}}
+@media(prefers-reduced-motion:reduce){.container>.tabs .tab-btn{transition:none}}
 </style>
 </head>
 <body>
