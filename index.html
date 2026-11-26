@@ -1955,6 +1955,70 @@ nav.tabs .tab-btn.active{background:#082b68;color:#fff;box-shadow:0 6px 15px rgb
 }
 @media(prefers-reduced-motion:reduce){.section:not(.hidden){animation:none}*{scroll-behavior:auto!important;transition:none!important}}
 </style>
+<style id="kl-operational-experience-visual-pass-2026-11">
+/* VISUAL PASS: operational workspace details, history, messaging and content pages */
+#vendorDashboard>h3,#riderDashboard>h2,#riderDashboard>div:first-child h2{font-size:clamp(1.35rem,2.3vw,1.8rem);letter-spacing:-.04em;color:#082b68}
+#vendorDashboard>p,#riderDashboard>div:first-child p{color:#71819a;line-height:1.65}
+#vendorDashboard>[data-action="togglePickupForm"]{min-height:48px;padding:12px 20px;background:linear-gradient(110deg,#f87500,#ff9636);box-shadow:0 8px 18px rgba(255,121,0,.18)}
+#vendorDashboard>[data-action="logoutVendor"],#riderDashboard>[data-action="logoutRider"]{border:1px solid #dce6f2;background:#fff;color:#355577}
+#pickupFormArea{padding:clamp(14px,2.5vw,24px)!important;border:1px solid #e0e8f2;border-radius:16px;background:linear-gradient(145deg,#f8faff,#fff)}
+#pickupFormArea h4{font-size:1.12rem;color:#082b68}
+#pickupFormArea .package-row{display:grid;grid-template-columns:1fr minmax(95px,150px);align-items:center;gap:12px;padding:10px 12px;border:1px solid #e2eaf4;border-radius:10px;background:#fff;margin:7px 0}
+#pickupFormArea .package-row label{font-size:.83rem;font-weight:750;color:#385577}
+#pickupFormArea .package-row input{width:100%;margin:0}
+#pickupFormArea form>button[type=submit]{width:100%;min-height:48px}
+#pickupHistory:empty:after,#availableAssignments:empty:after,#acceptedAssignments:empty:after,#depositHistory:empty:after,#ridersList:empty:after{
+ content:"Nothing to display yet.";display:block;padding:23px 15px;border:1px dashed #d4dfed;border-radius:13px;background:#f8faff;color:#788aa2;text-align:center;font-size:.85rem
+}
+#riderDashboard .wallet-box{padding:clamp(20px,3vw,30px);position:relative;overflow:hidden}
+#riderDashboard .wallet-box:after{content:"";position:absolute;right:-45px;top:-65px;width:210px;height:210px;border:1px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 0 25px rgba(255,255,255,.035),0 0 0 52px rgba(255,255,255,.025);pointer-events:none}
+#riderDashboard .wallet-box h3{color:#d9e8fb;font-size:.86rem;letter-spacing:.12em;text-transform:uppercase}
+#riderDashboard .wallet-box .balance{font-size:clamp(2.1rem,5vw,3.5rem);font-weight:900;letter-spacing:-.055em;color:#fff}
+#riderDashboard .wallet-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:19px}
+#riderDashboard .wallet-stats .stat-box{min-width:0;padding:13px;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.09)}
+#riderDashboard .wallet-stats .value{font-size:clamp(1.05rem,2vw,1.45rem);font-weight:900;color:#fff;overflow-wrap:anywhere}
+#riderDashboard .wallet-stats .label{font-size:.69rem;line-height:1.4;color:#c9d9ef}
+#riderDashboard .wallet-box button{position:relative;z-index:1;margin:5px 7px 0 0}
+#depositFormArea,#transactionHistoryArea{padding:clamp(16px,2.5vw,25px);border:1px solid #dce6f2;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(8,43,104,.06)}
+#depositFormArea h3,#transactionHistoryArea h3{color:#082b68;font-size:1.2rem}
+#depositFormArea .ref-code{border:1px solid rgba(255,255,255,.13);border-radius:13px;padding:15px;font-weight:800;letter-spacing:.025em;overflow-wrap:anywhere}
+#riderDashboard>.card{padding:clamp(16px,2.5vw,24px)}
+#riderDashboard>.card>h3{font-size:1.1rem;color:#082b68;letter-spacing:-.02em}
+#riderDashboard #ridersList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#riderDashboard #messagesArea{padding:12px;border:1px solid #e1e9f3;border-radius:13px;background:#f7f9fd}
+#riderDashboard #messagesArea :is(input,textarea){background:#fff}
+#vendorDashboard :is(.pickup-item,.history-item) :is(strong,h4){color:#123e73}
+#riderDashboard :is(.assignment-item,.history-item) :is(strong,h4){color:#123e73}
+#vendorDashboard :is(.pickup-item,.history-item,.alert),#riderDashboard :is(.assignment-item,.history-item,.alert){overflow-wrap:anywhere}
+#vendorDashboard .status,#riderDashboard .status{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;background:#edf4ff;color:#174d88;font-size:.72rem;font-weight:850}
+#vendorDashboard .alert-info,#riderDashboard .alert-info{border:1px solid #d7e6f8;background:#f1f7ff;color:#31587f}
+#vendorDashboard .alert-warning,#riderDashboard .alert-warning{border:1px solid #f5dfb7;background:#fff9eb;color:#855b13}
+#vendorDashboard .alert-success,#riderDashboard .alert-success{border:1px solid #cce8d6;background:#f0faf4;color:#23633d}
+.kl-content-page{max-width:1160px;margin:0 auto}
+.kl-content-page .kl-section-heading{margin-bottom:30px}
+.kl-content-page .kl-section-heading h2{line-height:1.08}
+.kl-content-page .kl-content-grid article{position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
+.kl-content-page .kl-content-grid article:hover{transform:translateY(-3px);box-shadow:0 15px 32px rgba(8,43,104,.09)}
+.kl-content-page .kl-page-hero{position:relative;overflow:hidden;box-shadow:0 15px 35px rgba(8,43,104,.13)}
+.kl-content-page .kl-page-hero:after{content:"";position:absolute;right:-55px;bottom:-120px;width:270px;height:270px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 25px rgba(255,255,255,.035),0 0 0 55px rgba(255,255,255,.025);pointer-events:none}
+.kl-content-page .kl-contact-grid a{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.kl-content-page .kl-contact-grid a:hover{transform:translateY(-3px);border-color:#ffbd88;box-shadow:0 12px 26px rgba(8,43,104,.08)}
+@media(max-width:760px){
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #riderDashboard .wallet-stats .stat-box{padding:11px}
+ #riderDashboard #ridersList{grid-template-columns:1fr}
+ #riderDashboard .wallet-box button{width:100%;margin:7px 0 0}
+ #pickupFormArea .package-row{grid-template-columns:1fr 105px}
+ #pickupFormArea form>button[type=submit]{width:100%}
+ #vendorDashboard>[data-action="togglePickupForm"]{width:100%}
+ #vendorDashboard>[data-action="logoutVendor"]{width:100%;margin-top:7px}
+}
+@media(max-width:390px){
+ #riderDashboard .wallet-stats .value{font-size:1.02rem}
+ #riderDashboard .wallet-stats .label{font-size:.63rem}
+ #pickupFormArea .package-row{grid-template-columns:1fr 88px;padding:8px}
+}
+</style>
 </head>
 <body>
   <div class="container">
