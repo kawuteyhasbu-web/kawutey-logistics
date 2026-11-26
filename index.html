@@ -2320,6 +2320,24 @@ header{border:1px solid #e1e8f1;border-radius:18px!important;box-shadow:0 10px 3
 .kl-footer{border-radius:20px}
 @media(max-width:720px){header{align-items:flex-start}.header-right{text-align:left;width:100%;padding-left:2px}.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:sticky;top:6px;z-index:30;box-shadow:0 8px 22px rgba(10,47,107,.09);backdrop-filter:blur(12px)}.tab-btn{min-width:0;padding:10px 8px!important;font-size:.82rem!important}}
 </style>
+<style id="kl-portal-screen-polish-2026-11">
+:root{--kl-deep:#071f4a;--kl-navy:#0a2f6b;--kl-orange:#ff7900;--kl-muted:#66788f;--kl-line:#dce5f0}
+:where(.vendor-section,.rider-section,.vendor-panel,.rider-panel,.pickup-section,.assignment-section,.wallet-section,.connect-section,.history-section){scroll-margin-top:92px}
+:where(.vendor-section h2,.rider-section h2,.vendor-panel h2,.rider-panel h2,.pickup-section h2,.assignment-section h2,.wallet-section h2,.connect-section h2,.history-section h2){letter-spacing:-.025em;color:var(--kl-deep)}
+:where(.pickup-card,.order-card,.delivery-card,.assignment-card,.wallet-card,.transaction-card,.conversation-card,.message-card,.support-card){border:1px solid var(--kl-line);border-radius:17px;box-shadow:0 8px 25px rgba(7,31,74,.055);background:#fff}
+:where(.pickup-card,.order-card,.delivery-card,.assignment-card,.wallet-card,.transaction-card,.conversation-card,.message-card,.support-card) :where(h3,h4){color:var(--kl-navy);letter-spacing:-.015em}
+:where(.pickup-card,.order-card,.delivery-card,.assignment-card,.conversation-card):hover{border-color:#c5d4e7}
+:where(.status,.order-status,.delivery-status,.transaction-status){display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 10px;font-size:.76rem;font-weight:750}
+:where(.wallet-balance,.balance-card,.wallet-hero){border-radius:20px;box-shadow:0 14px 32px rgba(7,31,74,.13)}
+:where(.wallet-balance,.balance-card,.wallet-hero) :where(small,.muted,.caption){opacity:.88}
+:where(.message-list,.conversation-list){overscroll-behavior:contain}
+:where(.message-composer,.chat-composer){border:1px solid var(--kl-line);border-radius:16px;background:#fff}
+@media(max-width:720px){
+ :where(.pickup-card,.order-card,.delivery-card,.assignment-card,.wallet-card,.transaction-card,.conversation-card,.message-card,.support-card){border-radius:14px}
+ :where(.vendor-section,.rider-section,.vendor-panel,.rider-panel,.pickup-section,.assignment-section,.wallet-section,.connect-section,.history-section){scroll-margin-top:112px}
+ :where(.message-list,.conversation-list){max-height:min(58dvh,560px)}
+}
+</style>
 </head>
 <body>
   <div class="container">
