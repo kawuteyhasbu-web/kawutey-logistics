@@ -640,6 +640,24 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 @media(max-width:560px){.head{padding:15px;border-radius:15px}.brand img{height:46px}#dashboard>.card{padding:14px;border-radius:14px}#dashboard .admin-section>summary{min-height:53px;padding:14px;font-size:.9rem}#dashboard .admin-section .section-card{padding:13px}#dashboard .commission-grid{gap:8px}#dashboard table{font-size:.84rem}}
 @media(prefers-reduced-motion:reduce){#dashboard>.card,#dashboard button{transition:none!important}}
 
+
+/* KL redesign batch 2: administrator review and finance workspace detail */
+#dashboard>.card:has(#cancellationRequests),#dashboard>.card:has(#notifications),#dashboard>.card:has(#walletTransactions),#dashboard>.card:has(#depositRequests),#dashboard>.card:has(#paymentSettingsForm){position:relative;overflow:hidden}
+#dashboard>.card:has(#cancellationRequests)>h2,#dashboard>.card:has(#walletTransactions)>h2,#dashboard>.card:has(#depositRequests)>h2{display:flex;align-items:center;gap:10px}
+#dashboard>.card:has(#cancellationRequests)>h2:before,#dashboard>.card:has(#walletTransactions)>h2:before,#dashboard>.card:has(#depositRequests)>h2:before{content:"";width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:var(--kl-admin-orange);box-shadow:0 0 0 4px #fff0e4}
+#dashboard #walletTransactions .item,#dashboard #depositRequests .item,#dashboard #cancellationRequests .item{padding:17px;border-radius:14px;background:linear-gradient(145deg,#fff,#f7faff)}
+#dashboard #walletTransactions .item p,#dashboard #depositRequests .item p,#dashboard #cancellationRequests .item p{line-height:1.65;overflow-wrap:anywhere}
+#dashboard #walletTransactions .refund-controls{margin-top:15px;padding:16px;border:1px solid #f0d9c7;border-radius:13px;background:linear-gradient(135deg,#fffaf5,#fff)}
+#dashboard #walletTransactions .refund-controls label{display:block;margin:10px 0 6px;color:#784313;font-weight:800}
+#dashboard #walletTransactions .refund-controls textarea{min-height:92px;resize:vertical}
+#dashboard #notifications .item,#dashboard #pendingRiders .item,#dashboard #approvedRiders .item{display:flex;flex-direction:column;gap:7px}
+#dashboard #notifications .item .tag,#dashboard #pendingRiders .item .tag,#dashboard #approvedRiders .item .tag{align-self:flex-start}
+#dashboard #paymentSettingsForm{align-items:end;gap:10px 16px}
+#dashboard #paymentSettingsForm label{display:flex;flex-direction:column;gap:6px}
+#dashboard #paymentSettingsForm input[type=checkbox]{width:20px;min-height:20px;accent-color:#0b397d}
+#dashboard #commissionReportEntries .report-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;align-items:center}
+#dashboard #commissionReportEntries .report-row>*{min-width:0}
+@media(max-width:680px){#dashboard #commissionReportEntries .report-row{grid-template-columns:minmax(0,1fr)}#dashboard #walletTransactions .refund-controls{padding:12px}#dashboard #paymentSettingsForm{gap:8px}}
 </style>
 </head>
 <body><main class="wrap">
