@@ -115,6 +115,53 @@
     #riderDashboard .dashboard-panel.wallet-box .recent-deposit-box { background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.3); color:#fff; }
     @media (max-width:650px) { .dashboard-panel-toggle { padding:15px; } .dashboard-panel-content { padding:14px; } }
 
+  
+    /* Kawutey Logistics public-facing redesign */
+    :root{--primary:#082b68;--primary-dark:#041a43;--accent:#ff7900;--dark:#071d45;--border:#dce5f2;--muted:#64748b}
+    body{background:#f3f6fb;color:#10264b}
+    .container{max-width:1180px;padding:22px}
+    header{position:relative;background:linear-gradient(110deg,#fff 0%,#f5f8ff 62%,#eaf1ff 100%);border:1px solid #e4ebf6;border-radius:18px;padding:15px 22px;box-shadow:0 12px 32px rgba(8,43,104,.09)}
+    .logo-area img{height:56px}.logo-text h1{font-size:1.42rem;letter-spacing:-.04em}.logo-text span{letter-spacing:.09em}
+    .header-right{font-size:.88rem}.header-right strong{color:var(--accent)}
+    .tabs{gap:9px;padding:5px 0 17px;border-bottom:1px solid #e1e8f2}
+    .tab-btn{border:1px solid transparent;background:transparent;padding:11px 17px;border-radius:999px;font-weight:700;color:#25436e}
+    .tab-btn.active{background:var(--primary);border-color:var(--primary);box-shadow:0 5px 14px rgba(8,43,104,.2)}
+    .tab-btn:hover:not(.active){background:#fff;border-color:#d7e2f2;color:var(--primary)}
+    .card{border:1px solid #e4eaf3;border-radius:17px;box-shadow:0 10px 28px rgba(13,43,91,.07);padding:24px}
+    .btn{border-radius:999px;padding:12px 20px;transition:transform .18s ease,box-shadow .18s ease}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 7px 17px rgba(5,25,63,.16)}
+    .btn-primary{background:var(--primary)}.btn-accent{background:linear-gradient(100deg,#ff8a00,#ff6500)}
+    .kl-home{padding-top:2px}
+    .kl-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:1.12fr .88fr;min-height:390px;border-radius:25px;background:radial-gradient(circle at 78% 25%,#1b65c9 0,transparent 34%),linear-gradient(118deg,#061c49 0%,#082f77 58%,#0755ad 100%);box-shadow:0 18px 42px rgba(7,32,77,.2);color:white}
+    .kl-hero:after{content:"";position:absolute;width:430px;height:430px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:7%;top:-34%;box-shadow:0 0 0 36px rgba(255,255,255,.035),0 0 0 76px rgba(255,255,255,.025);pointer-events:none}
+    .kl-hero-copy{position:relative;z-index:1;padding:48px 42px;align-self:center}
+    .kl-eyebrow,.kl-section-heading>span,.kl-bottom-cta>div>span{font-size:.72rem;letter-spacing:.17em;font-weight:800;color:#ff9a32}
+    .kl-hero h2{font-size:clamp(2.7rem,5vw,4.5rem);line-height:1.02;letter-spacing:-.065em;color:#fff;margin:13px 0 7px}.kl-hero h2 span{color:#ff8a00}
+    .kl-slogan{font-size:1.38rem;font-weight:800;color:#fff;margin-bottom:12px}.kl-hero-description{max-width:470px;color:#e0eaff;font-size:1.06rem}
+    .kl-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}.kl-hero-actions .btn{margin:0}
+    .kl-light-button{background:#fff;color:var(--primary);border:1px solid rgba(255,255,255,.7)}
+    .kl-hero-note{margin-top:22px;color:#bfd2f3;font-size:.82rem}
+    .kl-hero-art{position:relative;min-height:310px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,rgba(15,94,190,.08),rgba(1,13,42,.25))}
+    .kl-art-orbit{width:min(330px,72%);aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.26);background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.18),rgba(255,255,255,.025) 62%,transparent 63%);box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 70px rgba(54,143,255,.22)}
+    .kl-art-card{position:absolute;left:12%;right:12%;top:29%;padding:24px 20px;border:1px solid rgba(255,255,255,.35);border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.08));backdrop-filter:blur(12px);box-shadow:0 18px 38px rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;text-align:center}
+    .kl-art-mark{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;border:3px solid #ff8a00;background:#fff;color:#082b68;font-weight:950;font-size:2.2rem;box-shadow:0 8px 25px rgba(0,0,0,.2);margin-bottom:14px}
+    .kl-art-card strong{font-size:1.15rem}.kl-art-card small{color:#dbe9ff;margin-top:5px}
+    .kl-art-bubble{position:absolute;bottom:13%;right:8%;background:#ff7900;color:white;border-radius:999px;padding:10px 15px;font-weight:800;font-size:.78rem;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+    .kl-trust-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:17px 0 48px;padding:18px 8px;background:white;border:1px solid #e3eaf4;border-radius:17px;box-shadow:0 8px 22px rgba(13,43,91,.055)}
+    .kl-trust-strip>div{display:grid;grid-template-columns:38px 1fr;column-gap:10px;align-items:center;padding:6px 17px;border-right:1px solid #e5ebf4}.kl-trust-strip>div:last-child{border:0}
+    .kl-highlight-icon{grid-row:span 2;display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#fff1e5;color:#f47700;font-weight:900;font-size:1.2rem}
+    .kl-trust-strip strong{font-size:.88rem;color:#0b2d68}.kl-trust-strip small{font-size:.72rem;color:#64748b;line-height:1.35}
+    .kl-audience{padding:0 2px 42px}.kl-section-heading{text-align:center;max-width:650px;margin:0 auto 23px}.kl-section-heading h2{font-size:clamp(1.6rem,3vw,2.35rem);line-height:1.15;letter-spacing:-.04em;margin:8px 0;color:#082b68}.kl-section-heading p{color:#64748b}
+    .kl-audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.kl-audience-card{position:relative;overflow:hidden;padding:26px;border-radius:20px;border:1px solid #e0e8f4;background:white;box-shadow:0 9px 26px rgba(13,43,91,.06)}
+    .kl-vendor-card{background:linear-gradient(145deg,#fff 0%,#f0f5ff 100%)}.kl-rider-card{background:linear-gradient(145deg,#fff 0%,#fff5ec 100%)}
+    .kl-card-icon{display:grid;place-items:center;width:47px;height:47px;border-radius:14px;background:#e6efff;color:#0b3985;font-size:1.5rem;font-weight:900;margin-bottom:16px}.kl-rider-card .kl-card-icon{background:#ffead8;color:#ef7100}
+    .kl-card-kicker{font-size:.7rem;letter-spacing:.16em;font-weight:900;color:#24508e}.kl-rider-card .kl-card-kicker{color:#e36c00}
+    .kl-audience-card h3{font-size:1.45rem;line-height:1.2;max-width:450px;margin:8px 0;color:#092c68}.kl-audience-card p{color:#5c6e89;max-width:520px}.kl-audience-card ul{padding-left:19px;margin:14px 0 18px;color:#344b6d;font-size:.9rem}.kl-audience-card li{padding:3px 0}.kl-audience-card .btn{margin:0}
+    .kl-bottom-cta{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:25px 29px;border-radius:19px;background:linear-gradient(110deg,#08275f,#0a4b9c);color:white;margin-bottom:20px}.kl-bottom-cta h2{color:white;margin:5px 0;font-size:1.55rem}.kl-bottom-cta p{color:#d1e1fa}.kl-bottom-cta>div:last-child{display:flex;gap:8px;flex-wrap:wrap}.kl-bottom-cta .btn{margin:0}.kl-outline-light{background:transparent;border:1px solid rgba(255,255,255,.65);color:white}
+    .kl-footer{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:center;padding:20px 4px 8px;color:#64748b;text-align:left}.kl-footer>div:first-child strong{color:#082b68;font-size:1rem}.kl-footer p{font-size:.8rem}.kl-footer-contact,.kl-social{display:flex;flex-direction:column;gap:5px;font-size:.82rem}.kl-footer a{color:#16417e;text-decoration:none;font-weight:650}.kl-footer a:hover{text-decoration:underline}.kl-social>span{font-weight:800;color:#082b68}.kl-social small{color:#e36c00;font-weight:800}
+    @media(max-width:800px){.container{padding:13px}.kl-hero{grid-template-columns:1fr}.kl-hero-copy{padding:36px 27px 20px}.kl-hero-art{min-height:260px}.kl-art-card{left:20%;right:20%;top:17%}.kl-trust-strip{grid-template-columns:1fr 1fr;margin-bottom:34px}.kl-trust-strip>div:nth-child(2){border-right:0}.kl-trust-strip>div:nth-child(-n+2){border-bottom:1px solid #e5ebf4;padding-bottom:14px}.kl-trust-strip>div:nth-child(n+3){padding-top:14px}.kl-footer{grid-template-columns:1fr 1fr}.kl-social{grid-column:1/-1}}
+    @media(max-width:560px){.kl-audience-grid{grid-template-columns:1fr}.kl-bottom-cta{align-items:flex-start;flex-direction:column;padding:22px}.kl-footer{grid-template-columns:1fr}.kl-social{grid-column:auto}.kl-trust-strip>div{padding-left:10px;padding-right:7px;grid-template-columns:31px 1fr}.kl-highlight-icon{width:29px;height:29px}.kl-trust-strip strong{font-size:.79rem}.kl-trust-strip small{font-size:.67rem}.kl-hero h2{font-size:2.65rem}.kl-hero-copy{padding:31px 22px 15px}}
+
   </style>
 </head>
 <body>
@@ -140,34 +187,39 @@
     </div>
 
     <!-- HOME -->
-    <div id="home" class="section">
-      <div class="card">
-        <h2>Welcome to Kawutey Logistics</h2>
-        <p style="margin-bottom:16px;">A trusted platform connecting vendors and verified riders for fast, safe and reliable package delivery across Ghana.</p>
-        <div class="grid-2">
-          <div>
-            <h3>For Vendors</h3>
-            <ul style="padding-left:18px; margin-bottom:14px;">
-              <li>Register and request package pickups</li>
-              <li>Schedule preferred pickup times</li>
-              <li>Specify Large, Medium & Small packages</li>
-            </ul>
-            <button class="btn btn-primary" data-section="vendor">Vendor Portal</button>
+    <div id="home" class="section kl-home">
+      <section class="kl-hero">
+        <div class="kl-hero-copy">
+          <span class="kl-eyebrow">DELIVERY, MADE EASIER</span>
+          <h2><span>Kawutey</span> Logistics</h2>
+          <p class="kl-slogan">Your package, Our priority.</p>
+          <p class="kl-hero-description">Fast, reliable and secure delivery support for vendors and customers across Ghana.</p>
+          <div class="kl-hero-actions">
+            <button class="btn btn-accent" data-section="vendor">Get Started as a Vendor <span aria-hidden="true">→</span></button>
+            <button class="btn kl-light-button" data-section="rider">Join as a Rider</button>
           </div>
-          <div>
-            <h3>For Riders</h3>
-            <ul style="padding-left:18px; margin-bottom:14px;">
-              <li>Register with Ghana Card & Photo</li>
-              <li>Personal wallet + unique reference code</li>
-              <li>GH₵5 commission per package</li>
-            </ul>
-            <button class="btn btn-accent" data-section="rider">Rider Portal</button>
-          </div>
+          <div class="kl-hero-note">Simple pickup requests. Clear updates. Trusted delivery support.</div>
         </div>
-      </div>
-      <div class="contact-bar">
-        Need help? Call us: <a href="tel:0242267974" style="color:#ffd700;">024 226 7974</a> | <a href="tel:0551040353" style="color:#ffd700;">055 104 0353</a>
-      </div>
+        <div class="kl-hero-art" role="img" aria-label="Kawutey Logistics delivery team and delivery vehicle">
+          <div class="kl-art-orbit"></div><div class="kl-art-card"><span class="kl-art-mark">KL</span><strong>Moving your business forward</strong><small>Across Ghana</small></div>
+          <div class="kl-art-bubble">Fast • Safe • Reliable</div>
+        </div>
+      </section>
+      <section class="kl-trust-strip" aria-label="Service highlights">
+        <div><span class="kl-highlight-icon">↗</span><strong>Easy Pickup Requests</strong><small>Arrange collections around your business</small></div>
+        <div><span class="kl-highlight-icon">✓</span><strong>Trusted Rider Network</strong><small>Rider accounts reviewed before approval</small></div>
+        <div><span class="kl-highlight-icon">◎</span><strong>Delivery Visibility</strong><small>Keep track of your pickup requests</small></div>
+        <div><span class="kl-highlight-icon">♡</span><strong>Dedicated Support</strong><small>Help when you need it</small></div>
+      </section>
+      <section class="kl-audience">
+        <div class="kl-section-heading"><span>ONE PLATFORM, TWO COMMUNITIES</span><h2>Built around the people who keep business moving.</h2><p>Whether you sell or deliver, Kawutey Logistics gives you a simpler way to get started.</p></div>
+        <div class="kl-audience-grid">
+          <article class="kl-audience-card kl-vendor-card"><div class="kl-card-icon">▦</div><span class="kl-card-kicker">FOR VENDORS</span><h3>Grow your business. We'll help move your packages.</h3><p>Request pickups, set preferred times and follow your delivery activity from your vendor portal.</p><ul><li>Convenient pickup requests</li><li>Pickup history and updates</li><li>Access to assigned rider details</li></ul><button class="btn btn-primary" data-section="vendor">Explore Vendor Portal →</button></article>
+          <article class="kl-audience-card kl-rider-card"><div class="kl-card-icon">➤</div><span class="kl-card-kicker">FOR RIDERS</span><h3>Turn delivery opportunities into earnings.</h3><p>Register to join the rider network and manage available offers, assignments and wallet activity.</p><ul><li>View available delivery offers</li><li>Manage assignments and history</li><li>Track wallet transactions</li></ul><button class="btn btn-accent" data-section="rider">Explore Rider Portal →</button></article>
+        </div>
+      </section>
+      <section class="kl-bottom-cta"><div><span>READY WHEN YOU ARE</span><h2>Let's get your next delivery moving.</h2><p>Choose the portal that matches what you do.</p></div><div><button class="btn btn-accent" data-section="vendor">I'm a Vendor</button><button class="btn kl-outline-light" data-section="rider">I'm a Rider</button></div></section>
+      <footer class="kl-footer"><div><strong>Kawutey Logistics</strong><p>Your package, Our priority.</p></div><div class="kl-footer-contact"><a href="tel:0242267974">024 226 7974</a><a href="tel:0591114638">059 111 4638</a><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a></div><div class="kl-social"><span>Follow Kawutey Logistics</span><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer" aria-label="TikTok">@ TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎ Instagram</a><small>@kawuteylogistics4u</small></div></footer>
     </div>
 
     <!-- VENDOR PORTAL -->
