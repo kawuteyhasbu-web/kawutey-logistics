@@ -419,6 +419,25 @@ body{scroll-behavior:smooth}
 }
 @media(prefers-reduced-motion:reduce){.kl-audience-card{transition:none}.kl-audience-card:hover{transform:none}}
 
+
+/* Consistent KL interface system: portal panels, forms, controls and responsive rhythm */
+:root{--kl-ink:#102b55;--kl-muted:#64748b;--kl-line:#dce6f2;--kl-blue:#0a2f6b;--kl-orange:#ff7900;--kl-surface:#fff;--kl-soft:#f4f7fc}
+body{background:linear-gradient(180deg,#f3f6fb 0%,#edf2f8 100%);color:var(--kl-ink)}
+.container{max-width:1120px}
+header,.card,.panel,.section,.form-card,.dashboard-card{border:1px solid rgba(210,222,239,.85);box-shadow:0 8px 26px rgba(10,47,107,.065)}
+button,.btn,.tab-btn{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+button:focus-visible,.btn:focus-visible,.tab-btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(255,121,0,.45);outline-offset:2px}
+input:not([type=checkbox]):not([type=radio]),select,textarea{border:1px solid #ccd8e8;border-radius:10px;background:#fff;color:#102b55;min-height:44px}
+input::placeholder,textarea::placeholder{color:#8795a9}
+button:not(:disabled),.btn{font-weight:750}
+button:disabled{cursor:not-allowed;opacity:.58}
+.card h2,.panel h2,.section h2{letter-spacing:-.02em}
+.tabs{position:sticky;top:8px;z-index:20;padding:7px;border:1px solid #e0e8f3;border-radius:14px;background:rgba(247,250,255,.94);backdrop-filter:blur(12px)}
+.tab-btn{border-radius:10px}
+.tab-btn:not(.active):hover{border-color:#9db8dc;background:#f1f6ff}
+@media(max-width:680px){.container{padding:11px}.tabs{top:4px;gap:6px}.tab-btn{padding:9px 11px;font-size:.82rem}}
+@media(prefers-reduced-motion:reduce){button,.btn,.tab-btn{transition:none}}
+
 </style>
 </head>
 <body>
