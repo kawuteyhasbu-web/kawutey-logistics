@@ -2372,6 +2372,48 @@ header{border:1px solid #e1e8f1;border-radius:18px!important;box-shadow:0 10px 3
 @media(max-width:760px){.kl-content-page{padding:13px}.kl-content-page .kl-page-hero{border-radius:19px;padding:25px 21px}.kl-content-page .kl-steps-grid{grid-template-columns:1fr;gap:11px}.kl-content-page .kl-steps-grid article{min-height:0;padding:19px}.kl-contact-grid{grid-template-columns:1fr;gap:10px}.kl-contact-grid>a{min-height:108px;padding:17px}.kl-content-page .kl-page-cta{padding:19px}.kl-content-page .kl-page-cta a{width:100%;justify-content:center}#vendorDashboard .wallet-box,#riderDashboard .wallet-box{border-radius:18px;padding:19px!important}#vendorDashboard .wallet-stats,#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.kl-content-page .kl-steps-grid article,.kl-contact-grid>a,.kl-content-page .kl-page-cta a{transition:none!important}}
 </style>
+<style id="kl-bulk-mobile-workspace-navigation-2026-11">
+:root{--kl-mobile-navy:#0a2f6b;--kl-mobile-deep:#071f4a;--kl-mobile-orange:#ff7900;--kl-mobile-line:#dce5f0}
+#vendorDashboard,#riderDashboard{max-width:1180px;margin-inline:auto}
+#vendorDashboard>.card:first-child,#riderDashboard>.card:first-child{border:1px solid var(--kl-mobile-line);border-radius:19px;background:linear-gradient(145deg,#fff,#f7faff);box-shadow:0 9px 27px rgba(7,31,74,.06)}
+#vendorDashboard>h3{font-size:clamp(1.45rem,3vw,2rem)}
+#vendorDashboard [data-action="togglePickupForm"]{box-shadow:0 7px 17px rgba(255,121,0,.19)}
+#pickupFormArea{border:1px solid var(--kl-mobile-line);border-radius:17px;background:#f8fafd;padding:clamp(14px,2.5vw,23px)!important}
+#pickupForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#pickupForm>.form-group,#pickupForm>p,#pickupForm>button,#pickupForm>div:has(.package-row){grid-column:1/-1}
+#pickupForm .form-group{min-width:0;margin:0}
+#pickupForm .form-group label{font-size:.84rem;font-weight:750;color:#284464;margin-bottom:6px}
+#pickupForm .form-group input,#pickupForm .form-group select,#pickupForm .form-group textarea{width:100%;min-width:0;border-radius:11px}
+#pickupForm>button[type="submit"]{min-height:48px;border-radius:12px}
+#riderDashboard>.wallet-box{padding:clamp(19px,3vw,30px)!important}
+#riderDashboard>.wallet-box .wallet-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+#riderDashboard>.wallet-box .wallet-stats .stat-box{min-width:0;padding:13px}
+#riderDashboard>.wallet-box .wallet-stats .value{overflow-wrap:anywhere}
+#riderDashboard>.wallet-box>div:last-child{display:flex;flex-wrap:wrap;gap:9px}
+#riderDashboard>.wallet-box>div:last-child button{flex:1 1 145px}
+.connect-layout{align-items:stretch;gap:14px}
+.connect-threads,.connect-chat{min-width:0;border:1px solid var(--kl-mobile-line);border-radius:17px;background:#fff;box-shadow:0 8px 23px rgba(7,31,74,.045)}
+.connect-threads{padding:14px}
+.connect-chat{padding:14px}
+.connect-chat-header{border-bottom:1px solid #e8edf4;padding-bottom:12px;font-weight:800;color:var(--kl-mobile-navy)}
+#connectMessages{padding:12px 2px;overscroll-behavior:contain}
+#connectMessage{width:100%;min-height:94px;resize:vertical}
+@media(min-width:761px){#pickupForm .form-group:has(#pickup-time),#pickupForm .form-group:has(#total-packages){grid-column:span 1}}
+@media(max-width:760px){
+ #vendorDashboard,#riderDashboard{width:100%}
+ #pickupForm{grid-template-columns:1fr;gap:10px}
+ #pickupForm>.form-group,#pickupForm>p,#pickupForm>button,#pickupForm>div:has(.package-row){grid-column:1}
+ #pickupFormArea{padding:13px!important}
+ #riderDashboard>.wallet-box .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #riderDashboard>.wallet-box .wallet-stats .stat-box{padding:11px}
+ #riderDashboard>.wallet-box>div:last-child{display:grid;grid-template-columns:1fr 1fr}
+ #riderDashboard>.wallet-box>div:last-child button{min-width:0;padding:10px 8px;font-size:.8rem}
+ .connect-layout{display:flex;flex-direction:column}
+ .connect-threads{max-height:280px;overflow:auto}
+ .connect-chat{min-height:380px}
+ #connectMessage{font-size:16px!important}
+}
+</style>
 </head>
 <body>
   <div class="container">
