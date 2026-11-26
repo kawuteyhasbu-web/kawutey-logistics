@@ -1606,6 +1606,18 @@ body{color:var(--kl-brand-ink)}
 #kl-admin-quicknav a:focus-visible{outline:3px solid rgba(255,121,0,.3);outline-offset:2px}
 @media(max-width:720px){.wrap{padding:12px}.head{align-items:flex-start}#kl-admin-quicknav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:sticky;top:5px;z-index:30;box-shadow:0 8px 22px rgba(10,47,107,.09);backdrop-filter:blur(12px)}#kl-admin-quicknav a{justify-content:center;text-align:center;padding:8px 5px;font-size:.78rem}}
 </style>
+<style id="kl-admin-screen-polish-2026-11">
+:root{--kl-deep:#071f4a;--kl-navy:#0a2f6b;--kl-orange:#ff7900;--kl-muted:#66788f;--kl-line:#dce5f0}
+:where(#commissionSummaryCard,#cancellationRequests,#notifications,#paymentSettingsForm,#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders){scroll-margin-top:104px}
+:where(#commissionSummaryCard,#cancellationRequests,#notifications,#paymentSettingsForm,#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders){border-radius:17px}
+:where(#commissionSummaryCard h2,#cancellationRequests h2,#notifications h2,#walletTransactions h2,#depositRequests h2,#pendingRiders h2,#approvedRiders h2){letter-spacing:-.025em;color:var(--kl-deep)}
+:where(#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders) :where(table){border-radius:12px;overflow:hidden}
+:where(#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders) :where(tbody tr){transition:background .15s}
+:where(#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders) :where(tbody tr:hover){background:#f5f8fc}
+:where(#notifications .item,#cancellationRequests .item){border-radius:13px;border-color:var(--kl-line);padding:16px}
+:where(#paymentSettingsForm) input:focus-visible{outline:3px solid rgba(255,121,0,.22);outline-offset:1px}
+@media(max-width:720px){:where(#commissionSummaryCard,#cancellationRequests,#notifications,#paymentSettingsForm,#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders){scroll-margin-top:126px}:where(#notifications .item,#cancellationRequests .item){padding:13px}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
