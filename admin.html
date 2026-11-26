@@ -1445,6 +1445,35 @@ $("pendingRiders").addEventListener("click",async e=>{
   try{await api("/api/admin/riders/"+btn.dataset.approveRider+"/approve",{method:"POST"});show($("riderStatus"),"Rider approved successfully.","success");await loadPendingRiders();}
   catch(err){show($("riderStatus"),err.message,"error");btn.disabled=false;}
 });
+// Live filtering for the administrator's operational sections.
+const adminSearchInput=$("adminSectionSearch");
+const adminSearchCount=$("adminSectionSearchCount");
+const clearAdminSearchButton=$("clearAdminSectionSearch");
+function filterAdminSections(){
+  const query=adminSearchInput.value.trim().toLocaleLowerCase();
+  const sections=[...$("dashboard").children].filter(el=>
+    el.matches(".card,.admin-section") && el.id!=="dashboardActions"
+  );
+  let visible=0;
+  for(const section of sections){
+    const matches=!query||section.textContent.toLocaleLowerCase().includes(query);
+    section.hidden=!matches;
+    if(matches){
+      visible++;
+      if(query&&section.matches("details.admin-section"))section.open=true;
+    }
+  }
+  adminSearchCount.textContent=query
+    ? visible+" of "+sections.length+" sections match"
+    : "All "+sections.length+" sections shown";
+  clearAdminSearchButton.hidden=!query;
+}
+adminSearchInput.addEventListener("input",filterAdminSections);
+clearAdminSearchButton.addEventListener("click",()=>{
+  adminSearchInput.value="";
+  filterAdminSections();
+  adminSearchInput.focus();
+});
 function returnToAdminAccess(){sessionStorage.removeItem(tokenKey);const portal=new URLSearchParams(location.search).get("adminPortal");if(portal&&/^\/[A-Za-z0-9_-]{24,100}$/.test(portal)){location.assign(portal);return;} $("dashboard").classList.add("hidden");$("loginCard").classList.remove("hidden");} $("logoutButton").addEventListener("click",returnToAdminAccess); const adminPortalFromUrl=new URLSearchParams(location.search).get("adminPortal"); if(adminPortalFromUrl&&/^\/[A-Za-z0-9_-]{24,100}$/.test(adminPortalFromUrl)){ $("adminSignupLink").href=adminPortalFromUrl; $("adminSignupLink").addEventListener("click",e=>{e.preventDefault();location.assign(adminPortalFromUrl);}); } else { $("adminSignupAccess").classList.add("hidden"); }
 $("notifications").addEventListener("click",async e=>{const btn=e.target.closest("[data-read]");if(!btn)return;btn.disabled=true;try{await api("/api/admin/notifications/"+btn.dataset.read+"/read",{method:"PATCH"});await loadNotifications();}catch(err){show($("status"),err.message,"error");btn.disabled=false;}});
 (async()=>{if(sessionStorage.getItem(tokenKey)){try{const d=await api("/api/me");if(d.user.role==="admin")openDashboard();else sessionStorage.removeItem(tokenKey);}catch{sessionStorage.removeItem(tokenKey);}}})();
