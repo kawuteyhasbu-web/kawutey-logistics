@@ -1623,16 +1623,16 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       </div>
     </header>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-section="home">Home</button>
-      <button class="tab-btn" data-section="vendor">Vendor Portal</button>
-      <button class="tab-btn" data-section="rider">Rider Portal</button>
-      <button class="tab-btn" data-section="aboutPage">About Us</button>
-      <button class="tab-btn" data-section="howPage">How It Works</button>
-      <button class="tab-btn" data-section="contactPage">Contact</button>
-      <button class="tab-btn" data-section="vendorSupportPage">Vendor Support</button>
-      <button class="tab-btn" data-section="riderSupportPage">Rider Support</button>
-    </div>
+    <nav class="tabs" aria-label="Main website and portal navigation">
+      <button type="button" class="tab-btn active" data-section="home" aria-current="page" aria-pressed="true">Home</button>
+      <button type="button" class="tab-btn" data-section="vendor" aria-pressed="false">Vendor Portal</button>
+      <button type="button" class="tab-btn" data-section="rider" aria-pressed="false">Rider Portal</button>
+      <button type="button" class="tab-btn" data-section="aboutPage" aria-pressed="false">About Us</button>
+      <button type="button" class="tab-btn" data-section="howPage" aria-pressed="false">How It Works</button>
+      <button type="button" class="tab-btn" data-section="contactPage" aria-pressed="false">Contact</button>
+      <button type="button" class="tab-btn" data-section="vendorSupportPage" aria-pressed="false">Vendor Support</button>
+      <button type="button" class="tab-btn" data-section="riderSupportPage" aria-pressed="false">Rider Support</button>
+    </nav>
 
     <!-- HOME -->
     <div id="home" class="section kl-home">
@@ -2098,10 +2098,17 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
         section.classList.toggle("hidden", section.id !== sectionId);
       });
 
+      const navigation = document.querySelector(".container>.tabs");
       document.querySelectorAll(".tab-btn").forEach(button => {
         const isActive = button.getAttribute("data-section") === sectionId;
         button.classList.toggle("active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
+        if (isActive) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+        if (isActive && navigation && window.matchMedia("(max-width: 650px)").matches) {
+          const targetLeft = button.offsetLeft - (navigation.clientWidth - button.clientWidth) / 2;
+          navigation.scrollTo({ left: Math.max(0, targetLeft), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        }
       });
       if (sectionId === "vendor" && !currentVendor) restoreVendorSession();
     }
