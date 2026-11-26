@@ -658,6 +658,30 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboard #commissionReportEntries .report-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;align-items:center}
 #dashboard #commissionReportEntries .report-row>*{min-width:0}
 @media(max-width:680px){#dashboard #commissionReportEntries .report-row{grid-template-columns:minmax(0,1fr)}#dashboard #walletTransactions .refund-controls{padding:12px}#dashboard #paymentSettingsForm{gap:8px}}
+
+/* KL redesign batch 4: administrator command-centre hierarchy and review states */
+#dashboard{align-content:start}
+#dashboard>#commissionSummaryCard{grid-column:1/-1;overflow:hidden;background:radial-gradient(circle at 100% 0%,rgba(242,138,53,.11),transparent 34%),linear-gradient(145deg,#fff,#f8fbff)}
+#dashboard>#commissionSummaryCard>h2{font-size:clamp(1.2rem,2vw,1.5rem)}
+#dashboard>#commissionSummaryCard .commission-grid{gap:12px}
+#dashboard>#commissionSummaryCard .commission-metric{min-width:0;border:1px solid #e1e9f3;border-radius:14px;background:#fff}
+#dashboard>#commissionSummaryCard .commission-total{border-color:#123d76;background:linear-gradient(125deg,#092b60,#125093)}
+#dashboard>#commissionSummaryCard .commission-metric strong{overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#dashboard>.card:has(#cancellationRequests),#dashboard>.card:has(#notifications),#dashboard>.card:has(#paymentSettingsForm),#dashboard>.card:has(#walletTransactions),#dashboard>.card:has(#depositRequests),#dashboard>.card:has(#approvedRiders),#dashboard>.card:has(#pendingRiders){display:flex;flex-direction:column;gap:10px}
+#dashboard>.card:has(#cancellationRequests)>div[id],#dashboard>.card:has(#notifications)>div[id],#dashboard>.card:has(#walletTransactions)>div[id],#dashboard>.card:has(#depositRequests)>div[id],#dashboard>.card:has(#approvedRiders)>div[id],#dashboard>.card:has(#pendingRiders)>div[id]{min-width:0}
+#dashboard :is(#cancellationRequests,#notifications,#walletTransactions,#depositRequests,#approvedRiders,#pendingRiders,#paymentModeAudit,#commissionReportHistory)>:not(:empty){overflow-wrap:anywhere}
+#dashboard #paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end;padding:15px;border:1px solid #e2eaf4;border-radius:13px;background:#f8faff}
+#dashboard #paymentSettingsForm label{min-width:0}
+#dashboard #paymentSettingsForm label[for="momoAccountName"],#dashboard #paymentSettingsForm label[for="momoAccountNumber"]{grid-column:span 1}
+#dashboard #paymentSettingsForm #manualBackupEnabled{width:19px;min-height:19px}
+#dashboard #paymentSettingsForm p,#dashboard #paymentSettingsForm button{grid-column:1/-1}
+#dashboard #paymentSettingsForm button{justify-self:start;min-width:180px}
+#dashboard #paymentModeAudit{padding:12px;border:1px solid #e5edf6;border-radius:11px;background:#fff}
+#dashboard #adminAccountCountCard .section-card{display:grid;gap:12px}
+#dashboard #adminAccountCount{padding:12px;border:1px solid #e2eaf4;border-radius:11px;background:#f8faff;color:#173d70;font-weight:800}
+#dashboard #commissionReportEntries:empty:after{content:"No commission entries to display for this reporting period.";display:block;padding:16px;border:1px dashed #cbd9e9;border-radius:12px;color:#718198;text-align:center}
+#dashboard :is(#cancellationRequests,#notifications,#walletTransactions,#depositRequests,#approvedRiders,#pendingRiders):empty:after{content:"No records to display at the moment.";display:block;padding:15px;border:1px dashed #d5e0ed;border-radius:12px;color:#718198;text-align:center;background:#fbfcfe}
+@media(max-width:760px){#dashboard #paymentSettingsForm{grid-template-columns:minmax(0,1fr)}#dashboard #paymentSettingsForm label[for="momoAccountName"],#dashboard #paymentSettingsForm label[for="momoAccountNumber"]{grid-column:auto}#dashboard #paymentSettingsForm p,#dashboard #paymentSettingsForm button{grid-column:auto}#dashboard #paymentSettingsForm button{width:100%}}
 </style>
 </head>
 <body><main class="wrap">
