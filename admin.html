@@ -216,6 +216,32 @@ button:disabled{cursor:not-allowed;opacity:.58}
 @media(max-width:820px){#dashboard{grid-template-columns:1fr;gap:12px}#dashboard #adminAccountCountCard{grid-column:auto}}
 @media(max-width:560px){#dashboard>.card{padding:14px;border-radius:14px}#dashboard>.card>h2{font-size:1rem}#dashboard .admin-section>summary{padding:14px}}
 
+
+/* Admin reporting and review surfaces: scan-friendly metrics and decision panels */
+.commission-grid{gap:12px;margin:17px 0 20px}
+.commission-metric{position:relative;overflow:hidden;min-height:100px;padding:17px;border:1px solid #e0e8f2;border-radius:15px;background:linear-gradient(145deg,#fff,#f6f9fe);box-shadow:0 5px 16px rgba(8,43,104,.045)}
+.commission-metric strong{font-size:clamp(1.25rem,2.5vw,1.75rem);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.commission-metric span{display:block;margin-top:5px;line-height:1.45}
+.commission-total{background:radial-gradient(circle at 100% 0,rgba(36,145,89,.12),transparent 42%),linear-gradient(140deg,#f1faf4,#fff);border-color:#cfe8d8}
+.commission-total strong{color:#176b37}
+.commission-toolbar{padding:15px;border:1px solid #e0e8f2;border-radius:14px;background:#f8faff;margin:16px 0}
+.commission-toolbar label{display:grid;gap:7px;color:#25466f;font-weight:800;font-size:.85rem}
+.commission-toolbar input{min-height:43px}
+.commission-toolbar button{min-height:43px;border-radius:10px;font-weight:800}
+#commissionReportHeading{margin:21px 0 10px;color:#12396f;font-size:1.08rem}
+#commissionReportEntries,#commissionReportHistory{padding:13px 15px;border:1px solid #e1e9f3;border-radius:13px;background:#fbfcff;min-width:0;overflow-wrap:anywhere}
+#commissionReportStatus,#paymentModeStatus,#paymentSettingsMessage,#walletTransactionsStatus,#approvedRidersStatus,#riderStatus{border-radius:11px;line-height:1.55}
+#paymentModeAudit{margin-top:12px;padding:13px 14px;border:1px solid #e1e9f3;border-radius:12px;background:#fbfcff;line-height:1.65;overflow-wrap:anywhere}
+#adminAccountCount{margin:13px 0;padding:15px;border:1px solid #dce6f2;border-radius:12px;background:linear-gradient(110deg,#f6f9ff,#fff);color:#12396f;font-weight:850}
+#refreshAdminAccountCountButton{min-height:40px;border-radius:10px}
+#dashboard>.card:has(#notifications),#dashboard>.card:has(#paymentSettingsForm){border-top:3px solid #ff7900}
+#dashboard>.card:has(#walletTransactions),#dashboard>.card:has(#depositRequests){border-top:3px solid #1558a0}
+#dashboard>.card:has(#pendingRiders){border-top:3px solid #ff9a3d}
+#dashboard>.card:has(#notifications)>h2:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff7900;box-shadow:0 0 0 4px #fff0e4}
+#dashboard>.card:has(#walletTransactions)>h2:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#1558a0;box-shadow:0 0 0 4px #eaf2ff}
+#dashboard>.card:has(#pendingRiders)>h2:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff9a3d;box-shadow:0 0 0 4px #fff2e7}
+@media(max-width:600px){.commission-metric{min-height:88px;padding:12px}.commission-toolbar{padding:11px}.commission-toolbar label{min-width:100%}.commission-toolbar button{flex:1}#commissionReportEntries,#commissionReportHistory{padding:11px}}
+
 </style><script src="/admin-password.js" defer></script>
 </head>
 <body><main class="wrap">
