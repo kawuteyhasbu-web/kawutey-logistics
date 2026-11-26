@@ -48,6 +48,11 @@ app.use((req, res, next) => {
   next();
 });
 app.use((req, res, next) => req.path === "/api/payments/paystack/webhook" ? next() : express.json({ limit: "1mb" })(req, res, next));
+app.use("/api", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  res.set("Pragma", "no-cache");
+  next();
+});
 app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false }));
 
 const asyncRoute = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -112,7 +117,15 @@ async function sendSignupEmail(notification) {
   return { sent: true };
 }
 
-app.get("/api/health", (req, res) => res.json({ ok: true, service: "Kawutey Logistics API" }));
+app.get("/api/health", asyncRoute(async (req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ ok: true, service: "Kawutey Logistics API", database: "connected" });
+  } catch (error) {
+    console.error("Health check database probe failed:", error.message);
+    res.status(503).json({ ok: false, service: "Kawutey Logistics API", database: "unavailable" });
+  }
+}));
 
 
 app.post("/api/admin/register", adminRegisterLimiter, asyncRoute(async (req, res) => {
@@ -1253,7 +1266,22 @@ async function startServer() {
     await pool.query("CREATE INDEX IF NOT EXISTS rider_messages_unread_idx ON rider_messages(recipient_id, sender_id, created_at DESC) WHERE read_at IS NULL");
     await pool.query("CREATE TABLE IF NOT EXISTS rider_conversation_preferences (user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, peer_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, archived BOOLEAN NOT NULL DEFAULT FALSE, muted BOOLEAN NOT NULL DEFAULT FALSE, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), PRIMARY KEY(user_id,peer_id), CHECK(user_id <> peer_id))");
     console.log("Database connection and rider profile storage verified.");
-    app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
+    const server = app.listen(port, () => console.log(`Kawutey Logistics API listening on port ${port}`));
+    let shuttingDown = false;
+    const shutdown = signal => {
+      if (shuttingDown) return;
+      shuttingDown = true;
+      console.log(`${signal} received; closing HTTP server and database pool.`);
+      server.close(async error => {
+        if (error) console.error("HTTP server shutdown error:", error.message);
+        try { await pool.end(); }
+        catch (poolError) { console.error("Database pool shutdown error:", poolError.message); }
+        process.exit(error ? 1 : 0);
+      });
+      setTimeout(() => process.exit(1), 10000).unref();
+    };
+    process.once("SIGTERM", () => shutdown("SIGTERM"));
+    process.once("SIGINT", () => shutdown("SIGINT"));
   } catch (error) {
     console.error("Database connection failed:", error.message);
     process.exit(1);
