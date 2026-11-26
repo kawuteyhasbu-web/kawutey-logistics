@@ -1240,6 +1240,27 @@ footer{color:#718096}
 #riderDashboard #secureRiderPhoto{width:88px;height:88px;object-fit:cover;border:3px solid #fff;border-radius:50%;box-shadow:0 4px 14px rgba(8,43,104,.15)}
 @media(max-width:640px){#riderDashboard>.wallet-box .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#riderDashboard #riderConnectPanel button{width:100%;margin:5px 0}#riderDashboard>section.card{padding:14px!important}}
 @media(prefers-reduced-motion:reduce){#riderDashboard *{scroll-behavior:auto!important}}
+
+/* KL redesign batch 11: vendor pickup history status-led cards */
+#vendorPickupHistoryPanel .dashboard-panel-content{padding-top:14px}
+#pickupHistory{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:14px}
+#pickupHistory .pickup-item{display:flex;flex-direction:column;gap:12px;min-width:0;padding:17px;border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(180deg,#fff,#fbfcff);box-shadow:0 7px 20px rgba(8,43,104,.045)}
+#pickupHistory .pickup-item-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding-bottom:11px;border-bottom:1px solid #e8eef6}
+#pickupHistory .pickup-item-heading>strong{color:#153d70;font-size:.96rem}
+#pickupHistory .pickup-status{display:inline-flex;align-items:center;max-width:100%;padding:5px 10px;border:1px solid transparent;border-radius:999px;font-size:.73rem;font-weight:850;line-height:1.35}
+#pickupHistory .pickup-status-available{background:#fff7e8;border-color:#f4dfb4;color:#8a5700}
+#pickupHistory .pickup-status-accepted,#pickupHistory .pickup-status-progress{background:#edf5ff;border-color:#cfe1f7;color:#174e88}
+#pickupHistory .pickup-status-completed{background:#eaf8ef;border-color:#c6e8d0;color:#17643a}
+#pickupHistory .pickup-status-cancelled{background:#fff0ef;border-color:#f3d0cd;color:#a3322b}
+#pickupHistory .pickup-status-unknown{background:#f2f4f7;border-color:#e1e5eb;color:#586579}
+#pickupHistory .pickup-item-details{display:grid;gap:7px;min-width:0}
+#pickupHistory .pickup-item-details>p{margin:0;line-height:1.55;color:#52667f}
+#pickupHistory .pickup-item-details>p strong{color:#1a3f70}
+#pickupHistory .pickup-item .pickup-submitted{display:block;margin-top:auto;padding-top:10px;border-top:1px solid #edf1f6;color:#7a8798;font-size:.75rem}
+#pickupHistory .pickup-item .delete-pickup-button,#pickupHistory .pickup-item .cancel-pickup-button{min-height:40px;padding:9px 13px}
+#pickupHistory:has(>p){grid-template-columns:minmax(0,1fr)}
+#pickupHistory>p{padding:22px;border:1px dashed #cbd9e9;border-radius:13px;background:#f9fbfe;color:#718198!important;text-align:center}
+@media(max-width:760px){#pickupHistory{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -1882,6 +1903,11 @@ footer{color:#718096}
           const riderPhoto = p.rider_has_photo
             ? `<img id="vendor-rider-photo-${Number(p.id)}" alt="Approved profile photograph of assigned rider" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#f3f4f6;">`
             : `<div role="img" aria-label="Rider photograph unavailable" style="width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:#eef2f7;border:2px solid var(--border);color:#555;font-size:11px;">Photo unavailable</div>`;
+          const statusKey = String(p.assignment_status || "available").toLowerCase();
+          const statusLabels = { available: "Awaiting rider", accepted: "Rider assigned", in_progress: "In progress", completed: "Delivered", cancelled: "Cancelled" };
+          const statusClasses = { available: "available", accepted: "accepted", in_progress: "progress", completed: "completed", cancelled: "cancelled" };
+          const statusLabel = statusLabels[statusKey] || "Status update";
+          const statusClass = statusClasses[statusKey] || "unknown";
           const riderBlock = assigned ? `
             <div style="display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
               ${riderPhoto}
@@ -1892,8 +1918,13 @@ footer{color:#718096}
               </div>
             </div>` : "";
           return `
-            <div class="pickup-item">
-              <strong>Pickup Time:</strong> ${escapeHtml(formatGhanaDateTime(p.preferred_at))}<br>
+            <article class="pickup-item" aria-label="Pickup request ${Number(p.id)}">
+              <div class="pickup-item-heading">
+                <strong>Pickup request #${Number(p.id)}</strong>
+                <span class="pickup-status pickup-status-${statusClass}">${escapeHtml(statusLabel)}</span>
+              </div>
+              <div class="pickup-item-details">
+                <p><strong>Preferred pickup:</strong> ${escapeHtml(formatGhanaDateTime(p.preferred_at))}</p>
               <strong>Total Packages:</strong> ${Number(p.total_packages)}<br>
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
@@ -1904,8 +1935,9 @@ footer{color:#718096}
               ${p.cancellation_status ? `<p style="margin-top:10px;"><strong>Cancellation request:</strong> ${escapeHtml(String(p.cancellation_status).toUpperCase())}</p>${p.cancellation_reason_type ? `<p><strong>Reason:</strong> ${escapeHtml(({customer_cancelled:"Customer cancelled the order",incorrect_pickup_details:"Incorrect pickup details",package_unavailable:"Package unavailable or not ready"})[p.cancellation_reason_type] || p.cancellation_reason_type)}</p>` : ""}${p.cancellation_explanation ? `<p><strong>Explanation:</strong> ${escapeHtml(p.cancellation_explanation)}</p>` : ""}${p.cancellation_admin_note ? `<p><strong>Administrator's note:</strong> ${escapeHtml(p.cancellation_admin_note)}</p>` : ""}` : ""}
               ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && !p.cancellation_window_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" ${p.accepted_at ? `data-cancel-deadline="${new Date(p.accepted_at).getTime()+600000}"` : ""} style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
               ${p.assignment_status === "available" && !p.pickup_date_passed && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
-              <small>Request submitted: ${escapeHtml(formatGhanaDateTime(p.created_at))}</small>
-            </div>`;
+              <small class="pickup-submitted">Request submitted: ${escapeHtml(formatGhanaDateTime(p.created_at))}</small>
+              </div>
+            </article>`;
         }).join("");
         area.querySelectorAll(".delete-pickup-button").forEach(button => {
           button.addEventListener("click", () => deletePickupRequest(button.dataset.pickupId));
