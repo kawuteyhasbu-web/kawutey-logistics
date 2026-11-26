@@ -2899,7 +2899,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
           const peerId = String(c.rider_id);
           const count = current[peerId];
           const previous = Number(riderConnectUnreadSnapshot[peerId] || 0);
-          if (count > previous && Number(peerId) !== Number(activeRiderConnectPeerId)) {
+          if (count > previous && !c.muted && !c.archived && Number(peerId) !== Number(activeRiderConnectPeerId)) {
             const notification = new Notification("New Rider Connect message", {
               body: c.full_name + " sent you a message.",
               tag: "rider-connect-" + peerId
@@ -2923,6 +2923,8 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       threadButtons.forEach(item => {
         const visible = !conversationTerm || item.textContent.toLowerCase().includes(conversationTerm);
         item.hidden = !visible;
+        const threadItem = item.closest(".connect-thread-item");
+        if (threadItem) threadItem.hidden = !visible;
         if (visible) visibleThreads++;
       });
       const messages = Array.from(document.querySelectorAll("#connectMessages .msg-box"));
