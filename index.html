@@ -3037,7 +3037,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 
     function renderRiderConnectMessage(m) {
       const sent = Number(m.sender_id) === Number(currentRider.id);
-      return '<article class="msg-box" data-message-id="' + Number(m.id) + '"><strong>' + (sent ? 'You' : escapeHtml(m.sender_name)) + '</strong><p>' + escapeHtml(m.message) + '</p><small>' + escapeHtml(formatGhanaDateTime(m.created_at)) + '</small>' + (sent ? '<small class="read-state">' + (m.read_at ? 'Seen' : 'Sent') + '</small>' : '') + '</article>';
+      return '<article class="msg-box' + (sent ? ' sent' : '') + '" data-message-id="' + Number(m.id) + '"><strong>' + (sent ? 'You' : escapeHtml(m.sender_name)) + '</strong><p>' + escapeHtml(m.message) + '</p><small>' + escapeHtml(formatGhanaDateTime(m.created_at)) + '</small>' + (sent ? '<small class="read-state">' + (m.read_at ? 'Seen' : 'Sent') + '</small>' : '') + '</article>';
     }
 
     async function loadOlderRiderMessages() {
