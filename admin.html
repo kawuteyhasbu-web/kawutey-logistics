@@ -1488,6 +1488,26 @@ body{background:radial-gradient(ellipse at 50% -15%,#e7effb 0,transparent 48%),#
  #dashboard>.admin-section summary{padding:13px 11px}
 }
 </style>
+<style id="kl-admin-signin-visual-pass-2026-11">
+/* ADMIN SIGN-IN — visual consistency with private command centre */
+#loginCard{position:relative;isolation:isolate;max-width:520px;margin:clamp(28px,7vh,76px) auto;padding:clamp(24px,4vw,38px);overflow:hidden;border:1px solid #dce6f2;border-radius:22px;background:linear-gradient(150deg,#fff,#f8faff);box-shadow:0 22px 60px rgba(8,43,104,.12)}
+#loginCard:before{content:"";position:absolute;z-index:-1;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#082b68 0 64%,#ff7900 64%)}
+#loginCard:after{content:"KL";position:absolute;z-index:-1;right:12px;top:0;font-size:7rem;line-height:1;font-weight:950;letter-spacing:-.1em;color:rgba(8,43,104,.035);pointer-events:none}
+#loginCard h2{margin:7px 0 8px;color:#082b68;font-size:clamp(1.5rem,3vw,1.9rem);letter-spacing:-.04em}
+#loginCard>p{color:#71839b;line-height:1.65}
+#loginForm{display:grid;gap:10px;margin-top:22px}
+#loginForm label{margin-top:5px;color:#294b72;font-size:.78rem;font-weight:850}
+#loginForm input{width:100%;min-width:0;min-height:48px;padding:11px 13px;border:1px solid #d7e2ef;border-radius:11px;background:#fbfcff;color:#173a68}
+#loginForm input:focus{outline:0;border-color:#3778b8;box-shadow:0 0 0 3px rgba(55,120,184,.12)}
+#loginForm .password-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+#loginForm .password-wrap button{min-width:68px;border:1px solid #dce6f2;border-radius:10px;background:#f2f6fb;color:#355678;font-weight:800}
+#loginButton{min-height:49px;margin-top:10px;border:0;border-radius:11px;background:linear-gradient(110deg,#f47708,#ff9637);color:#fff;font-weight:900;box-shadow:0 8px 18px rgba(255,121,0,.18)}
+#adminSignupAccess{padding-top:13px;border-top:1px solid #e7edf5}
+#adminSignupAccess a{color:#d96c08!important;text-decoration:none}
+#adminSignupAccess a:hover{text-decoration:underline}
+#loginMessage:not(.hidden){padding:11px 13px;border-radius:10px;background:#f0f6ff;color:#28537f;font-size:.83rem;line-height:1.55}
+@media(max-width:600px){#loginCard{margin:20px 12px;padding:23px 17px;border-radius:18px}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
