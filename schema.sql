@@ -66,8 +66,19 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
   package_assignment_id BIGINT REFERENCES assignments(id),
   provider_reference TEXT,
   description TEXT,
+  related_transaction_id BIGINT REFERENCES wallet_transactions(id),
+  refund_reason TEXT,
+  reviewed_by BIGINT,
+  reviewed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS related_transaction_id BIGINT REFERENCES wallet_transactions(id);
+ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS refund_reason TEXT;
+ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_by BIGINT;
+ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ;
+CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction
+  ON wallet_transactions(related_transaction_id)
+  WHERE type = 'refund' AND status = 'successful';
 CREATE UNIQUE INDEX IF NOT EXISTS one_commission_per_assignment
   ON wallet_transactions(package_assignment_id)
   WHERE type = 'commission' AND status = 'successful';
