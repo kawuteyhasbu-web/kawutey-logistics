@@ -188,7 +188,6 @@ $("walletTransactions").addEventListener("change",e=>{
   const vendorReason=card.querySelector("[data-vendor-cancellation-reason]");
   const showVendorDetails=category.value==="pickup_cancelled"&&Boolean(card.dataset.hasVendorCancellation==="true");
   explanation.value=showVendorDetails?card.dataset.vendorCancellationExplanation||"":"";
-  explanation.disabled=!showVendorDetails;
   vendorReason.hidden=!showVendorDetails;
 });
 $("walletTransactions").addEventListener("click",async e=>{
