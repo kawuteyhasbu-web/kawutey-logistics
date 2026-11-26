@@ -480,6 +480,8 @@
 
       const secureAcceptButton = target.closest("[data-secure-accept]");
       if (secureAcceptButton) { acceptSecureAssignment(secureAcceptButton.getAttribute("data-secure-accept"), secureAcceptButton); return; }
+      const secureDeliverButton = target.closest("[data-secure-deliver]");
+      if (secureDeliverButton) { markSecureAssignmentDelivered(secureDeliverButton.getAttribute("data-secure-deliver"), secureDeliverButton); return; }
       const acceptButton = target.closest("[data-accept-assignment]");
       if (acceptButton) acceptAssignment(Number(acceptButton.getAttribute("data-accept-assignment")));
     });
@@ -707,9 +709,10 @@
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
               ${riderBlock}
               ${p.accepted_at ? `<p><strong>Rider accepted:</strong> ${escapeHtml(formatGhanaDateTime(p.accepted_at))}</p>` : ""}
+              ${p.assignment_status === "completed" ? `<p class="status verified" style="margin-top:8px;">Delivered${p.delivered_at ? ` — ${escapeHtml(formatGhanaDateTime(p.delivered_at))}` : ""}</p>` : ""}
               ${p.pickup_date_passed ? `<p class="status pending" style="margin-top:8px;">Pickup date passed — this offer has expired.</p>` : ""}
               ${p.cancellation_status ? `<p style="margin-top:10px;"><strong>Cancellation request:</strong> ${escapeHtml(String(p.cancellation_status).toUpperCase())}</p>${p.cancellation_reason_type ? `<p><strong>Reason:</strong> ${escapeHtml(({customer_cancelled:"Customer cancelled the order",incorrect_pickup_details:"Incorrect pickup details",package_unavailable:"Package unavailable or not ready"})[p.cancellation_reason_type] || p.cancellation_reason_type)}</p>` : ""}${p.cancellation_explanation ? `<p><strong>Explanation:</strong> ${escapeHtml(p.cancellation_explanation)}</p>` : ""}${p.cancellation_admin_note ? `<p><strong>Administrator's note:</strong> ${escapeHtml(p.cancellation_admin_note)}</p>` : ""}` : ""}
-              ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
+              ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && !p.cancellation_window_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
               ${p.assignment_status === "available" && !p.pickup_date_passed && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
               <small>Request submitted: ${escapeHtml(formatGhanaDateTime(p.created_at))}</small>
             </div>`;
@@ -1057,7 +1060,7 @@
           accepted.forEach(a => {
             const card = document.createElement("div");
             card.className = "assignment-item";
-            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p>" + (a.accepted_at ? "<p>Accepted: " + escapeHtml(formatGhanaDateTime(a.accepted_at)) + "</p>" : "") + "<p>Packages: " + Number(a.total_packages) + "</p><span class='status verified'>" + escapeHtml(a.status) + "</span>";
+            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p>" + (a.accepted_at ? "<p>Accepted: " + escapeHtml(formatGhanaDateTime(a.accepted_at)) + "</p>" : "") + "<p>Packages: " + Number(a.total_packages) + "</p>" + (a.status === "completed" ? "<p class='status verified'>Delivered" + (a.delivered_at ? " — " + escapeHtml(formatGhanaDateTime(a.delivered_at)) : "") + "</p>" : "<span class='status verified'>Accepted</span><p><button type='button' class='btn btn-accent' data-secure-deliver='" + Number(a.id) + "'>Mark as Delivered</button></p>");
             acceptedArea.appendChild(card);
           });
         }
@@ -1259,6 +1262,16 @@
         message.textContent = error.message || "Could not submit deposit request.";
         message.className = "alert alert-warning";
       } finally { button.disabled = false; }
+    }
+
+    async function markSecureAssignmentDelivered(id, button) {
+      if (!window.confirm("Confirm that this package has been delivered to the customer?")) return;
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/rider/assignments/" + encodeURIComponent(id) + "/deliver", { method: "POST", riderAuth: true });
+        alert(result.message);
+        await loadSecureRiderAssignments();
+      } catch (error) { alert(error.message || "Could not mark this pickup as delivered."); button.disabled = false; }
     }
 
     async function acceptSecureAssignment(id, button) {
