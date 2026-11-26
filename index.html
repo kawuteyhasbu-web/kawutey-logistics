@@ -2207,6 +2207,75 @@ nav.tabs .tab-btn.active{background:#082b68;color:#fff;box-shadow:0 6px 15px rgb
  .container>header .header-right{max-width:125px}
 }
 </style>
+<style id="kl-vendor-rider-operational-visual-pass-2026-11">
+/* KAWUTEY VISUAL SYSTEM — vendor order creation, rider wallet and delivery work */
+#vendorDashboard,#riderDashboard{gap:18px}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid #dce6f2;border-radius:19px;background:#fff;box-shadow:0 9px 26px rgba(8,43,104,.055)}
+#vendorDashboard>.card>h3,#riderDashboard>.card>h3{display:flex;align-items:center;gap:10px;color:#0b326c;font-size:1.12rem;letter-spacing:-.02em}
+#vendorDashboard>.card>h3:before,#riderDashboard>.card>h3:before{content:"";width:6px;height:23px;flex:0 0 6px;border-radius:8px;background:linear-gradient(#ff7900,#ffad5b)}
+#pickupFormArea{margin-top:18px!important;padding:20px!important;border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(145deg,#f8fbff,#fff)}
+#pickupFormArea>h4{margin:0 0 15px;color:#0c376f;font-size:1rem}
+#pickupForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#pickupForm>.alert,#pickupForm>[role=status],#pickupForm>button[type=submit],#pickupForm>button[data-action="capturePickupLocation"],#pickupForm>h4{grid-column:1/-1}
+#pickupForm .form-group{min-width:0;margin:0}
+#pickupForm .form-group label{display:block;margin-bottom:7px;color:#294b72;font-size:.78rem;font-weight:850}
+#pickupForm .form-group :is(input,select,textarea){width:100%;min-width:0;min-height:46px;padding:10px 12px;border:1px solid #d8e3ef;border-radius:10px;background:#fff;color:#173a68}
+#pickupForm .form-group textarea{min-height:86px;resize:vertical}
+#pickupForm .form-group :is(input,select,textarea):focus{outline:0;border-color:#397bb8;box-shadow:0 0 0 3px rgba(55,120,184,.12)}
+#pickupForm button{min-height:45px}
+#pickupForm>button[type=submit]{width:100%;font-weight:900}
+#pickupHistory{display:grid;gap:12px;margin-top:12px}
+#pickupHistory:empty{display:block}
+#vendorDashboard .pickup-item,#vendorDashboard .history-item,#riderDashboard .assignment-item,#riderDashboard .history-item{min-width:0;padding:15px;border:1px solid #e2eaf3;border-radius:14px;background:linear-gradient(145deg,#fff,#fbfcff)}
+#vendorDashboard .pickup-item-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#vendorDashboard .pickup-item-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 15px;margin-top:12px;color:#657b95;font-size:.8rem}
+#riderDashboard .wallet-box{position:relative;overflow:hidden;padding:24px;border:1px solid rgba(255,255,255,.15);border-radius:21px;background:radial-gradient(circle at 88% 8%,rgba(255,145,48,.3),transparent 35%),linear-gradient(125deg,#061d49,#0a3979 72%,#14518a);box-shadow:0 14px 30px rgba(8,43,104,.18);color:#fff}
+#riderDashboard .wallet-box:after{content:"KL";position:absolute;right:18px;bottom:-27px;font-size:8rem;line-height:1;font-weight:950;letter-spacing:-.12em;color:rgba(255,255,255,.045);pointer-events:none}
+#riderDashboard .wallet-box h3{position:relative;z-index:1;margin:0 0 9px;color:#d9e8fb;font-size:.88rem;font-weight:800;letter-spacing:.04em}
+#riderDashboard .wallet-box .balance{position:relative;z-index:1;margin:4px 0 20px;color:#fff;font-size:clamp(2rem,5vw,3rem);font-weight:950;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+#riderDashboard .wallet-box .wallet-stats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+#riderDashboard .wallet-box .stat-box{min-width:0;min-height:78px;padding:11px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:rgba(255,255,255,.085)}
+#riderDashboard .wallet-box .stat-box .value{color:#fff;font-size:1.05rem;font-weight:900;overflow-wrap:anywhere}
+#riderDashboard .wallet-box .stat-box .label{margin-top:5px;color:#c6d8ed;font-size:.68rem;line-height:1.4}
+#riderDashboard .wallet-box>div:last-child{display:flex;flex-wrap:wrap;gap:9px}
+#riderDashboard .wallet-box>div:last-child button{min-height:42px;border-radius:10px;font-weight:850}
+#depositFormArea,#transactionHistoryArea{border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(150deg,#fff,#f8fbff);box-shadow:0 8px 22px rgba(8,43,104,.05)}
+#depositFormArea h3,#transactionHistoryArea h3{color:#0b326c}
+#depositFormArea .ref-code{padding:14px;border:1px dashed rgba(255,255,255,.4);border-radius:12px;box-shadow:0 7px 16px rgba(8,43,104,.12);overflow-wrap:anywhere}
+#depositFormArea .form-group{margin:13px 0}
+#depositFormArea .form-group label{display:block;margin-bottom:6px;color:#294b72;font-size:.78rem;font-weight:850}
+#depositFormArea .form-group :is(input,select){width:100%;min-height:46px;padding:10px 12px;border:1px solid #d8e3ef;border-radius:10px;background:#fff}
+#depositFormArea>button{width:100%;min-height:47px;margin-top:5px}
+#transactionHistoryArea #depositHistory{display:grid;gap:9px}
+#riderDashboard #availableAssignments,#riderDashboard #acceptedAssignments{display:grid;gap:11px}
+#riderDashboard .assignment-item{padding:16px}
+#riderDashboard .assignment-item :is(button,a){min-height:40px}
+#riderDashboard #acceptedCount{display:inline-flex;align-items:center;justify-content:center;min-width:29px;height:27px;padding:0 8px;border-radius:99px;background:#fff0e4;color:#cf690b}
+#riderDashboard #ridersList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#riderDashboard #messagesArea{display:grid;gap:8px}
+#riderDashboard #messageTo,#riderDashboard #messageText{width:100%;min-height:44px;padding:10px 12px;border:1px solid #d8e3ef;border-radius:10px;background:#fbfcff}
+#riderDashboard #messageText{min-height:90px}
+#riderDashboard .secure-rider-profile,#riderDashboard .secure-wallet-panel{border:1px solid #dce6f2;border-radius:16px}
+#vendorDashboard :is(button,a),#riderDashboard :is(button,a){transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+#vendorDashboard button:hover,#riderDashboard button:hover{box-shadow:0 6px 15px rgba(8,43,104,.1)}
+#vendorDashboard :is(input,select,textarea):focus-visible,#riderDashboard :is(input,select,textarea):focus-visible{outline:3px solid rgba(255,132,24,.27);outline-offset:1px}
+@media(max-width:760px){
+ #pickupForm{grid-template-columns:1fr;gap:11px}
+ #pickupFormArea{padding:14px!important}
+ #riderDashboard .wallet-box{padding:19px}
+ #riderDashboard .wallet-box .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #riderDashboard #ridersList{grid-template-columns:1fr}
+ #vendorDashboard .pickup-item-details{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+ #riderDashboard .wallet-box{padding:15px}
+ #riderDashboard .wallet-box>div:last-child{display:grid;grid-template-columns:1fr}
+ #riderDashboard .wallet-box>div:last-child button{width:100%}
+ #riderDashboard .wallet-box .stat-box{padding:9px}
+ #riderDashboard .wallet-box .stat-box .value{font-size:.93rem}
+ #vendorDashboard>.card,#riderDashboard>.card{padding:14px!important}
+}
+</style>
 </head>
 <body>
   <div class="container">
