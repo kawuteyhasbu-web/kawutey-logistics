@@ -541,6 +541,30 @@ button:disabled{cursor:not-allowed;opacity:.58}
 @media(max-width:720px){#pickupHistory,#availableAssignments,#acceptedAssignments{grid-template-columns:1fr}}
 @media(max-width:560px){#vendorDashboard>button[data-action="togglePickupForm"],#vendorDashboard>button[data-action="logoutVendor"]{width:100%;margin:5px 0}#riderDashboard>.card:first-child{align-items:flex-start;padding:15px}#riderDashboard>.card:first-child button{width:100%}#riderDashboard>.wallet-box{margin-top:12px}}
 
+
+/* Transaction, pickup-status and assigned-rider detail refinement */
+#pickupHistory .pickup-item{position:relative;padding:19px 19px 17px 21px;border:1px solid #dce6f2;border-radius:16px;background:linear-gradient(145deg,#fff 0%,#f9fbff 100%);box-shadow:0 7px 20px rgba(8,43,104,.045)}
+#pickupHistory .pickup-item:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:0 5px 5px 0;background:linear-gradient(180deg,#ff8a00,#ff6500)}
+#pickupHistory .pickup-item strong{color:#173e75}
+#pickupHistory .pickup-item .status{padding:5px 11px;font-size:.74rem;letter-spacing:.015em}
+#pickupHistory .pickup-item a{display:inline-flex;align-items:center;gap:5px;min-height:30px}
+#pickupHistory .pickup-item img{flex:0 0 88px;box-shadow:0 3px 12px rgba(8,43,104,.12)}
+#pickupHistory .pickup-item>div[style*="border-top"]{padding-top:14px!important;margin-top:14px!important}
+#riderDashboard #depositHistory .history-item{align-items:center;padding:14px 13px;border:1px solid #e1e9f3;border-radius:12px;background:linear-gradient(110deg,#fff,#f9fbff);gap:10px}
+#riderDashboard #depositHistory .history-item:last-child{border-bottom:1px solid #e1e9f3}
+#riderDashboard #depositHistory .history-item strong{color:#12396f}
+#riderDashboard #depositHistory .history-item small{color:#718198;line-height:1.55}
+#riderDashboard #depositHistory .history-item [style*="color:green"],#riderDashboard #depositHistory .history-item [style*="color: red"]{font-weight:850;font-variant-numeric:tabular-nums}
+#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{position:relative;padding:17px;border-radius:15px;background:linear-gradient(145deg,#fff,#f8faff);border-color:#dce6f2;box-shadow:0 6px 18px rgba(8,43,104,.045)}
+#secureAvailableAssignments .assignment-item strong,#secureAcceptedAssignments .assignment-item strong{color:#153d73}
+#secureAvailableAssignments .assignment-item .btn,#secureAcceptedAssignments .assignment-item .btn{min-height:40px;padding:10px 15px}
+#riderDashboard .rider-card{border:1px solid #dce6f2;border-radius:15px;background:linear-gradient(110deg,#fff,#f8faff);box-shadow:0 5px 16px rgba(8,43,104,.04)}
+#riderDashboard .rider-card img{box-shadow:0 4px 12px rgba(8,43,104,.1)}
+#riderDashboard #messagesArea .msg-box{border:1px solid #dce6f2;border-radius:14px;background:#f7faff;line-height:1.65}
+#riderDashboard #messagesArea .msg-box strong{color:#12396f}
+#riderDashboard #messageTo,#riderDashboard #messageText{border-color:#cbd8e8;border-radius:12px}
+@media(max-width:600px){#pickupHistory .pickup-item{padding:16px 14px 15px 18px}#pickupHistory .pickup-item img{width:68px!important;height:68px!important;flex-basis:68px}#riderDashboard #depositHistory .history-item{align-items:flex-start;flex-direction:column}#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{padding:14px}}
+
 </style>
 </head>
 <body>
