@@ -206,6 +206,12 @@
 .kl-page-cta{margin-top:24px;padding:26px;border-radius:18px;background:#f0f5fd;border:1px solid #dfe8f5}.kl-page-cta h3{margin:0 0 12px}.kl-page-cta a{display:inline-block;margin:8px 18px 0 0;color:#0a438e;font-weight:700}
 @media(max-width:720px){.tabs{gap:7px}.kl-content-grid,.kl-steps-grid,.kl-contact-grid{grid-template-columns:1fr}.kl-page-hero{border-radius:18px}}
 
+
+.kl-page-cta a{overflow-wrap:anywhere}
+.tabs .tab-btn{font-weight:700;letter-spacing:-.01em}
+.kl-content-page .kl-steps-grid article{min-height:190px}
+@media(max-width:760px){.tabs{scrollbar-width:thin}.tabs .tab-btn{font-size:.86rem}}
+
 </style>
 </head>
 <body>
@@ -231,6 +237,8 @@
       <button class="tab-btn" data-section="aboutPage">About Us</button>
       <button class="tab-btn" data-section="howPage">How It Works</button>
       <button class="tab-btn" data-section="contactPage">Contact</button>
+      <button class="tab-btn" data-section="vendorSupportPage">Vendor Support</button>
+      <button class="tab-btn" data-section="riderSupportPage">Rider Support</button>
     </div>
 
     <!-- HOME -->
@@ -298,6 +306,26 @@
         <a href="mailto:kwauteyhasbu@gmail.com"><small>EMAIL US</small><strong>kwauteyhasbu@gmail.com</strong><span>Send us an enquiry</span></a>
       </div>
       <div class="kl-page-cta"><h3>Follow our updates</h3><p>Find Kawutey Logistics on TikTok and Instagram.</p><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on Instagram</a></div>
+    </section>
+
+
+    <section id="vendorSupportPage" class="section hidden kl-content-page">
+      <div class="kl-page-hero"><span class="kl-eyebrow">VENDOR SUPPORT</span><h2>We're here to help your business keep moving.</h2><p>Find guidance for using your vendor portal and getting help with pickup requests.</p></div>
+      <div class="kl-steps-grid">
+        <article><b>01</b><h3>Account and profile</h3><p>Use your vendor account to manage your details and access your pickup activity.</p></article>
+        <article><b>02</b><h3>Pickup requests</h3><p>Provide accurate package counts, pickup details and preferred collection times when submitting a request.</p></article>
+        <article><b>03</b><h3>Follow your request</h3><p>Check your vendor dashboard for pickup status and assigned rider information when available.</p></article>
+      </div>
+      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team and include the pickup details relevant to your enquiry. Do not send passwords or Ghana Card information by email.</p><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a><a href="tel:0242267974">024 226 7974</a></div>
+    </section>
+    <section id="riderSupportPage" class="section hidden kl-content-page">
+      <div class="kl-page-hero"><span class="kl-eyebrow">RIDER SUPPORT</span><h2>Support for your rider journey.</h2><p>Guidance for rider account approval, pickup offers, assignments and wallet activity.</p></div>
+      <div class="kl-steps-grid">
+        <article><b>01</b><h3>Account approval</h3><p>Rider accounts require administrator review. Keep your registration details accurate and current.</p></article>
+        <article><b>02</b><h3>Pickup opportunities</h3><p>Eligible active riders can view available pickup offers. Location estimates may be unavailable when location or routing data is missing.</p></article>
+        <article><b>03</b><h3>Wallet and transactions</h3><p>Review your wallet history for deposits, acceptance commissions and any separately processed refunds.</p></article>
+      </div>
+      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team with your rider reference and a brief description of the issue. Never share your password or full Ghana Card number.</p><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a><a href="tel:0591114638">059 111 4638</a></div>
     </section>
 
     <!-- VENDOR PORTAL -->
@@ -641,7 +669,7 @@
     });
 
     function showSection(sectionId) {
-      const allowedSections = ["home", "vendor", "rider", "aboutPage", "howPage", "contactPage"];
+      const allowedSections = ["home", "vendor", "rider", "aboutPage", "howPage", "contactPage", "vendorSupportPage", "riderSupportPage"];
       if (!allowedSections.includes(sectionId)) return;
 
       document.querySelectorAll(".section").forEach(section => {
