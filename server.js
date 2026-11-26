@@ -256,23 +256,31 @@ app.post("/api/vendor/pickups/:id/cancellation-request", authenticate, roles("ve
   if(!Number.isSafeInteger(pickupId)||pickupId<1) return res.status(400).json({error:"Invalid pickup request."});
   if(!allowed.includes(reasonType)) return res.status(400).json({error:"Choose one of the listed cancellation reasons."});
   if(explanation.length<10||explanation.length>500) return res.status(400).json({error:"Please explain the cancellation in at least 10 characters (maximum 500)."});
-  const owned=await pool.query(`SELECT a.id,a.status,
-      ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed
-    FROM pickups p JOIN assignments a ON a.pickup_id=p.id
-    WHERE p.id=$1 AND p.vendor_id=$2`,[pickupId,req.user.id]);
-  if(!owned.rowCount) return res.status(404).json({error:"Pickup request not found."});
-  if(owned.rows[0].pickup_date_passed) return res.status(409).json({error:"This pickup date has passed. Cancellation requests are no longer available."});
-  if(["cancelled","completed"].includes(owned.rows[0].status)) return res.status(409).json({error:"This pickup can no longer be cancelled."});
+  const client=await pool.connect();
   try {
-    const result=await pool.query("INSERT INTO pickup_cancellation_requests(assignment_id,vendor_id,reason_type,explanation) VALUES($1,$2,$3,$4) RETURNING id,status,created_at",[owned.rows[0].id,req.user.id,reasonType,explanation]);
+    await client.query("BEGIN");
+    const owned=await client.query(`SELECT a.id,a.status,a.accepted_at,
+        ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed,
+        (a.accepted_at IS NOT NULL AND NOW() >= a.accepted_at + INTERVAL '10 minutes') AS cancellation_window_passed
+      FROM pickups p JOIN assignments a ON a.pickup_id=p.id
+      WHERE p.id=$1 AND p.vendor_id=$2 FOR UPDATE OF a`,[pickupId,req.user.id]);
+    if(!owned.rowCount){await client.query("ROLLBACK");return res.status(404).json({error:"Pickup request not found."});}
+    const row=owned.rows[0];
+    if(row.pickup_date_passed){await client.query("ROLLBACK");return res.status(409).json({error:"This pickup date has passed. Cancellation requests are no longer available."});}
+    if(row.cancellation_window_passed){await client.query("ROLLBACK");return res.status(409).json({error:"The 10-minute cancellation window after rider acceptance has expired."});}
+    if(["cancelled","completed"].includes(row.status)){await client.query("ROLLBACK");return res.status(409).json({error:"This pickup can no longer be cancelled."});}
+    const result=await client.query("INSERT INTO pickup_cancellation_requests(assignment_id,vendor_id,reason_type,explanation) VALUES($1,$2,$3,$4) RETURNING id,status,created_at",[row.id,req.user.id,reasonType,explanation]);
+    await client.query("COMMIT");
     res.status(201).json({message:"Cancellation request sent to the administrator. Your pickup remains active until it is reviewed.",request:result.rows[0]});
-  } catch(error) { if(error.code==="23505") return res.status(409).json({error:"A cancellation request is already pending for this pickup."}); throw error; }
+  } catch(error) { await client.query("ROLLBACK"); if(error.code==="23505") return res.status(409).json({error:"A cancellation request is already pending for this pickup."}); throw error; }
+  finally { client.release(); }
 }));
 
 app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,
       ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed,
-      a.status AS assignment_status,a.rider_id,a.accepted_at,
+      (a.accepted_at IS NOT NULL AND NOW() >= a.accepted_at + INTERVAL '10 minutes') AS cancellation_window_passed,
+      a.status AS assignment_status,a.rider_id,a.accepted_at,a.delivered_at,
       cr.id AS cancellation_request_id,cr.reason_type AS cancellation_reason_type,cr.explanation AS cancellation_explanation,cr.status AS cancellation_status,cr.admin_note AS cancellation_admin_note,cr.created_at AS cancellation_requested_at,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.full_name END AS rider_name,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.phone END AS rider_phone,
@@ -396,7 +404,7 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
   const riderLat = hasLocation ? Number(latValue) : null;
   const riderLon = hasLocation ? Number(lonValue) : null;
   if (hasLocation && (!Number.isFinite(riderLat) || !Number.isFinite(riderLon) || riderLat < -90 || riderLat > 90 || riderLon < -180 || riderLon > 180)) return res.status(400).json({ error: "Your location could not be read. Please update your location and try again." });
-  const result = await pool.query(`SELECT a.id,a.status,a.accepted_at,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.pickup_latitude,p.pickup_longitude,u.full_name AS vendor_name
+  const result = await pool.query(`SELECT a.id,a.status,a.accepted_at,a.delivered_at,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.pickup_latitude,p.pickup_longitude,u.full_name AS vendor_name
     FROM assignments a JOIN pickups p ON p.id=a.pickup_id JOIN users u ON u.id=p.vendor_id
     WHERE (a.status='available' AND (p.preferred_at AT TIME ZONE 'Africa/Accra')::date >= (NOW() AT TIME ZONE 'Africa/Accra')::date)
        OR a.rider_id=$1
@@ -469,6 +477,20 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
     res.json({ message: "Delivery accepted. Commission deducted once.", commissionGhs: fee / 100 });
   } catch (error) { await client.query("ROLLBACK"); throw error; }
   finally { client.release(); }
+}));
+app.post("/api/rider/assignments/:id/deliver", authenticate, roles("rider"), asyncRoute(async (req,res)=>{
+  const client=await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const found=await client.query("SELECT a.id,a.pickup_id,a.status,a.rider_id FROM assignments a WHERE a.id=$1 FOR UPDATE",[req.params.id]);
+    if(!found.rowCount||Number(found.rows[0].rider_id)!==Number(req.user.id)){await client.query("ROLLBACK");return res.status(404).json({error:"Assigned pickup not found."});}
+    if(found.rows[0].status==="completed"){await client.query("ROLLBACK");return res.status(409).json({error:"This pickup has already been marked as delivered."});}
+    if(found.rows[0].status!=="accepted"){await client.query("ROLLBACK");return res.status(409).json({error:"Only an accepted pickup can be marked as delivered."});}
+    const updated=await client.query("UPDATE assignments SET status='completed',delivered_at=NOW() WHERE id=$1 AND status='accepted' RETURNING delivered_at",[req.params.id]);
+    await client.query("UPDATE pickups SET status='completed' WHERE id=$1",[found.rows[0].pickup_id]);
+    await client.query("COMMIT");
+    res.json({message:"Pickup marked as delivered.",deliveredAt:updated.rows[0].delivered_at});
+  } catch(error){await client.query("ROLLBACK");throw error;} finally{client.release();}
 }));
 
 
