@@ -738,6 +738,32 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboard>details.admin-section[hidden]{display:none!important}
 #dashboard>details.admin-section:not([hidden]){scroll-margin-top:100px}
 </style>
+<style id="admin-operations-workspace-redesign">
+
+/* Administrator operations workspace: vendor oversight, pickup reviews and finance panels */
+:root{--admin-ink:#14233b;--admin-muted:#64748b;--admin-line:#e2e8f0;--admin-panel:#fff;--admin-soft:#f5f8fc;--admin-orange:#f28c28}
+#dashboard{max-width:1440px;margin-inline:auto}
+#dashboard section,#dashboard .panel,#dashboard .card{scroll-margin-top:24px}
+#dashboard .item{position:relative;background:var(--admin-panel);border:1px solid var(--admin-line);border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 5px 18px rgba(20,35,59,.045);overflow-wrap:anywhere}
+#dashboard .item>strong{display:block;color:var(--admin-ink);font-size:1.02rem;letter-spacing:.01em;margin-bottom:8px}
+#dashboard .item p{color:#42516a;line-height:1.55;margin:7px 0}
+#dashboard .item .meta{font-size:.84rem;color:var(--admin-muted)}
+#dashboard .tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 10px;background:#fff3e6;color:#9a4b08;font-size:.76rem;font-weight:750;letter-spacing:.035em}
+#dashboard .tag.read{background:#e8f5ed;color:#17633a}
+#dashboard button,#dashboard input,#dashboard select,#dashboard textarea{font:inherit}
+#dashboard button{min-height:42px;border-radius:10px;padding:9px 14px;font-weight:700;transition:transform .15s ease,box-shadow .15s ease}
+#dashboard button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(20,35,59,.12)}
+#dashboard button:focus-visible,#dashboard input:focus-visible,#dashboard select:focus-visible,#dashboard textarea:focus-visible{outline:3px solid rgba(242,140,40,.38);outline-offset:2px}
+#dashboard input:not([type=file]),#dashboard select,#dashboard textarea{border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;max-width:100%;background:#fff}
+#dashboard hr{border:0;border-top:1px solid var(--admin-line);margin:16px 0}
+#dashboard table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--admin-line);border-radius:12px;overflow:hidden}
+#dashboard th{background:var(--admin-soft);color:var(--admin-ink);font-size:.8rem;text-align:left;letter-spacing:.025em}
+#dashboard th,#dashboard td{padding:11px 13px;border-bottom:1px solid var(--admin-line);vertical-align:top}
+#dashboard tr:last-child td{border-bottom:0}
+@media(max-width:700px){#dashboard .item{padding:14px;border-radius:13px}#dashboard .item button{width:100%;margin-top:8px}#dashboard table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}#dashboard th,#dashboard td{padding:10px}}
+@media(prefers-reduced-motion:reduce){#dashboard button{transition:none}#dashboard button:not(:disabled):hover{transform:none}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
