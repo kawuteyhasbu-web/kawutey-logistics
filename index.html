@@ -1198,6 +1198,24 @@ footer{color:#718096}
 #vendorDashboard .card,#riderDashboard .card{border:1px solid #e2eaf4;border-radius:16px;box-shadow:0 7px 20px rgba(8,43,104,.045)}
 @media(max-width:650px){.container>header{justify-content:center;text-align:center}.container>header .logo-area{justify-content:center}.container>.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.container>.tabs .tab-btn{width:100%;margin:0;padding-inline:8px;font-size:.82rem}.container>header .header-right{text-align:center}}
 @media(prefers-reduced-motion:reduce){.container>.tabs .tab-btn{transition:none}}
+
+/* KL redesign batch 9: clearer vendor pickup and rider account forms */
+#vendorAuthCard :is(input,select,textarea),#riderAuthCard :is(input,select,textarea),#vendorDashboard :is(input,select,textarea),#riderDashboard :is(input,select,textarea){width:100%;min-width:0;min-height:45px;padding:11px 13px;border:1px solid #d8e2ef;border-radius:11px;background:#fbfcff;color:#17324f;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+#vendorAuthCard textarea,#riderAuthCard textarea,#vendorDashboard textarea,#riderDashboard textarea{min-height:96px;resize:vertical;line-height:1.55}
+#vendorAuthCard :is(input,select,textarea):focus,#riderAuthCard :is(input,select,textarea):focus,#vendorDashboard :is(input,select,textarea):focus,#riderDashboard :is(input,select,textarea):focus{border-color:#f28a35;background:#fff;outline:0;box-shadow:0 0 0 3px rgba(242,138,53,.13)}
+#vendorAuthCard .form-group,#riderAuthCard .form-group,#vendorDashboard .form-group,#riderDashboard .form-group{display:grid;gap:7px;min-width:0;margin-bottom:16px}
+#vendorAuthCard .form-group>label,#riderAuthCard .form-group>label,#vendorDashboard .form-group>label,#riderDashboard .form-group>label{color:#183d6d;font-size:.86rem;font-weight:800;line-height:1.45}
+#vendorDashboard #pickupForm .alert-info{padding:13px 15px;border:1px solid #d6e5f7;border-radius:12px;line-height:1.65}
+#vendorDashboard #pickupForm [data-action="capturePickupLocation"]{min-height:43px;border-radius:10px;font-weight:800}
+#vendorDashboard #pickupForm .package-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.42fr);align-items:center;gap:12px;padding:10px 12px;border:1px solid #e3eaf3;border-bottom:0;background:#fff}
+#vendorDashboard #pickupForm .package-row:first-child{border-radius:12px 12px 0 0}
+#vendorDashboard #pickupForm .package-row:last-child{border-bottom:1px solid #e3eaf3;border-radius:0 0 12px 12px}
+#vendorDashboard #pickupForm .package-row label{color:#24466e;font-size:.85rem;font-weight:750}
+#vendorDashboard #pickupForm .package-row input{max-width:150px;justify-self:end;text-align:center}
+#vendorDashboard #pickupForm button[type="submit"],#vendorAuthCard form button[type="submit"],#riderAuthCard form button[type="submit"]{min-height:47px;border-radius:11px;font-weight:850;box-shadow:0 5px 12px rgba(8,43,104,.1)}
+#vendorAuthCard .kl-field-hint,#riderAuthCard .kl-field-hint{display:block;margin-top:3px;color:#718198;font-size:.78rem;line-height:1.55}
+#vendorDashboard #pickupLocationStatus{font-size:.82rem;line-height:1.55}
+@media(max-width:540px){#vendorDashboard #pickupForm .package-row{grid-template-columns:minmax(0,1fr) minmax(84px,.4fr);gap:8px;padding:9px}#vendorDashboard #pickupForm .package-row input{max-width:110px}#vendorDashboard #pickupForm button[type="submit"]{width:100%}}
 </style>
 </head>
 <body>
@@ -1366,13 +1384,13 @@ footer{color:#718096}
               <p class="alert alert-info">Share your current location while you are at the pickup point so riders can see the road distance and estimated driving time. This is optional; your pickup request can still be submitted without location access.</p>
               <button type="button" class="btn btn-outline" data-action="capturePickupLocation">Share My Current Location</button>
               <p id="pickupLocationStatus" role="status" aria-live="polite" style="margin:0 0 14px;color:#555;font-size:0.88rem;">Pickup location not shared yet.</p>
-              <div class="form-group"><label>Package Description / Notes</label><textarea id="pkg-desc" rows="2"></textarea></div>
-              <div class="form-group"><label>Preferred Pickup Date & Time *</label><input type="datetime-local" id="pickup-time" required></div>
-              <div class="form-group"><label>Total Number of Packages *</label><input type="number" id="total-packages" min="1" required></div>
+              <div class="form-group"><label for="pkg-desc">Package Description / Notes</label><textarea id="pkg-desc" rows="2" maxlength="1000" placeholder="Add any handling instructions or useful package details"></textarea></div>
+              <div class="form-group"><label for="pickup-time">Preferred Pickup Date & Time <span aria-hidden="true">*</span></label><input type="datetime-local" id="pickup-time" required aria-required="true"></div>
+              <div class="form-group"><label for="total-packages">Total Number of Packages <span aria-hidden="true">*</span></label><input type="number" id="total-packages" min="1" step="1" inputmode="numeric" required aria-required="true"></div>
               <div style="margin:14px 0;">
-                <div class="package-row"><label>Large Packages</label><input type="number" id="large-packages" min="0" value="0"></div>
-                <div class="package-row"><label>Medium Packages</label><input type="number" id="medium-packages" min="0" value="0"></div>
-                <div class="package-row"><label>Small Packages</label><input type="number" id="small-packages" min="0" value="0"></div>
+                <div class="package-row"><label for="large-packages">Large Packages</label><input type="number" id="large-packages" min="0" step="1" inputmode="numeric" value="0"></div>
+                <div class="package-row"><label for="medium-packages">Medium Packages</label><input type="number" id="medium-packages" min="0" step="1" inputmode="numeric" value="0"></div>
+                <div class="package-row"><label for="small-packages">Small Packages</label><input type="number" id="small-packages" min="0" step="1" inputmode="numeric" value="0"></div>
               </div>
               <button type="submit" class="btn btn-primary">Submit Pickup Request</button>
             </form>
