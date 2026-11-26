@@ -919,6 +919,51 @@ header:after,.header:after{content:"";position:absolute;right:-90px;top:-175px;w
 }
 @media(prefers-reduced-motion:reduce){#riderDashboard .dashboard-panel-icon{transition:none}}
 
+
+
+/* Batch 1 redesign: responsive vendor and rider workspace foundation */
+:root{--kl-navy:#082b68;--kl-navy-deep:#061d49;--kl-orange:#ff7900;--kl-surface:#fff;--kl-soft:#f5f8fd;--kl-line:#dce5f2}
+html{scroll-behavior:smooth}
+button,.btn,.tab-btn{touch-action:manipulation}
+button:focus-visible,.btn:focus-visible,.tab-btn:focus-visible,a:focus-visible{outline:3px solid rgba(255,121,0,.55);outline-offset:3px}
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard .card,#riderDashboard .card{border:1px solid var(--kl-line);border-radius:17px;box-shadow:0 8px 22px rgba(8,43,104,.055)}
+#vendorDashboard .pickup-item,#vendorDashboard .assignment-item,#riderDashboard .pickup-item,#riderDashboard .assignment-item{border:1px solid var(--kl-line);border-radius:14px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 3px 12px rgba(8,43,104,.035)}
+#vendorDashboard button,#riderDashboard button{min-height:42px;touch-action:manipulation}
+#vendorDashboard input,#vendorDashboard select,#vendorDashboard textarea,#riderDashboard input,#riderDashboard select,#riderDashboard textarea{min-height:45px;max-width:100%}
+#pickupHistory,#secureAvailableAssignments,#secureAcceptedAssignments,#secureDepositHistory,#connectMessages{min-width:0}
+@media(max-width:650px){
+ body{background:#f4f6fa}
+ .container{width:100%;max-width:100%;padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
+ header{position:sticky;top:0;z-index:30;display:flex;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:9px;margin:0 -10px 13px;padding:10px 13px;border-radius:0 0 17px 17px;border:1px solid #e6edf6;border-top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
+ .logo-area{min-width:0;gap:8px}.logo-area img{height:39px;max-width:54px;object-fit:contain}.logo-text h1{font-size:1rem;line-height:1.15}.logo-text span{font-size:.64rem}
+ .header-right{max-width:48%;font-size:.72rem;line-height:1.35;text-align:right}
+ .tabs{display:flex;gap:7px;flex-wrap:nowrap;overflow-x:auto;padding:3px 1px 9px;margin:0 -1px 12px;scrollbar-width:none}
+ .tabs::-webkit-scrollbar{display:none}.tab-btn{flex:0 0 auto;min-height:42px;padding:10px 13px;border-radius:12px;font-size:.82rem}
+ .card{padding:15px;border-radius:16px;margin-bottom:12px}
+ h2{font-size:1.12rem}h3{font-size:1.02rem}
+ .grid-2{grid-template-columns:minmax(0,1fr);gap:11px}
+ .btn,.btn-primary,.btn-accent,.btn-outline{min-height:46px;padding:12px 15px;border-radius:12px}
+ input,select,textarea{min-height:47px;font-size:16px}
+ .pickup-item,.assignment-item,.rider-card,.msg-box{padding:13px;border-radius:14px}
+ .rider-card{gap:11px;align-items:flex-start}
+ .wallet-box{padding:18px;border-radius:17px}
+ .wallet-box .balance{font-size:2rem}
+ .history-item{padding:13px 0;gap:7px}
+ #vendorDashboard,#riderDashboard{gap:12px}
+ #vendorDashboard .card,#riderDashboard .card{border-radius:16px}
+ #pickupHistory>*{min-width:0;overflow-wrap:anywhere}
+ #riderDashboard #connectMessages>*{min-width:0}
+ footer{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+}
+@media(max-width:380px){
+ .container{padding-left:8px;padding-right:8px}
+ header{margin-left:-8px;margin-right:-8px;padding-left:10px;padding-right:10px}
+ .logo-text h1{font-size:.92rem}
+ .card{padding:13px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
 </style>
 <style>
 /* Kawutey Logistics — public portal visual refinement */
