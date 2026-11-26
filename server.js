@@ -793,7 +793,7 @@ app.get("/api/admin/cancellation-requests", authenticate, roles("admin"), asyncR
 app.patch("/api/admin/cancellation-requests/:id/contact", authenticate, roles("admin"), asyncRoute(async(req,res)=>{
   const outcome=clean(req.body?.outcome);
   if(!["spoke_confirmed","spoke_not_confirmed","no_answer","not_called"].includes(outcome)) return res.status(400).json({error:"Choose a valid contact outcome."});
-  const result=await pool.query("UPDATE pickup_cancellation_requests SET contacted_vendor=$2,contact_outcome=$3,contacted_by=$4,contacted_at=CASE WHEN $2 THEN NOW() ELSE NULL END WHERE id=$1 AND status='pending' RETURNING id,contact_outcome,contacted_at",[req.params.id,outcome!=="not_called",outcome,req.user.id]);
+  const result=await pool.query("UPDATE pickup_cancellation_requests SET contacted_vendor=$2,contact_outcome=$3,contacted_by=$4,contacted_at=CASE WHEN $2 THEN NOW() ELSE NULL END WHERE id=$1 AND status='pending' RETURNING id,contact_outcome,contacted_at",[req.params.id,outcome==="spoke_confirmed"||outcome==="spoke_not_confirmed",outcome,req.user.id]);
   if(!result.rowCount) return res.status(404).json({error:"Pending cancellation request not found."});
   res.json({message:"Optional call outcome recorded.",request:result.rows[0]});
 }));
