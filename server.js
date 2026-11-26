@@ -256,8 +256,12 @@ app.post("/api/vendor/pickups/:id/cancellation-request", authenticate, roles("ve
   if(!Number.isSafeInteger(pickupId)||pickupId<1) return res.status(400).json({error:"Invalid pickup request."});
   if(!allowed.includes(reasonType)) return res.status(400).json({error:"Choose one of the listed cancellation reasons."});
   if(explanation.length<10||explanation.length>500) return res.status(400).json({error:"Please explain the cancellation in at least 10 characters (maximum 500)."});
-  const owned=await pool.query("SELECT a.id,a.status FROM pickups p JOIN assignments a ON a.pickup_id=p.id WHERE p.id=$1 AND p.vendor_id=$2",[pickupId,req.user.id]);
+  const owned=await pool.query(`SELECT a.id,a.status,
+      ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed
+    FROM pickups p JOIN assignments a ON a.pickup_id=p.id
+    WHERE p.id=$1 AND p.vendor_id=$2`,[pickupId,req.user.id]);
   if(!owned.rowCount) return res.status(404).json({error:"Pickup request not found."});
+  if(owned.rows[0].pickup_date_passed) return res.status(409).json({error:"This pickup date has passed. Cancellation requests are no longer available."});
   if(["cancelled","completed"].includes(owned.rows[0].status)) return res.status(409).json({error:"This pickup can no longer be cancelled."});
   try {
     const result=await pool.query("INSERT INTO pickup_cancellation_requests(assignment_id,vendor_id,reason_type,explanation) VALUES($1,$2,$3,$4) RETURNING id,status,created_at",[owned.rows[0].id,req.user.id,reasonType,explanation]);
@@ -267,7 +271,8 @@ app.post("/api/vendor/pickups/:id/cancellation-request", authenticate, roles("ve
 
 app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,
-      a.status AS assignment_status,a.rider_id,
+      ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed,
+      a.status AS assignment_status,a.rider_id,a.accepted_at,
       cr.id AS cancellation_request_id,cr.reason_type AS cancellation_reason_type,cr.explanation AS cancellation_explanation,cr.status AS cancellation_status,cr.admin_note AS cancellation_admin_note,cr.created_at AS cancellation_requested_at,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.full_name END AS rider_name,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.phone END AS rider_phone,
@@ -302,7 +307,8 @@ app.delete("/api/vendor/pickups/:id", authenticate, roles("vendor"), asyncRoute(
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    const result = await client.query(`SELECT a.id AS assignment_id,a.status,a.rider_id
+    const result = await client.query(`SELECT a.id AS assignment_id,a.status,a.rider_id,
+        ((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed
       FROM pickups p
       JOIN assignments a ON a.pickup_id=p.id
       WHERE p.id=$1 AND p.vendor_id=$2
@@ -312,6 +318,10 @@ app.delete("/api/vendor/pickups/:id", authenticate, roles("vendor"), asyncRoute(
       return res.status(404).json({ error: "This pickup request could not be found in your account." });
     }
     const assignment = result.rows[0];
+    if (assignment.pickup_date_passed) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "This pickup date has passed. The expired offer can no longer be changed or deleted." });
+    }
     if (assignment.status !== "available" || assignment.rider_id !== null) {
       await client.query("ROLLBACK");
       return res.status(409).json({ error: "Deletion not allowed. This pickup request has already been accepted by a rider or is no longer available." });
@@ -386,9 +396,11 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
   const riderLat = hasLocation ? Number(latValue) : null;
   const riderLon = hasLocation ? Number(lonValue) : null;
   if (hasLocation && (!Number.isFinite(riderLat) || !Number.isFinite(riderLon) || riderLat < -90 || riderLat > 90 || riderLon < -180 || riderLon > 180)) return res.status(400).json({ error: "Your location could not be read. Please update your location and try again." });
-  const result = await pool.query(`SELECT a.id,a.status,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.pickup_latitude,p.pickup_longitude,u.full_name AS vendor_name
+  const result = await pool.query(`SELECT a.id,a.status,a.accepted_at,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.pickup_latitude,p.pickup_longitude,u.full_name AS vendor_name
     FROM assignments a JOIN pickups p ON p.id=a.pickup_id JOIN users u ON u.id=p.vendor_id
-    WHERE a.status='available' OR a.rider_id=$1 ORDER BY CASE WHEN a.status='available' THEN 0 ELSE 1 END,p.preferred_at ASC`, [req.user.id]);
+    WHERE (a.status='available' AND (p.preferred_at AT TIME ZONE 'Africa/Accra')::date >= (NOW() AT TIME ZONE 'Africa/Accra')::date)
+       OR a.rider_id=$1
+    ORDER BY CASE WHEN a.status='available' THEN 0 ELSE 1 END,p.preferred_at ASC`, [req.user.id]);
   const assignments = result.rows.map(row => ({ ...row, distanceKm: null, travelMinutes: null, nearby: false }));
   const routable = hasLocation ? assignments.filter(a => a.status === "available" && a.pickup_latitude !== null && a.pickup_longitude !== null && Number.isFinite(Number(a.pickup_latitude)) && Number.isFinite(Number(a.pickup_longitude))).slice(0, 30) : [];
   if (routable.length) {
@@ -435,11 +447,15 @@ app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyn
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-    const assignment = await client.query("SELECT a.id,a.status,a.rider_id,p.total_packages FROM assignments a JOIN pickups p ON p.id=a.pickup_id WHERE a.id=$1 FOR UPDATE OF a", [req.params.id]);
+    const assignment = await client.query("SELECT a.id,a.status,a.rider_id,p.total_packages,((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed FROM assignments a JOIN pickups p ON p.id=a.pickup_id WHERE a.id=$1 FOR UPDATE OF a", [req.params.id]);
     if (!assignment.rowCount || assignment.rows[0].status !== "available") {
       const alreadyMine = assignment.rowCount && Number(assignment.rows[0].rider_id) === Number(req.user.id);
       await client.query("ROLLBACK");
       return res.status(409).json({ error: alreadyMine ? "You have already accepted this pickup." : "Sorry, another rider has already accepted this pickup." });
+    }
+    if (assignment.rows[0].pickup_date_passed) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "This pickup offer has expired because its scheduled date has passed." });
     }
     const count = Number(assignment.rows[0].total_packages);
     const fee = count * COMMISSION_PESEWAS;
@@ -804,10 +820,15 @@ app.patch("/api/admin/cancellation-requests/:id/review", authenticate, roles("ad
   const client=await pool.connect();
   try {
     await client.query("BEGIN");
-    const found=await client.query("SELECT cr.id,cr.assignment_id,cr.status,a.pickup_id,a.status AS assignment_status FROM pickup_cancellation_requests cr JOIN assignments a ON a.id=cr.assignment_id WHERE cr.id=$1 FOR UPDATE OF cr,a",[req.params.id]);
+    const found=await client.query("SELECT cr.id,cr.assignment_id,cr.status,a.pickup_id,a.status AS assignment_status,p.preferred_at,((p.preferred_at AT TIME ZONE 'Africa/Accra')::date < (NOW() AT TIME ZONE 'Africa/Accra')::date) AS pickup_date_passed FROM pickup_cancellation_requests cr JOIN assignments a ON a.id=cr.assignment_id JOIN pickups p ON p.id=a.pickup_id WHERE cr.id=$1 FOR UPDATE OF cr,a,p",[req.params.id]);
     if(!found.rowCount||found.rows[0].status!=="pending"){await client.query("ROLLBACK");return res.status(404).json({error:"Pending cancellation request not found."});}
     const row=found.rows[0];
     if(decision==="approve"){
+      if(row.pickup_date_passed && !["cancelled","completed"].includes(row.assignment_status)){
+        await client.query("UPDATE pickup_cancellation_requests SET status='rejected',admin_note=$2,reviewed_by=$3,reviewed_at=NOW() WHERE id=$1",[row.id,"Automatically closed: the scheduled pickup date had already passed.",req.user.id]);
+        await client.query("COMMIT");
+        return res.status(409).json({error:"This pickup date has passed. The cancellation request was closed; expired pickups cannot be cancelled."});
+      }
       if(["cancelled","completed"].includes(row.assignment_status)){await client.query("ROLLBACK");return res.status(409).json({error:"This pickup is already cancelled or completed."});}
       await client.query("UPDATE assignments SET status='cancelled' WHERE id=$1",[row.assignment_id]);
       await client.query("UPDATE pickups SET status='cancelled' WHERE id=$1",[row.pickup_id]);

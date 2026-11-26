@@ -523,6 +523,11 @@
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
     }
+    function formatGhanaDateTime(value) {
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return "Date unavailable";
+      return new Intl.DateTimeFormat("en-GH", { timeZone: "Africa/Accra", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true }).format(date);
+    }
     function setVendorSession(data) {
       currentVendor = {
         id: data.user.id,
@@ -696,15 +701,17 @@
             </div>` : "";
           return `
             <div class="pickup-item">
-              <strong>Pickup Time:</strong> ${escapeHtml(new Date(p.preferred_at).toLocaleString())}<br>
+              <strong>Pickup Time:</strong> ${escapeHtml(formatGhanaDateTime(p.preferred_at))}<br>
               <strong>Total Packages:</strong> ${Number(p.total_packages)}<br>
               Large: ${Number(p.large_packages)} | Medium: ${Number(p.medium_packages)} | Small: ${Number(p.small_packages)}<br>
               ${p.description ? `<strong>Notes:</strong> ${escapeHtml(p.description)}<br>` : ""}
               ${riderBlock}
+              ${p.accepted_at ? `<p><strong>Rider accepted:</strong> ${escapeHtml(formatGhanaDateTime(p.accepted_at))}</p>` : ""}
+              ${p.pickup_date_passed ? `<p class="status pending" style="margin-top:8px;">Pickup date passed — this offer has expired.</p>` : ""}
               ${p.cancellation_status ? `<p style="margin-top:10px;"><strong>Cancellation request:</strong> ${escapeHtml(String(p.cancellation_status).toUpperCase())}</p>${p.cancellation_reason_type ? `<p><strong>Reason:</strong> ${escapeHtml(({customer_cancelled:"Customer cancelled the order",incorrect_pickup_details:"Incorrect pickup details",package_unavailable:"Package unavailable or not ready"})[p.cancellation_reason_type] || p.cancellation_reason_type)}</p>` : ""}${p.cancellation_explanation ? `<p><strong>Explanation:</strong> ${escapeHtml(p.cancellation_explanation)}</p>` : ""}${p.cancellation_admin_note ? `<p><strong>Administrator's note:</strong> ${escapeHtml(p.cancellation_admin_note)}</p>` : ""}` : ""}
-              ${!["cancelled","completed"].includes(p.assignment_status) && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
-              ${p.assignment_status === "available" && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
-              <small>Request submitted: ${escapeHtml(new Date(p.created_at).toLocaleString())}</small>
+              ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
+              ${p.assignment_status === "available" && !p.pickup_date_passed && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
+              <small>Request submitted: ${escapeHtml(formatGhanaDateTime(p.created_at))}</small>
             </div>`;
         }).join("");
         area.querySelectorAll(".delete-pickup-button").forEach(button => {
@@ -1033,7 +1040,7 @@
                 ? "<span class='status verified' style='display:inline-block;margin-bottom:8px;'>Nearby to you</span>"
                 : "<span class='status' style='display:inline-block;margin-bottom:8px;background:#fff0d9;color:#805000;border:1px solid #f0cf91;'>Further away</span>")
               : "";
-            card.innerHTML = proximityLabel + "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p><strong>Distance / estimated travel time:</strong> " + escapeHtml(routeEstimate) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
+            card.innerHTML = proximityLabel + "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p><p><strong>Distance / estimated travel time:</strong> " + escapeHtml(routeEstimate) + "</p><p>Total packages: " + Number(a.total_packages) + " (Large: " + Number(a.large_packages) + ", Medium: " + Number(a.medium_packages) + ", Small: " + Number(a.small_packages) + ")</p><p>Commission to accept: GH₵" + cost.toFixed(2) + "</p>";
             const button = document.createElement("button");
             button.className = "btn btn-accent";
             button.textContent = canAfford ? "Accept pickup" : "Insufficient wallet balance";
@@ -1050,7 +1057,7 @@
           accepted.forEach(a => {
             const card = document.createElement("div");
             card.className = "assignment-item";
-            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(new Date(a.preferred_at).toLocaleString()) + "</p><p>Packages: " + Number(a.total_packages) + "</p><span class='status verified'>" + escapeHtml(a.status) + "</span>";
+            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p>" + (a.accepted_at ? "<p>Accepted: " + escapeHtml(formatGhanaDateTime(a.accepted_at)) + "</p>" : "") + "<p>Packages: " + Number(a.total_packages) + "</p><span class='status verified'>" + escapeHtml(a.status) + "</span>";
             acceptedArea.appendChild(card);
           });
         }
@@ -1169,7 +1176,7 @@
         return;
       }
       amountArea.textContent = "+ GH₵" + Number(latestDeposit.amountGhs || 0).toFixed(2);
-      detailsArea.textContent = "Successfully credited • " + new Date(latestDeposit.createdAt).toLocaleString();
+      detailsArea.textContent = "Successfully credited • " + formatGhanaDateTime(latestDeposit.createdAt);
     }
 
     function renderSecureWalletTransactions(transactions) {
@@ -1192,7 +1199,7 @@
         if (isCommission && t.assignmentId) details.push("Pickup assignment: " + t.assignmentId);
         if (t.description && !(isCommission && t.description === "GH₵5 commission per package accepted")) details.push(t.description);
         if (t.refundReason) details.push("Refund reason: " + t.refundReason);
-        item.innerHTML = "<strong>" + escapeHtml(label) + "</strong><p>Amount: GH₵" + Math.abs(amount).toFixed(2) + (amount < 0 ? " deducted" : " credited") + "</p><p>Status: " + escapeHtml(status) + "</p><p>Reference: " + escapeHtml(t.reference || "—") + "</p>" + (t.providerReference ? "<p>Provider reference: " + escapeHtml(t.providerReference) + "</p>" : "") + (details.length ? "<p>" + escapeHtml(details.join(" | ")) + "</p>" : "") + "<small>" + escapeHtml(new Date(t.createdAt).toLocaleString()) + "</small>";
+        item.innerHTML = "<strong>" + escapeHtml(label) + "</strong><p>Amount: GH₵" + Math.abs(amount).toFixed(2) + (amount < 0 ? " deducted" : " credited") + "</p><p>Status: " + escapeHtml(status) + "</p><p>Reference: " + escapeHtml(t.reference || "—") + "</p>" + (t.providerReference ? "<p>Provider reference: " + escapeHtml(t.providerReference) + "</p>" : "") + (details.length ? "<p>" + escapeHtml(details.join(" | ")) + "</p>" : "") + "<small>" + escapeHtml(formatGhanaDateTime(t.createdAt)) + "</small>";
         area.appendChild(item);
       });
     }
@@ -1222,7 +1229,7 @@
           const item = document.createElement("div");
           item.className = "assignment-item";
           const status = d.status === "successful" ? "Verified and credited" : d.status === "pending" ? "Pending administrator verification" : d.status === "failed" ? "Rejected / not credited" : d.status;
-          item.innerHTML = "<strong>GH₵" + Number(d.amountGhs).toFixed(2) + "</strong><p>Status: " + escapeHtml(status) + "</p><p>Network / sender: " + escapeHtml(d.description || "Not recorded") + "</p><p>Payment reference: " + escapeHtml(d.providerReference || "—") + "</p><p>Request reference: " + escapeHtml(d.reference) + "</p><small>" + escapeHtml(new Date(d.createdAt).toLocaleString()) + "</small>";
+          item.innerHTML = "<strong>GH₵" + Number(d.amountGhs).toFixed(2) + "</strong><p>Status: " + escapeHtml(status) + "</p><p>Network / sender: " + escapeHtml(d.description || "Not recorded") + "</p><p>Payment reference: " + escapeHtml(d.providerReference || "—") + "</p><p>Request reference: " + escapeHtml(d.reference) + "</p><small>" + escapeHtml(formatGhanaDateTime(d.createdAt)) + "</small>";
           area.appendChild(item);
         });
       } catch (error) { area.textContent = error.message || "Could not load deposit history."; }
@@ -1414,7 +1421,7 @@
         network: network,
         momoNumber: number,
         paymentRef: txnId,
-        date: new Date().toLocaleString()
+        date: formatGhanaDateTime()
       });
       localStorage.setItem('kl_deposits', JSON.stringify(deposits));
 
@@ -1439,7 +1446,7 @@
           type: "Refund Request",
           status: "Pending",
           refCode: currentRider.refCode,
-          date: new Date().toLocaleString()
+          date: formatGhanaDateTime()
         });
         localStorage.setItem('kl_deposits', JSON.stringify(deposits));
         alert("Refund request submitted. It will be processed after review.");
@@ -1476,7 +1483,7 @@
         type: "Commission Deduction",
         status: "Completed",
         refCode: currentRider.refCode,
-        date: new Date().toLocaleString(),
+        date: formatGhanaDateTime(),
         note: `Accepted ${assignment.total} package(s)`
       });
       localStorage.setItem('kl_deposits', JSON.stringify(deposits));
@@ -1507,7 +1514,7 @@
       const text = document.getElementById('messageText').value.trim();
       if (!toId || !text) { alert('Please select a rider and write a message.'); return; }
       const toRider = riders.find(r => r.id == toId);
-      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: new Date().toLocaleString() });
+      messages.unshift({ id: Date.now(), to: toRider.name, toId, text, date: formatGhanaDateTime() });
       localStorage.setItem('kl_messages', JSON.stringify(messages));
       document.getElementById('messageText').value = '';
       updateRiderDashboard();
