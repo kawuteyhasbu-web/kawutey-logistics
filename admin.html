@@ -508,6 +508,30 @@ html{scroll-behavior:smooth}
  #depositRequests>*,#walletTransactions>*{padding:13px;border-radius:13px}
 }
 
+
+/* Batch 5: administrator notifications, support and audit-history presentation */
+#notifications,#cancellationRequests,#commissionReportEntries,#commissionReportHistory{
+ min-width:0;overflow-wrap:anywhere
+}
+#notifications>.item,#cancellationRequests>.item{
+ border:1px solid #dce6f3;border-radius:14px;background:linear-gradient(145deg,#fff,#f8faff);
+ box-shadow:0 5px 15px rgba(8,43,104,.045);padding:15px 16px 15px 19px
+}
+#notifications>.item strong,#cancellationRequests>.item strong{color:#0a2f6b}
+#notifications>.item small,#cancellationRequests>.item small{color:#64748b}
+#commissionReportEntries,#commissionReportHistory{
+ border-radius:14px;background:#f8faff;border-color:#dce6f3
+}
+#dashboard .admin-section>summary{transition:background .18s ease,color .18s ease}
+#dashboard .admin-section[open]>summary{background:#f1f6fd;color:#0a2f6b}
+#dashboard .admin-section>summary:focus-visible,#dashboard button:focus-visible,
+#dashboard a:focus-visible{outline:3px solid rgba(255,106,0,.35);outline-offset:2px}
+@media(max-width:700px){
+ #notifications>.item,#cancellationRequests>.item{padding:13px 12px 13px 16px;border-radius:13px}
+ #dashboard #notifications,#dashboard #cancellationRequests{gap:9px}
+ #dashboard #commissionReportEntries,#dashboard #commissionReportHistory{padding:12px}
+}
+
 </style><script src="/admin-password.js" defer></script>
 <style>
 /* KL administrator interface — refined command-centre visual layer */
