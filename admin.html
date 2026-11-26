@@ -1498,6 +1498,14 @@ function filterAdminSections(){
       if(query&&section.matches("details.admin-section"))section.open=true;
     }
   }
+  if(adminQuickNav){
+    for(const link of adminQuickNav.querySelectorAll("a[href^='#']")){
+      const targetId=link.getAttribute("href").slice(1);
+      const targetSection=$(targetId);
+      const matchesLink=!query||(targetSection&&targetSection.textContent.toLocaleLowerCase().includes(query));
+      link.hidden=!matchesLink;
+    }
+  }
   adminSearchCount.textContent=query
     ? visible+" of "+sections.length+" sections match"
     : "All "+sections.length+" sections shown";
