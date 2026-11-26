@@ -1549,6 +1549,53 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 
 </style>
 
+<style id="kl-authenticated-dashboard-layout">
+/* Give authenticated Vendor and Rider workspaces a consistent, card-led hierarchy. */
+#vendorDashboard:not(.hidden),#riderDashboard:not(.hidden){
+ display:grid;grid-template-columns:minmax(0,1fr);gap:14px;
+ width:100%;max-width:1160px;margin:18px auto 0;align-content:start
+}
+#vendorDashboard:not(.hidden){
+ padding:clamp(16px,2.5vw,26px);border:1px solid #e1e9f4;border-radius:22px;
+ background:linear-gradient(145deg,#fff 0%,#f7faff 100%);
+ box-shadow:0 14px 34px rgba(8,43,104,.075)
+}
+#vendorDashboard>h3,#riderDashboard>div:first-child h2{
+ margin:0;color:#082b68;font-size:clamp(1.2rem,2.3vw,1.65rem);letter-spacing:-.025em
+}
+#vendorDashboard>p{margin:0!important;color:#60728b;line-height:1.55}
+#vendorDashboard>button{width:100%;min-height:48px;margin:0}
+#vendorDashboard>#pickupFormArea{
+ margin:2px 0 0!important;padding:18px!important;border:1px solid #e1e9f4;
+ border-radius:17px;background:#fff
+}
+#vendorDashboard>h4{margin:8px 0 0!important;color:#123967;font-size:1.05rem}
+#vendorDashboard #pickupHistory{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
+#riderDashboard>div:first-child,#riderDashboard>.card{
+ min-width:0;margin:0;padding:clamp(16px,2vw,22px);border:1px solid #e1e9f4;
+ border-radius:18px;background:#fff;box-shadow:0 9px 25px rgba(8,43,104,.055)
+}
+#riderDashboard>.wallet-box{min-width:0;margin:0;border-radius:19px}
+#riderDashboard>.card h3{margin-top:0;color:#123967}
+#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+#vendorDashboard :is(input,select,textarea),#riderDashboard :is(input,select,textarea){max-width:100%;min-width:0}
+@media(min-width:900px){
+ #vendorDashboard:not(.hidden){grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+ #vendorDashboard>h3,#vendorDashboard>p,#vendorDashboard>#pickupFormArea,
+ #vendorDashboard>h4,#vendorDashboard>#pickupHistory{grid-column:1/-1}
+ #vendorDashboard>button{width:auto;justify-self:start;min-width:190px}
+ #riderDashboard:not(.hidden){grid-template-columns:repeat(2,minmax(0,1fr))}
+ #riderDashboard>div:first-child,#riderDashboard>.wallet-box{grid-column:1/-1}
+}
+@media(max-width:650px){
+ #vendorDashboard:not(.hidden),#riderDashboard:not(.hidden){gap:11px;margin-top:12px}
+ #vendorDashboard:not(.hidden){padding:14px;border-radius:17px}
+ #vendorDashboard>button{width:100%}
+ #riderDashboard>.wallet-box{padding:16px!important}
+ #riderDashboard .wallet-stats{gap:8px}
+}
+</style>
+
 <style id="kl-mobile-native-portal-navigation">
 /* Phone-native portal finish: persistent section navigation and stronger workspace hierarchy */
 @media(max-width:650px){
