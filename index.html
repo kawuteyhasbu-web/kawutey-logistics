@@ -243,6 +243,31 @@
  #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+/* Site-wide navigation and brand header finishing pass */
+body{scroll-behavior:smooth}
+.container>header{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px clamp(15px,3vw,28px);margin-bottom:12px;border:1px solid #e0e8f3;border-radius:18px;background:linear-gradient(105deg,#fff 0%,#f7faff 72%,#fff5ec 100%);box-shadow:0 8px 24px rgba(8,43,104,.055)}
+.container>header:after{content:"";position:absolute;z-index:-1;left:0;top:13px;bottom:13px;width:4px;border-radius:0 5px 5px 0;background:linear-gradient(#0b4b9b 0 65%,#ff7900 65%)}
+.logo-area{gap:13px}.logo-area img{width:62px;height:62px;object-fit:contain}.logo-text h1{font-size:clamp(1.12rem,2.3vw,1.55rem);letter-spacing:-.04em;color:#082b68}.logo-text span{font-size:.66rem;letter-spacing:.14em;color:#e36c00;font-weight:850}
+.header-right{display:grid;gap:5px;text-align:right;color:#526783;font-size:.86rem}.header-right strong{color:#082b68;font-size:.94rem}
+.tabs{top:8px;z-index:30;display:flex;gap:6px;align-items:center;border:1px solid #e1e9f4;box-shadow:0 9px 25px rgba(8,43,104,.08);padding:9px;border-radius:15px}
+.tab-btn{border:1px solid transparent;border-radius:10px;padding:10px 13px;color:#435a79;font-weight:750;transition:background .15s,color .15s,border-color .15s}
+.tab-btn:hover{background:#edf3ff;color:#082b68}
+.tab-btn.active{background:#082b68;color:#fff;box-shadow:0 5px 13px rgba(8,43,104,.16)}
+.tab-btn:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid rgba(255,121,0,.55);outline-offset:3px}
+.section{scroll-margin-top:86px}
+@media(max-width:720px){
+ .container>header{align-items:flex-start;padding:14px 15px}.logo-area img{width:52px;height:52px}
+ .header-right{font-size:.75rem;max-width:46%}.header-right>div:last-child{overflow-wrap:anywhere}
+ .tabs{top:4px;padding:7px;gap:5px}
+ .tab-btn{padding:10px 12px;font-size:.83rem}
+}
+@media(max-width:430px){
+ .container>header{flex-direction:column;gap:9px}
+ .header-right{text-align:left;max-width:none;padding-left:65px}
+ .logo-area img{width:48px;height:48px}
+}
+
 </style>
 </head>
 <body>
@@ -710,6 +735,7 @@
       document.querySelectorAll(".tab-btn").forEach(button => {
         const isActive = button.getAttribute("data-section") === sectionId;
         button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
       });
       if (sectionId === "vendor" && !currentVendor) restoreVendorSession();
     }
