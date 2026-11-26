@@ -1299,6 +1299,28 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.kl-art-card,.kl-audience-card,.kl-vendor-card,.kl-rider-card{transition:none!important}}
 
 </style>
+<style id="kl-account-workspace-finishing-pass">
+
+/* Vendor and rider account workspace finishing pass */
+#vendorAuthCard,#riderAuthCard{max-width:900px;margin:24px auto;border:1px solid #e0e8f2;border-radius:20px;box-shadow:0 12px 34px rgba(11,47,104,.075);overflow:hidden}
+#vendorAuthCard>h2,#riderAuthCard>h2{color:#0b2f68;letter-spacing:-.025em}
+#vendorRegSection,#vendorLoginSection,#riderRegSection,#riderLoginSection{background:linear-gradient(145deg,#fff,#f8faff);border:1px solid #e6edf5;border-radius:16px;padding:clamp(16px,3vw,26px);margin-top:16px}
+#vendorRegSection h3,#vendorLoginSection h3,#riderRegSection h3,#riderLoginSection h3{color:#12376f;margin-top:0}
+#vendorRegForm,#vendorLoginForm,#riderRegForm,#riderLoginForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
+#vendorRegForm .form-group,#vendorLoginForm .form-group,#riderRegForm .form-group,#riderLoginForm .form-group{min-width:0;margin:0}
+#vendorRegForm input,#vendorLoginForm input,#riderRegForm input,#riderLoginForm input,#vendorRegForm select,#riderRegForm select{width:100%;min-width:0;max-width:100%;border-radius:10px}
+#vendorRegForm>button,#vendorLoginForm>button,#riderRegForm>button,#riderLoginForm>button{align-self:end;min-height:46px}
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid #e1e8f1;border-radius:17px;box-shadow:0 7px 22px rgba(11,47,104,.05);min-width:0}
+#vendorDashboard h3,#riderDashboard h3{letter-spacing:-.018em}
+#vendorDashboard #vendorNameDisplay,#riderDashboard #riderNameDisplay{color:#0b2f68}
+#vendorDashboard #vendorBusinessDisplay{font-weight:600}
+#photoPreview img{max-width:132px;max-height:132px;object-fit:cover;border-radius:14px;border:2px solid #e1e8f1}
+#connectMessages{display:grid;gap:10px;min-width:0;overflow-wrap:anywhere}
+#connectMessages>*{max-width:100%;min-width:0}
+@media(max-width:640px){#vendorAuthCard,#riderAuthCard{margin:14px auto;border-radius:15px}#vendorRegForm,#vendorLoginForm,#riderRegForm,#riderLoginForm{grid-template-columns:minmax(0,1fr);gap:12px}#vendorRegSection,#vendorLoginSection,#riderRegSection,#riderLoginSection{padding:15px;border-radius:13px}#vendorDashboard>.card,#riderDashboard>.card{border-radius:14px}}
+
+</style>
 </head>
 <body>
   <div class="container">
