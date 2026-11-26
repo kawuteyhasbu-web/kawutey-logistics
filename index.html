@@ -784,6 +784,47 @@ footer a:hover{color:#ff8a24}
 }
 @media(prefers-reduced-motion:reduce){.kl-content-grid article,.kl-steps-grid article,.kl-contact-grid>a{transition:none}}
 
+
+
+/* Navigation and brand chrome: consistent, touch-friendly page switching */
+.tabs{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:7px;margin:0 0 22px;padding:10px 11px;border:1px solid rgba(213,225,240,.9);border-radius:0 0 16px 16px;background:rgba(255,255,255,.94);box-shadow:0 8px 22px rgba(7,31,74,.075);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow-x:auto;overscroll-behavior-x:contain}
+.tabs .tab-btn{flex:0 0 auto;min-height:42px;padding:10px 14px;border:1px solid transparent;border-radius:10px;background:transparent;color:#385675;font-size:.87rem;font-weight:800;transition:background .16s ease,color .16s ease,border-color .16s ease,box-shadow .16s ease}
+.tabs .tab-btn:hover{border-color:#dce6f2;background:#f4f8fd;color:#10396f}
+.tabs .tab-btn.active{border-color:#0b3977;background:linear-gradient(110deg,#082b68,#14569a);color:#fff;box-shadow:0 5px 13px rgba(8,43,104,.18)}
+.tabs .tab-btn:focus-visible{outline:3px solid #ff9a42;outline-offset:2px}
+header,.header{position:relative;overflow:hidden;border-radius:0 0 19px 19px}
+header:after,.header:after{content:"";position:absolute;right:-90px;top:-175px;width:280px;height:280px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 32px rgba(255,255,255,.035),0 0 0 66px rgba(255,255,255,.025);pointer-events:none}
+.header-right{position:relative;z-index:1}
+.kl-footer{display:grid;grid-template-columns:1.1fr 1fr 1fr;align-items:start;padding:clamp(21px,3vw,32px);border:1px solid rgba(255,255,255,.12);background:linear-gradient(115deg,#061b43,#0a3475 65%,#10569c);box-shadow:0 15px 34px rgba(7,31,74,.16)}
+.kl-footer>div:first-child strong{display:inline-block;color:#fff;font-size:1.15rem;letter-spacing:-.025em}
+.kl-footer>div:first-child p{margin-top:8px;color:#dce9fa}
+.kl-footer-contact,.kl-social{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
+.kl-footer-contact a,.kl-social a{color:#fff;text-decoration:none;overflow-wrap:anywhere}
+.kl-footer-contact a:hover,.kl-social a:hover{color:#ffad68;text-decoration:underline}
+.kl-social>span{color:#ffad68;font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.kl-social small{color:#c8d9ef;font-weight:750}
+.section{scroll-margin-top:82px}
+.kl-content-page .kl-page-hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:radial-gradient(circle at 88% 12%,rgba(78,151,226,.25),transparent 30%),linear-gradient(115deg,#071f4a,#0b4389 72%,#12589c);box-shadow:0 15px 34px rgba(7,31,74,.13)}
+.kl-content-page .kl-page-hero:after{content:"";position:absolute;right:-85px;bottom:-180px;width:270px;height:270px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 30px rgba(255,255,255,.03),0 0 0 62px rgba(255,255,255,.025);pointer-events:none}
+.kl-content-page .kl-page-hero>*{position:relative;z-index:1}
+.kl-eyebrow{display:inline-flex;align-items:center;gap:8px;color:#ffad68;font-size:.72rem;font-weight:950;letter-spacing:.15em}
+.kl-eyebrow:before{content:"";width:20px;height:2px;background:#ff8a32;border-radius:4px}
+.kl-content-page .kl-page-hero h2{max-width:760px;color:#fff;font-size:clamp(2rem,4.5vw,3.35rem);line-height:1.06;letter-spacing:-.055em}
+.kl-content-page .kl-page-hero p{position:relative;z-index:1}
+@media(max-width:760px){
+ .tabs{top:0;gap:6px;margin-bottom:15px;padding:8px;border-radius:0 0 13px 13px}
+ .tabs .tab-btn{min-height:40px;padding:9px 12px;font-size:.82rem}
+ .kl-footer{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+ .kl-footer>div:first-child{grid-column:1/-1}
+}
+@media(max-width:480px){
+ .kl-footer{grid-template-columns:minmax(0,1fr);gap:17px}
+ .kl-footer>div:first-child{grid-column:1}
+ .kl-content-page .kl-page-hero{padding:23px 18px;border-radius:16px}
+ .kl-content-page .kl-page-hero h2{font-size:clamp(1.9rem,10vw,2.6rem)}
+}
+@media(prefers-reduced-motion:reduce){.tabs .tab-btn{transition:none}}
+
 </style>
 </head>
 <body>
