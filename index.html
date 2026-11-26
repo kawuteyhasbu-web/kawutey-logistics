@@ -990,6 +990,28 @@ button:focus-visible,.btn:focus-visible,.tab-btn:focus-visible,a:focus-visible{o
  #secureAvailableAssignments button,#secureAcceptedAssignments button{width:100%;min-height:47px}
 }
 
+
+/* Batch 5: communication, history and account surfaces */
+#riderDashboard #riderConnectPanel,#vendorDashboard #pickupHistory{
+ border:1px solid #dce6f3;border-radius:18px;background:linear-gradient(150deg,#fff 0%,#f8faff 100%);
+ box-shadow:0 9px 24px rgba(8,43,104,.055);padding:16px;min-width:0
+}
+#riderDashboard #riderConnectPanel h3,#riderDashboard #riderConnectPanel h4,
+#vendorDashboard #pickupHistory h3,#vendorDashboard #pickupHistory h4{color:#0a2f6b;letter-spacing:-.01em}
+#riderDashboard #connectMessages{display:flex;flex-direction:column;gap:9px;max-height: min(58vh,560px);overflow-y:auto;overscroll-behavior:contain;padding:10px;background:#f3f7fc;border:1px solid #e2eaf4;border-radius:14px}
+#riderDashboard #connectMessages>*{max-width:min(92%,620px);box-shadow:0 2px 8px rgba(10,47,107,.045)}
+#riderDashboard #connectRecipient,#riderDashboard #connectMessage{border-radius:12px;border-color:#d5e0ee;background:#fff}
+#riderDashboard #riderConnectPanel button{min-height:42px;border-radius:11px}
+#vendorDashboard #pickupHistory .history-item{border-bottom:1px solid #e8eef6;padding:13px 4px}
+#vendorDashboard #pickupHistory .history-item:last-child{border-bottom:0}
+#vendorDashboard .account-card,#riderDashboard .account-card{border:1px solid #dce6f3;border-radius:15px;background:#fff;box-shadow:0 5px 16px rgba(8,43,104,.04)}
+@media(max-width:650px){
+ #riderDashboard #riderConnectPanel,#vendorDashboard #pickupHistory{padding:13px;border-radius:15px}
+ #riderDashboard #connectMessages{max-height:55vh;padding:8px}
+ #riderDashboard #connectMessages>*{max-width:96%;padding:11px 12px}
+ #riderDashboard #riderConnectPanel button{width:100%;min-height:46px}
+}
+
 </style>
 <style>
 /* Kawutey Logistics — public portal visual refinement */
