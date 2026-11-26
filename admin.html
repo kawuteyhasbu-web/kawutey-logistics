@@ -1323,6 +1323,90 @@ body{background:radial-gradient(ellipse at 50% -15%,#e7effb 0,transparent 48%),#
 }
 @media(prefers-reduced-motion:reduce){#dashboard button{transition:none!important}}
 </style>
+<style id="kl-admin-data-workspace-visual-pass-2026-11">
+/* ADMIN OPERATIONS: data-dense screens, responsive lists and audit workspaces */
+#dashboard{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));align-items:start}
+#dashboard>.admin-hero,#dashboard>#kl-admin-quicknav,#dashboard>#dashboardActions,
+#dashboard>#commissionSummaryCard,#dashboard>.admin-section,#dashboard>.card{grid-column:1/-1;min-width:0}
+#dashboard>.admin-hero{grid-template-columns:minmax(0,1.15fr) minmax(230px,.85fr)}
+#dashboard>.card>p:not(.meta){max-width:980px;color:#647b96;line-height:1.7}
+#dashboard .section-card{min-width:0}
+#dashboard .section-card>div[id],#dashboard>.card>div[id]{min-width:0;overflow-wrap:anywhere}
+#dashboard :is(table,.table-wrap,.table-container){max-width:100%;border-radius:12px}
+#dashboard table{width:100%;border-collapse:separate;border-spacing:0;font-size:.84rem}
+#dashboard table th{padding:12px 13px;background:#eef4fc;color:#173d6c;text-align:left;font-size:.73rem;font-weight:900;letter-spacing:.025em;border-bottom:1px solid #dce6f2;white-space:nowrap}
+#dashboard table td{padding:12px 13px;border-bottom:1px solid #e8eef5;color:#405a79;vertical-align:middle}
+#dashboard table tbody tr:nth-child(even){background:#fafcff}
+#dashboard table tbody tr:hover{background:#f2f7fd}
+#dashboard table td :is(button,a){white-space:normal}
+#dashboard .meta{color:#71839b;line-height:1.55}
+#dashboard .notice:empty{display:none}
+#dashboard .notice:not(:empty){margin:10px 0}
+#dashboard .item :is(p,small){line-height:1.65}
+#dashboard .item :is(a[href^="tel:"],a[href^="mailto:"]){overflow-wrap:anywhere}
+#dashboard .item :is(button,input,select){max-width:100%}
+#dashboard .admin-section summary{display:flex;align-items:center;justify-content:space-between;gap:14px;list-style:none}
+#dashboard .admin-section summary::-webkit-details-marker{display:none}
+#dashboard .admin-section summary:after{content:"+";display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:#eaf1fb;color:#174b83;font-size:1.1rem;font-weight:700}
+#dashboard .admin-section[open] summary:after{content:"−";background:#fff0e4;color:#e87509}
+#dashboard .admin-section .section-card{background:#fff}
+#dashboard .notification-filter{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid #dce6f2;border-radius:9px;background:#f8faff;color:#49627f;font-size:.76rem;font-weight:750}
+#dashboard .notification-filter input{width:17px;min-height:17px;accent-color:#f47b13}
+#dashboard #notifications,#dashboard #cancellationRequests,#dashboard #depositRequests,
+#dashboard #pendingRiders,#dashboard #approvedRiders,#dashboard #walletTransactions,
+#dashboard #commissionReportEntries,#dashboard #commissionReportHistory,
+#dashboard #paymentModeAudit{display:grid;gap:10px;min-width:0}
+#dashboard #notifications>.item,#dashboard #cancellationRequests>.item,
+#dashboard #depositRequests>.item,#dashboard #pendingRiders>.item,
+#dashboard #approvedRiders>.item,#dashboard #walletTransactions>.item{border-left:3px solid #d5e3f5}
+#dashboard #notifications>.item:has(button),#dashboard #cancellationRequests>.item:has(button){border-left-color:#f39a4a}
+#dashboard #commissionReportEntries .item,#dashboard #commissionReportHistory .item{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#dashboard #paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 15px;max-width:900px}
+#dashboard #paymentSettingsForm>label{display:flex;flex-direction:column;gap:7px;font-size:.77rem;font-weight:850;color:#385577}
+#dashboard #paymentSettingsForm>label:has(input[type=checkbox]){grid-column:1/-1;flex-direction:row;align-items:center}
+#dashboard #paymentSettingsForm>p,#dashboard #paymentSettingsForm>button{grid-column:1/-1}
+#dashboard #paymentSettingsForm input[type=checkbox]{width:18px;min-height:18px;accent-color:#f47b13}
+#dashboard #walletReconciliationCard .reconciliation-row{display:grid;gap:5px}
+#dashboard #walletReconciliationCard .reconciliation-row p{margin:0;font-size:.82rem;color:#516982}
+#dashboard #walletReconciliationCard .reconciliation-row strong{color:#173d6c}
+#dashboard .section-card>h3{margin-top:23px;padding-top:15px;border-top:1px solid #e8eef5}
+#dashboard button.secondary{border:1px solid #d5e1ef;background:#f5f8fd;color:#174575}
+#dashboard button.secondary:hover{background:#eaf1fb}
+#dashboard button:not(.secondary):not(.danger){box-shadow:0 3px 9px rgba(8,43,104,.08)}
+#dashboard button.danger{background:#fff1ef;border:1px solid #f1c9c3;color:#a23a2e}
+#dashboard .commission-total{position:relative;overflow:hidden}
+#dashboard .commission-total:after{content:"";position:absolute;right:-24px;bottom:-44px;width:105px;height:105px;border:1px solid #f2d7c3;border-radius:50%;box-shadow:0 0 0 15px rgba(255,121,0,.035)}
+#dashboard .admin-section[open] .section-card{animation:admReveal .18s ease both}
+@keyframes admReveal{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(min-width:1050px){
+ #dashboard>#commissionSummaryCard{grid-column:span 12}
+ #dashboard>.admin-section{grid-column:span 6}
+ #dashboard>.admin-section#adminAccountCountCard{grid-column:span 6}
+ #dashboard>.card{grid-column:span 6}
+ #dashboard>.card#cancellationRequestsCard,#dashboard>.card#notificationsCard{grid-column:span 6}
+ #dashboard>#walletReconciliationCard{grid-column:span 12}
+ #dashboard>.admin-hero,#dashboard>#kl-admin-quicknav,#dashboard>#dashboardActions{grid-column:1/-1}
+}
+@media(max-width:760px){
+ #dashboard{display:flex;flex-direction:column;gap:12px}
+ #dashboard>*{width:100%;min-width:0}
+ #dashboard>.admin-hero{grid-template-columns:1fr}
+ #dashboard #paymentSettingsForm{grid-template-columns:1fr}
+ #dashboard #paymentSettingsForm>*{grid-column:1}
+ #dashboard table{font-size:.75rem}
+ #dashboard table th,#dashboard table td{padding:9px 10px}
+ #dashboard .section-card>h3{margin-top:17px}
+ #dashboard #commissionReportEntries .item,#dashboard #commissionReportHistory .item{display:block}
+ #dashboard #commissionReportEntries .item button,#dashboard #commissionReportHistory .item button{width:100%}
+ #dashboard .notification-filter{width:100%;justify-content:flex-start}
+}
+@media(max-width:430px){
+ #dashboard .commission-toolbar{display:grid;grid-template-columns:1fr}
+ #dashboard .commission-toolbar>*{width:100%}
+ #dashboard #walletReconciliationCard .reconciliation-summary{grid-template-columns:1fr}
+ #dashboard table{min-width:580px}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
