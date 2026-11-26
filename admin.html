@@ -1084,6 +1084,63 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 @media(prefers-reduced-motion:reduce){#kl-admin-quicknav{scroll-behavior:auto!important}}
 </style>
 
+
+<style id="kl-admin-visual-batch-2026-11">
+/* Admin visual batch: more legible command centre, cleaner summaries and mobile controls. */
+#dashboard>.admin-hero{
+ position:relative;overflow:hidden;border:1px solid #dce6f2;border-radius:20px;
+ background:linear-gradient(118deg,#082b68 0%,#104783 66%,#165a9b 100%);
+ color:#fff;box-shadow:0 14px 32px rgba(8,43,104,.15);
+}
+#dashboard>.admin-hero:after{
+ content:"";position:absolute;width:240px;height:240px;border:1px solid rgba(255,255,255,.12);
+ border-radius:50%;right:-70px;top:-105px;box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 0 50px rgba(255,255,255,.025);
+ pointer-events:none;
+}
+#dashboard>.admin-hero :is(h2,p,span){position:relative;z-index:1}
+#dashboard>.admin-hero h2{color:#fff;letter-spacing:-.045em}
+#dashboard>.admin-hero p{color:rgba(255,255,255,.82);line-height:1.6}
+#dashboard>.admin-hero .admin-hero-kicker{color:#ffd2a7;font-size:.72rem;font-weight:850;letter-spacing:.12em}
+#dashboard>.admin-section>summary{gap:12px}
+#dashboard>.admin-section>summary:focus-visible{outline:3px solid rgba(255,121,0,.38);outline-offset:-3px}
+#dashboard>.admin-section .section-card>h2{color:#123967}
+#dashboard #dashboardActions{border:1px solid #dce6f2;border-radius:16px;box-shadow:0 8px 22px rgba(8,43,104,.06)}
+#dashboard #adminSectionSearch{min-height:45px;border-radius:11px}
+#dashboard .admin-section .item{transition:border-color .16s ease,box-shadow .16s ease}
+#dashboard .admin-section .item:hover{border-color:#c4d6eb;box-shadow:0 7px 18px rgba(8,43,104,.06)}
+#dashboard .admin-section .item button.danger{background:#fff1f0;border:1px solid #f2c9c5;color:#a12b22}
+#dashboard .admin-section .item button.secondary{background:#fff;border:1px solid #cfdaea;color:#183e70}
+#dashboard .admin-section .item button:not(.danger):not(.secondary){background:linear-gradient(105deg,#ff7900,#ff9633);color:#fff}
+#dashboard .admin-section .section-card>h2{margin-top:4px}
+@media(min-width:1000px){
+ .wrap{padding:30px}
+ #dashboard{gap:18px}
+ #dashboard>.admin-hero{padding:clamp(25px,3vw,38px)}
+ #dashboard>.admin-section>summary{min-height:62px}
+}
+@media(max-width:700px){
+ .head{align-items:center}
+ .brand{min-width:0;flex:1}
+ .brand img{height:43px}
+ .brand h1{font-size:1.12rem}
+ .head>a{padding:9px 11px;font-size:.78rem}
+ #dashboard>.admin-hero{border-radius:16px}
+ #dashboard>.admin-hero h2{font-size:1.35rem;line-height:1.2}
+ #dashboard>.admin-section>summary{padding:14px 13px;line-height:1.35}
+ #dashboard>.admin-section .section-card{padding:12px}
+ #dashboard .admin-section .item{margin:9px 0}
+ #dashboard .admin-section .item button{margin:6px 0 0}
+ #dashboard #dashboardActions{position:relative;top:auto}
+ #dashboard #dashboardActions #adminSectionSearch{width:100%;min-width:0}
+ #dashboard #commissionSummaryCard .commission-metric{min-height:84px}
+ #dashboard .refund-controls{display:grid;gap:8px}
+ #dashboard .refund-controls>*{width:100%;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){
+ #dashboard .admin-section .item{transition:none}
+}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
