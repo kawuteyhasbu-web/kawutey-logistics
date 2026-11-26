@@ -1501,9 +1501,11 @@ function filterAdminSections(){
   if(adminQuickNav){
     for(const link of adminQuickNav.querySelectorAll("a[href^='#']")){
       const targetId=link.getAttribute("href").slice(1);
-      const targetSection=$(targetId);
+      const targetElement=$(targetId);
+      const targetSection=targetElement&&(targetElement.closest("#dashboard > details.admin-section")||targetElement);
       const matchesLink=!query||(targetSection&&targetSection.textContent.toLocaleLowerCase().includes(query));
       link.hidden=!matchesLink;
+      if(!matchesLink)link.removeAttribute("aria-current");
     }
   }
   adminSearchCount.textContent=query
