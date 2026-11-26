@@ -250,9 +250,25 @@ app.get("/api/rider/profile", authenticate, roles("rider"), asyncRoute(async (re
   res.json({ profile: result.rows[0] });
 }));
 
+app.post("/api/vendor/pickups/:id/cancellation-request", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
+  const pickupId=Number(req.params.id), reasonType=clean(req.body?.reasonType), explanation=clean(req.body?.explanation);
+  const allowed=["customer_cancelled","incorrect_pickup_details","package_unavailable"];
+  if(!Number.isSafeInteger(pickupId)||pickupId<1) return res.status(400).json({error:"Invalid pickup request."});
+  if(!allowed.includes(reasonType)) return res.status(400).json({error:"Choose one of the listed cancellation reasons."});
+  if(explanation.length<10||explanation.length>500) return res.status(400).json({error:"Please explain the cancellation in at least 10 characters (maximum 500)."});
+  const owned=await pool.query("SELECT a.id,a.status FROM pickups p JOIN assignments a ON a.pickup_id=p.id WHERE p.id=$1 AND p.vendor_id=$2",[pickupId,req.user.id]);
+  if(!owned.rowCount) return res.status(404).json({error:"Pickup request not found."});
+  if(["cancelled","completed"].includes(owned.rows[0].status)) return res.status(409).json({error:"This pickup can no longer be cancelled."});
+  try {
+    const result=await pool.query("INSERT INTO pickup_cancellation_requests(assignment_id,vendor_id,reason_type,explanation) VALUES($1,$2,$3,$4) RETURNING id,status,created_at",[owned.rows[0].id,req.user.id,reasonType,explanation]);
+    res.status(201).json({message:"Cancellation request sent to the administrator. Your pickup remains active until it is reviewed.",request:result.rows[0]});
+  } catch(error) { if(error.code==="23505") return res.status(409).json({error:"A cancellation request is already pending for this pickup."}); throw error; }
+}));
+
 app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT p.id,p.description,p.preferred_at,p.total_packages,p.large_packages,p.medium_packages,p.small_packages,p.created_at,
       a.status AS assignment_status,a.rider_id,
+      cr.id AS cancellation_request_id,cr.reason_type AS cancellation_reason_type,cr.explanation AS cancellation_explanation,cr.status AS cancellation_status,cr.admin_note AS cancellation_admin_note,cr.created_at AS cancellation_requested_at,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.full_name END AS rider_name,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.phone END AS rider_phone,
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN u.location END AS rider_location,
@@ -260,6 +276,7 @@ app.get("/api/vendor/pickups", authenticate, roles("vendor"), asyncRoute(async (
       CASE WHEN a.rider_id IS NOT NULL AND a.status IN ('accepted','completed') AND u.status='active' THEN (rp.photo_data IS NOT NULL AND octet_length(rp.photo_data)>0) ELSE false END AS rider_has_photo
     FROM pickups p
     LEFT JOIN assignments a ON a.pickup_id=p.id
+    LEFT JOIN LATERAL (SELECT id,reason_type,explanation,status,admin_note,created_at FROM pickup_cancellation_requests WHERE assignment_id=a.id ORDER BY created_at DESC LIMIT 1) cr ON true
     LEFT JOIN users u ON u.id=a.rider_id AND u.role='rider'
     LEFT JOIN rider_profiles rp ON rp.user_id=u.id
     WHERE p.vendor_id=$1 ORDER BY p.created_at DESC`, [req.user.id]);
@@ -298,6 +315,11 @@ app.delete("/api/vendor/pickups/:id", authenticate, roles("vendor"), asyncRoute(
     if (assignment.status !== "available" || assignment.rider_id !== null) {
       await client.query("ROLLBACK");
       return res.status(409).json({ error: "Deletion not allowed. This pickup request has already been accepted by a rider or is no longer available." });
+    }
+    const cancellationHistory = await client.query("SELECT EXISTS(SELECT 1 FROM pickup_cancellation_requests WHERE assignment_id=$1) AS exists",[assignment.assignment_id]);
+    if(cancellationHistory.rows[0].exists) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({error:"This pickup has cancellation review history and cannot be permanently deleted. The history must be preserved."});
     }
     const linkedRecords = await client.query(`SELECT
         EXISTS(SELECT 1 FROM wallet_transactions WHERE package_assignment_id=$1) AS has_wallet_records,
@@ -755,6 +777,47 @@ app.get("/api/admin/admin-account-count", authenticate, roles("admin"), asyncRou
   res.json({ total: result.rows[0].total, maximum: ADMIN_LIMIT });
 }));
 
+app.get("/api/admin/cancellation-requests", authenticate, roles("admin"), asyncRoute(async (req,res)=>{
+  const result=await pool.query(`SELECT cr.id,cr.assignment_id,cr.reason_type,cr.explanation,cr.status,cr.admin_note,cr.contacted_vendor,cr.contact_outcome,cr.contacted_at,cr.created_at,cr.reviewed_at,
+    p.id AS pickup_id,p.description,p.preferred_at,p.total_packages,
+    v.full_name AS vendor_name,v.business_name AS vendor_business_name,v.phone AS vendor_phone,
+    a.status AS assignment_status,a.rider_id,r.full_name AS rider_name,r.phone AS rider_phone
+    FROM pickup_cancellation_requests cr
+    JOIN assignments a ON a.id=cr.assignment_id
+    JOIN pickups p ON p.id=a.pickup_id
+    JOIN users v ON v.id=cr.vendor_id
+    LEFT JOIN users r ON r.id=a.rider_id
+    ORDER BY CASE cr.status WHEN 'pending' THEN 0 ELSE 1 END,cr.created_at DESC LIMIT 200`);
+  res.set("Cache-Control","private, no-store"); res.json({requests:result.rows});
+}));
+app.patch("/api/admin/cancellation-requests/:id/contact", authenticate, roles("admin"), asyncRoute(async(req,res)=>{
+  const outcome=clean(req.body?.outcome);
+  if(!["spoke_confirmed","spoke_not_confirmed","no_answer","not_called"].includes(outcome)) return res.status(400).json({error:"Choose a valid contact outcome."});
+  const result=await pool.query("UPDATE pickup_cancellation_requests SET contacted_vendor=$2,contact_outcome=$3,contacted_by=$4,contacted_at=CASE WHEN $2 THEN NOW() ELSE NULL END WHERE id=$1 AND status='pending' RETURNING id,contact_outcome,contacted_at",[req.params.id,outcome!=="not_called",outcome,req.user.id]);
+  if(!result.rowCount) return res.status(404).json({error:"Pending cancellation request not found."});
+  res.json({message:"Optional call outcome recorded.",request:result.rows[0]});
+}));
+app.patch("/api/admin/cancellation-requests/:id/review", authenticate, roles("admin"), asyncRoute(async(req,res)=>{
+  const decision=clean(req.body?.decision),note=clean(req.body?.adminNote);
+  if(!["approve","reject"].includes(decision)) return res.status(400).json({error:"Choose approve or reject."});
+  if(note.length>1000) return res.status(400).json({error:"Administrative note must be 1,000 characters or fewer."});
+  const client=await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const found=await client.query("SELECT cr.id,cr.assignment_id,cr.status,a.pickup_id,a.status AS assignment_status FROM pickup_cancellation_requests cr JOIN assignments a ON a.id=cr.assignment_id WHERE cr.id=$1 FOR UPDATE OF cr,a",[req.params.id]);
+    if(!found.rowCount||found.rows[0].status!=="pending"){await client.query("ROLLBACK");return res.status(404).json({error:"Pending cancellation request not found."});}
+    const row=found.rows[0];
+    if(decision==="approve"){
+      if(["cancelled","completed"].includes(row.assignment_status)){await client.query("ROLLBACK");return res.status(409).json({error:"This pickup is already cancelled or completed."});}
+      await client.query("UPDATE assignments SET status='cancelled' WHERE id=$1",[row.assignment_id]);
+      await client.query("UPDATE pickups SET status='cancelled' WHERE id=$1",[row.pickup_id]);
+    }
+    await client.query("UPDATE pickup_cancellation_requests SET status=$2,admin_note=$3,reviewed_by=$4,reviewed_at=NOW() WHERE id=$1",[row.id,decision==="approve"?"approved":"rejected",note||null,req.user.id]);
+    await client.query("COMMIT");
+    res.json({message:decision==="approve"?"Cancellation approved. The pickup is now cancelled. Any eligible commission refund remains a separate administrator action.":"Cancellation rejected. The pickup remains active."});
+  } catch(error){await client.query("ROLLBACK");throw error;} finally{client.release();}
+}));
+
 app.get("/api/admin/notifications", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query("SELECT id,account_type,details,email_status,created_at,read_at FROM admin_notifications ORDER BY created_at DESC LIMIT 100");
   res.json({ notifications: result.rows });
@@ -954,6 +1017,24 @@ async function startServer() {
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS related_transaction_id BIGINT REFERENCES wallet_transactions(id)");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS refund_reason TEXT");
     await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction ON wallet_transactions(related_transaction_id) WHERE type='refund' AND status='successful'");
+    await pool.query("CREATE TABLE IF NOT EXISTS pickup_cancellation_requests (
+      id BIGSERIAL PRIMARY KEY,
+      assignment_id BIGINT NOT NULL REFERENCES assignments(id),
+      vendor_id BIGINT NOT NULL REFERENCES users(id),
+      reason_type TEXT NOT NULL CHECK(reason_type IN ('customer_cancelled','incorrect_pickup_details','package_unavailable')),
+      explanation TEXT NOT NULL CHECK(length(explanation) BETWEEN 10 AND 500),
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected')),
+      admin_note TEXT,
+      contacted_vendor BOOLEAN NOT NULL DEFAULT FALSE,
+      contact_outcome TEXT CHECK(contact_outcome IN ('spoke_confirmed','spoke_not_confirmed','no_answer','not_called')),
+      contacted_by BIGINT REFERENCES users(id),
+      contacted_at TIMESTAMPTZ,
+      reviewed_by BIGINT REFERENCES users(id),
+      reviewed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )");
+    await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_pending_cancellation_per_assignment ON pickup_cancellation_requests(assignment_id) WHERE status='pending'");
+    await pool.query("CREATE INDEX IF NOT EXISTS cancellation_requests_status_created_idx ON pickup_cancellation_requests(status,created_at DESC)");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_settings (id INTEGER PRIMARY KEY CHECK (id=1), manual_backup_enabled BOOLEAN NOT NULL DEFAULT FALSE, momo_account_name TEXT, momo_account_number TEXT, manual_backup_reason TEXT, updated_by BIGINT, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     await pool.query("INSERT INTO payment_settings(id) VALUES(1) ON CONFLICT (id) DO NOTHING");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_mode_audit (id BIGSERIAL PRIMARY KEY, admin_user_id BIGINT NOT NULL, manual_backup_enabled BOOLEAN NOT NULL, reason TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
