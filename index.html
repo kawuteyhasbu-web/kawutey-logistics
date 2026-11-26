@@ -1158,12 +1158,13 @@
         const item = document.createElement("div");
         item.className = "assignment-item";
         const isCommission = t.type === "commission";
-        const label = isCommission ? "Package commission deduction" : t.type === "deposit" ? "Wallet deposit" : String(t.type || "Wallet transaction");
+        const label = isCommission ? "Package commission deduction" : t.type === "deposit" ? "Wallet deposit" : t.type === "refund" ? "Commission refund" : String(t.type || "Wallet transaction");
         const amount = Number(t.amountGhs || 0);
         const status = t.status === "successful" ? "Successful" : t.status === "pending" ? "Pending verification" : t.status === "failed" ? "Failed / rejected" : String(t.status || "Unknown");
         const details = [];
         if (isCommission && t.assignmentId) details.push("Pickup assignment: " + t.assignmentId);
         if (t.description && !(isCommission && t.description === "GH₵5 commission per package accepted")) details.push(t.description);
+        if (t.refundReason) details.push("Refund reason: " + t.refundReason);
         item.innerHTML = "<strong>" + escapeHtml(label) + "</strong><p>Amount: GH₵" + Math.abs(amount).toFixed(2) + (amount < 0 ? " deducted" : " credited") + "</p><p>Status: " + escapeHtml(status) + "</p><p>Reference: " + escapeHtml(t.reference || "—") + "</p>" + (t.providerReference ? "<p>Provider reference: " + escapeHtml(t.providerReference) + "</p>" : "") + (details.length ? "<p>" + escapeHtml(details.join(" | ")) + "</p>" : "") + "<small>" + escapeHtml(new Date(t.createdAt).toLocaleString()) + "</small>";
         area.appendChild(item);
       });
