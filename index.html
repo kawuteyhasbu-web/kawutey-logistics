@@ -1140,6 +1140,28 @@ footer{color:#718096}
 @media(max-width:850px){.kl-home .kl-hero{grid-template-columns:minmax(0,1fr) minmax(220px,.75fr)}.kl-home .kl-trust-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.kl-content-page .kl-steps-grid,.kl-content-page .kl-contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.kl-home .kl-hero{grid-template-columns:minmax(0,1fr);padding:22px;border-radius:18px}.kl-home .kl-hero-art{min-height:210px}.kl-home .kl-hero-actions{display:grid;grid-template-columns:minmax(0,1fr)}.kl-home .kl-hero-actions .btn{width:100%}.kl-home .kl-trust-strip{grid-template-columns:minmax(0,1fr)}.kl-content-page{padding:10px}.kl-content-page .kl-content-grid,.kl-content-page .kl-steps-grid,.kl-content-page .kl-contact-grid{grid-template-columns:minmax(0,1fr)}.kl-content-page .kl-page-cta{align-items:stretch}.kl-content-page .kl-page-cta .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.kl-content-page .kl-contact-grid a{transition:none}}
+
+/* KL redesign batch 4: vendor and rider workspace overview hierarchy */
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard>.card,#riderDashboard>.card{min-width:0}
+#vendorDashboard>#pickupFormArea{margin-top:17px!important;border:1px solid #dce6f2!important;border-radius:16px!important;background:linear-gradient(145deg,#fff,#f8faff)!important;box-shadow:0 8px 22px rgba(8,43,104,.045)}
+#vendorDashboard>#pickupFormArea>h4{margin:0 0 15px;color:#123d76;font-size:1.08rem}
+#vendorDashboard>#pickupFormArea .alert{border-radius:11px;line-height:1.6}
+#vendorDashboard>#pickupFormArea #pickupLocationStatus{padding:9px 11px;border-radius:9px;background:#f2f6fc}
+#vendorDashboard #pickupHistory{margin-top:10px}
+#vendorDashboard #pickupHistory:empty:after{content:"Your pickup requests will appear here once submitted.";display:block;padding:18px;border:1px dashed #cbd9e9;border-radius:13px;color:#718198;text-align:center;background:#f9fbfe}
+#vendorDashboard #pickupHistory>*{min-width:0;overflow-wrap:anywhere}
+#riderDashboard>.wallet-box{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 28px rgba(7,31,73,.16)}
+#riderDashboard>.wallet-box:after{content:"";position:absolute;right:-58px;top:-82px;width:190px;height:190px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 24px rgba(255,255,255,.035),0 0 0 50px rgba(255,255,255,.025);pointer-events:none}
+#riderDashboard>.wallet-box>*{position:relative;z-index:1}
+#riderDashboard .wallet-stats{gap:9px}
+#riderDashboard .wallet-stats .stat-box{min-width:0;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.09)}
+#riderDashboard .wallet-stats .stat-box .value{overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#riderDashboard .wallet-box button{min-height:42px;border-radius:10px;font-weight:850}
+#riderDashboard #secureDepositHistory:empty:after,#riderDashboard #secureWalletTransactionHistory:empty:after,#riderDashboard #secureAvailableAssignments:empty:after,#riderDashboard #secureAcceptedAssignments:empty:after{content:"There are no records to display yet.";display:block;padding:16px;border:1px dashed #cbd9e9;border-radius:12px;color:#718198;text-align:center;background:#fbfcfe}
+#riderDashboard #secureDepositHistory>*,#riderDashboard #secureWalletTransactionHistory>*{min-width:0;overflow-wrap:anywhere}
+#vendorDashboard :is(button,input,select,textarea),#riderDashboard :is(button,input,select,textarea){max-width:100%}
+@media(max-width:650px){#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}#riderDashboard .wallet-box>div:last-child{display:grid;grid-template-columns:minmax(0,1fr)}#riderDashboard .wallet-box button{width:100%}}
 </style>
 </head>
 <body>
