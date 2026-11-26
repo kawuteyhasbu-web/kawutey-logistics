@@ -476,6 +476,37 @@ button:disabled{cursor:not-allowed;opacity:.58}
 @media(max-width:600px){.kl-content-page{padding:10px}.kl-page-hero{border-radius:17px;padding:27px 21px}.kl-page-hero:after{right:0}.kl-steps-grid{gap:10px}.kl-steps-grid article{padding:19px}.kl-contact-grid{gap:9px}#vendorRegForm,#riderRegForm{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.kl-contact-grid>a{transition:none}.kl-contact-grid>a:hover{transform:none}}
 
+
+/* Vendor workspace and rider operations dashboard visual pass */
+#vendorDashboard,#riderDashboard{display:block;min-width:0}
+#vendorDashboard>h3,#riderDashboard>h2{color:#082b68;font-size:clamp(1.35rem,3vw,1.8rem);letter-spacing:-.035em}
+#vendorDashboard>p,#riderDashboard>p{color:#64748b;line-height:1.65}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid #dce6f2;border-radius:18px;background:#fff;box-shadow:0 9px 26px rgba(8,43,104,.055);padding:clamp(16px,2.5vw,24px);margin:14px 0;min-width:0}
+#vendorDashboard h4,#riderDashboard h3{color:#10396f;letter-spacing:-.015em}
+#vendorDashboard .btn,#riderDashboard .btn{min-height:42px;border-radius:10px;font-weight:800}
+#pickupFormArea{padding:clamp(15px,2.5vw,22px)!important;border:1px solid #dce6f2;border-radius:15px;background:linear-gradient(180deg,#fbfdff,#f4f8fe)}
+#pickupForm .package-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,150px);gap:12px;align-items:center;padding:9px 12px;border:1px solid #e3eaf3;border-radius:10px;background:#fff;margin:7px 0}
+#pickupHistory,#availableAssignments,#acceptedAssignments,#depositHistory,#messagesArea,#connectMessages{min-width:0}
+#pickupHistory>.card,#availableAssignments>.card,#acceptedAssignments>.card,#depositHistory>.card{border:1px solid #e0e8f2;border-radius:13px;box-shadow:none;margin:10px 0}
+#riderDashboard .wallet-box{position:relative;overflow:hidden;padding:clamp(20px,3vw,30px);border:1px solid rgba(255,255,255,.12);border-radius:20px;background:radial-gradient(circle at 90% 5%,rgba(65,145,232,.38),transparent 34%),linear-gradient(125deg,#071f4a,#0a397b 68%,#105da4);color:#fff;box-shadow:0 15px 32px rgba(8,43,104,.18)}
+#riderDashboard .wallet-box h3{color:#fff;font-size:1.12rem}
+#riderDashboard .wallet-box .balance{font-size:clamp(2rem,6vw,3rem);font-weight:900;letter-spacing:-.045em;color:#fff;font-variant-numeric:tabular-nums}
+#riderDashboard .wallet-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+#riderDashboard .wallet-stats .stat-box{min-width:0;padding:13px;border:1px solid rgba(255,255,255,.17);border-radius:12px;background:rgba(255,255,255,.09)}
+#riderDashboard .wallet-stats .value{font-size:clamp(1rem,2.4vw,1.35rem);font-weight:850;overflow-wrap:anywhere;color:#fff}
+#riderDashboard .wallet-stats .label{font-size:.78rem;line-height:1.4;color:#d8e7fb}
+#riderDashboard .wallet-box button{margin:8px 7px 0 0}
+#riderDashboard .card>h3{display:flex;align-items:center;gap:9px}
+#riderDashboard #messageTo,#riderDashboard #messageText,#riderDashboard #connectRecipient,#riderDashboard #connectMessage{width:100%;max-width:100%}
+#riderDashboard #ridersList,#riderDashboard #connectMessages{padding:10px 0}
+#riderDashboard .rider-connect-panel{background:linear-gradient(180deg,#fff,#f8fbff)}
+#riderDashboard .rider-connect-panel #connectMessages{max-height:420px;overflow:auto;overscroll-behavior:contain}
+#vendorDashboard .alert,#riderDashboard .alert{border-radius:11px;line-height:1.55}
+#vendorDashboard input,#vendorDashboard select,#vendorDashboard textarea,#riderDashboard input,#riderDashboard select,#riderDashboard textarea{max-width:100%}
+@media(max-width:760px){#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#vendorDashboard>.card,#riderDashboard>.card{padding:14px;border-radius:14px}#vendorDashboard .btn,#riderDashboard .btn{margin:6px 5px 0 0}#pickupForm .package-row{grid-template-columns:minmax(0,1fr) 88px;gap:8px;padding:8px}#riderDashboard .wallet-stats{gap:8px}#riderDashboard .wallet-stats .stat-box{padding:10px}#riderDashboard .wallet-box button{width:100%;margin:7px 0 0}}
+@media(prefers-reduced-motion:reduce){#vendorDashboard .btn,#riderDashboard .btn{transition:none}}
+
 </style>
 </head>
 <body>
