@@ -1562,6 +1562,31 @@ body{background:radial-gradient(ellipse at 50% -15%,#e7effb 0,transparent 48%),#
  #dashboard .refund-controls button{width:100%}
 }
 </style>
+<style id="kl-admin-visual-system-2026-11-26">
+:root{--kl-admin-navy:#102b4e;--kl-admin-orange:#f47b20;--kl-admin-line:#e3eaf2;--kl-admin-muted:#64748b}
+body{background:#f4f7fb}
+:where(#dashboard,.dashboard,.admin-dashboard){color:#17283b}
+:where(.admin-section,.admin-card,.admin-panel,.stat-card,.summary-card,.notification-card,.queue-card,.report-card){border:1px solid var(--kl-admin-line);border-radius:18px;box-shadow:0 8px 28px rgba(16,43,78,.055)}
+:where(.admin-section,.admin-panel){background:#fff}
+:where(.admin-section h2,.admin-section h3,.admin-panel h2,.admin-panel h3){color:var(--kl-admin-navy);letter-spacing:-.02em}
+:where(input,select,textarea){border-radius:11px!important;border:1px solid #d6e0eb!important;min-height:43px;transition:border-color .18s,box-shadow .18s}
+:where(input,select,textarea):focus{border-color:var(--kl-admin-orange)!important;box-shadow:0 0 0 3px rgba(244,123,32,.13)!important;outline:0}
+:where(button,.btn){transition:transform .18s,box-shadow .18s}
+:where(button,.btn):not(:disabled):active{transform:translateY(1px)}
+:where(table){border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+:where(th){background:#f1f5f9;color:#42546b;font-size:.77rem;letter-spacing:.035em;text-transform:uppercase}
+:where(td,th){padding:12px 13px;border-bottom:1px solid #e8edf3}
+:where(tbody tr:hover){background:#f8fafd}
+:where(.hidden){display:none!important}
+@media(max-width:720px){
+ :where(.admin-section,.admin-card,.admin-panel,.stat-card,.summary-card,.notification-card,.queue-card,.report-card){border-radius:15px}
+ :where(td,th){padding:10px}
+ :where(input,select,textarea){font-size:16px!important}
+ :where(button,.btn){min-height:42px}
+ :where(table){min-width:640px}
+}
+@media(prefers-reduced-motion:reduce){:where(*,*::before,*::after){scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
