@@ -302,6 +302,39 @@ body{scroll-behavior:smooth}
  #connectMessages{max-height:360px}
 }
 
+
+/* Vendor pickup workflow and rider assignment cards */
+#pickupFormArea{padding:clamp(15px,2.5vw,24px)!important;border:1px solid #e0e8f3;border-radius:16px;background:#f8fbff}
+#pickupFormArea>h4{color:#082b68;font-size:1.05rem}
+#pickupForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#pickupForm .form-group{min-width:0;margin:0}
+#pickupForm .form-group:first-of-type{grid-column:1/-1}
+#pickupForm .form-group label,#pickupForm .package-row label{display:block;margin-bottom:7px;color:#20395e;font-weight:750;font-size:.9rem}
+#pickupForm input,#pickupForm textarea{width:100%;min-width:0;min-height:45px;padding:10px 12px;border:1px solid #d8e3f0;border-radius:10px;background:#fff;color:#17345e}
+#pickupForm textarea{resize:vertical;line-height:1.55}
+#pickupForm input:focus,#pickupForm textarea:focus{outline:0;border-color:#1768b8;box-shadow:0 0 0 3px rgba(23,104,184,.12)}
+#pickupForm>div[style*="margin:14px"]{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0!important}
+#pickupForm .package-row{padding:12px;border:1px solid #e0e8f3;border-radius:12px;background:#fff}
+#pickupForm>button[type=submit]{grid-column:1/-1;min-height:48px}
+#pickupHistory{display:grid;gap:12px;margin-top:12px}
+#pickupHistory .pickup-item{padding:17px;border:1px solid #e0e8f3;border-radius:15px;background:#fff;line-height:1.65;box-shadow:0 5px 16px rgba(8,43,104,.04);overflow-wrap:anywhere}
+#pickupHistory .pickup-item>strong{color:#173e75}
+#pickupHistory .pickup-item p{margin:9px 0}
+#secureAvailableAssignments,#secureAcceptedAssignments{display:grid;gap:12px;margin-top:12px}
+#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{padding:17px;border:1px solid #dfe8f3;border-radius:15px;background:#fff;box-shadow:0 6px 18px rgba(8,43,104,.045);line-height:1.6;overflow-wrap:anywhere}
+#secureAvailableAssignments .assignment-item>strong,#secureAcceptedAssignments .assignment-item>strong{display:block;margin-bottom:7px;color:#082b68;font-size:1.02rem}
+#secureAvailableAssignments .assignment-item p,#secureAcceptedAssignments .assignment-item p{margin:7px 0;color:#536780}
+#secureAvailableAssignments .assignment-item button{min-height:44px;margin-top:9px}
+#secureAcceptedAssignments input[type=checkbox]{width:18px;height:18px;accent-color:#0b4b9b}
+@media(max-width:680px){
+ #pickupForm{grid-template-columns:1fr}
+ #pickupForm .form-group:first-of-type,#pickupForm>div[style*="margin:14px"],#pickupForm>button[type=submit]{grid-column:1}
+ #pickupForm>div[style*="margin:14px"]{grid-template-columns:1fr}
+ #pickupForm .package-row{display:grid;grid-template-columns:1fr 110px;align-items:center;gap:10px}
+ #pickupForm .package-row label{margin:0}
+ #pickupHistory .pickup-item,#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{padding:14px}
+}
+
 </style>
 </head>
 <body>
