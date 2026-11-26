@@ -577,6 +577,47 @@ html{scroll-behavior:smooth}
  #commissionSummaryCard .commission-grid{grid-template-columns:minmax(0,1fr)}
 }
 
+
+/* Dedicated administrator command-centre hero */
+.admin-hero{position:relative;isolation:isolate;overflow:hidden;min-height:255px;padding:clamp(24px,4vw,42px);border-radius:22px;color:#fff;background:radial-gradient(circle at 84% 15%,rgba(255,121,0,.25),transparent 26%),linear-gradient(115deg,#061b42 0%,#082b68 58%,#10498d 100%);box-shadow:0 18px 42px rgba(8,43,104,.18);display:grid;grid-template-columns:minmax(0,1.25fr) minmax(230px,.75fr);align-items:center;gap:18px}
+.admin-hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(90deg,#000,transparent 85%)}
+.admin-hero-copy{max-width:660px}.admin-hero-kicker{display:inline-flex;align-items:center;gap:9px;color:#ffd0a8;font-size:.7rem;font-weight:850;letter-spacing:.15em}
+.admin-hero-kicker i{width:8px;height:8px;border-radius:50%;background:#ff8b27;box-shadow:0 0 0 5px rgba(255,139,39,.16)}
+.admin-hero h2{font-size:clamp(1.8rem,3.4vw,2.85rem);line-height:1.05;letter-spacing:-.05em;color:#fff;margin:17px 0 11px}
+.admin-hero h2:before{display:none!important}.admin-hero p{max-width:550px;color:#cfddf0;font-size:.95rem;line-height:1.75;margin:0}
+.admin-hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:23px}
+.admin-hero-pills span{border:1px solid rgba(255,255,255,.18);border-radius:99px;background:rgba(255,255,255,.08);padding:7px 11px;color:#e1eafa;font-size:.72rem;font-weight:700}
+.admin-hero-art{position:relative;min-height:190px;display:grid;place-items:center}
+.route-orbit{position:absolute;border:1px solid rgba(255,255,255,.18);border-radius:50%;width:180px;height:180px}
+.orbit-two{width:132px;height:132px;border-color:rgba(255,121,0,.42)}
+.route-line{position:absolute;width:205px;height:105px;border:2px dashed rgba(255,166,93,.65);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;transform:rotate(-24deg)}
+.route-core{width:88px;height:88px;border-radius:27px;background:linear-gradient(145deg,#ff9a35,#ff6b00);box-shadow:0 14px 32px rgba(255,121,0,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-7deg)}
+.route-core b{font-size:1.7rem;letter-spacing:-.08em}.route-core small{font-size:.52rem;font-weight:900;letter-spacing:.2em}
+.route-pin{position:absolute;color:#ff9a35;font-size:1.1rem;text-shadow:0 0 0 5px rgba(255,255,255,.2)}
+.pin-a{top:22px;right:23%}.pin-b{bottom:20px;left:23%;color:#fff}
+.route-caption{position:absolute;right:0;bottom:0;font-size:.55rem;line-height:1.5;letter-spacing:.14em;color:#c5d6ee;text-align:right}
+.route-caption strong{color:#ffb16d}
+#dashboardActions{display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+#dashboardActions .admin-search-label{flex:1;min-width:min(100%,260px);margin:0}
+#dashboardActions #adminSectionSearch{display:block;margin-top:6px}
+#dashboardActions #logoutButton{margin-left:auto}
+@media(max-width:700px){
+ .admin-hero{min-height:0;grid-template-columns:minmax(0,1fr);padding:23px 19px;border-radius:17px;gap:0}
+ .admin-hero h2{font-size:2rem;margin-top:13px}
+ .admin-hero p{font-size:.84rem;line-height:1.65}
+ .admin-hero-pills{gap:6px;margin-top:17px}
+ .admin-hero-pills span{font-size:.64rem;padding:6px 9px}
+ .admin-hero-art{min-height:132px;margin-top:12px}
+ .route-orbit{width:125px;height:125px}.orbit-two{width:92px;height:92px}
+ .route-line{width:155px;height:78px}
+ .route-core{width:65px;height:65px;border-radius:20px}
+ .route-core b{font-size:1.3rem}
+ .route-caption{right:4px;bottom:0;font-size:.48rem}
+ #dashboardActions{align-items:stretch;gap:9px}
+ #dashboardActions .admin-search-label{min-width:100%}
+ #dashboardActions #logoutButton{margin-left:0}
+}
+
 </style><script src="/admin-password.js" defer></script>
 <style>
 /* KL administrator interface — refined command-centre visual layer */
@@ -996,6 +1037,20 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><p class="meta" id="adminSignupAccess" style="margin-top:12px">Need another administrator account? <a id="adminSignupLink" href="#" style="color:var(--primary);font-weight:700">Admin Sign Up</a></p><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
+<section class="admin-hero" aria-label="Administrator command centre introduction">
+ <div class="admin-hero-copy">
+  <span class="admin-hero-kicker"><i></i> KAWUTEY OPERATIONS • GHANA</span>
+  <h2>Command your operations.</h2>
+  <p>One workspace to oversee deliveries, support your teams and keep business activity moving.</p>
+  <div class="admin-hero-pills"><span>Vendor management</span><span>Rider operations</span><span>Financial oversight</span></div>
+ </div>
+ <div class="admin-hero-art" aria-hidden="true">
+  <div class="route-orbit orbit-one"></div><div class="route-orbit orbit-two"></div>
+  <div class="route-line"></div><div class="route-pin pin-a">●</div><div class="route-pin pin-b">●</div>
+  <div class="route-core"><b>KL</b><small>CONTROL</small></div>
+  <div class="route-caption">YOUR PACKAGE<br><strong>OUR PRIORITY</strong></div>
+ </div>
+</section>
 <div class="card" id="dashboardActions"><label class="admin-search-label" for="adminSectionSearch">Find an administrator section<input id="adminSectionSearch" type="search" placeholder="Search vendors, refunds, riders, reports…" autocomplete="off"></label><span id="adminSectionSearchCount" class="meta" aria-live="polite">All sections shown</span><button type="button" class="secondary" id="clearAdminSectionSearch" hidden>Clear search</button><button type="button" class="secondary" id="logoutButton">Log out</button></div>
 <section class="card" id="commissionSummaryCard">
 <h2>Today's Rider Commission Collections</h2>
