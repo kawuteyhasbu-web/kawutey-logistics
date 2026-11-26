@@ -268,6 +268,16 @@ body{scroll-behavior:smooth}
  .logo-area img{width:48px;height:48px}
 }
 
+
+/* Clear location guidance and form micro-interactions */
+.kl-field-hint{display:block;margin-top:6px;color:#6a7b94;font-size:.76rem;line-height:1.45}
+#vendorRegForm .form-group:focus-within,#riderRegForm .form-group:focus-within,#vendorLoginForm .form-group:focus-within,#riderLoginForm .form-group:focus-within{position:relative}
+#vendorRegForm input::placeholder,#riderRegForm input::placeholder{color:#91a0b5}
+#vendorRegForm input:disabled,#riderRegForm input:disabled,#vendorLoginForm input:disabled,#riderLoginForm input:disabled{opacity:.7;cursor:not-allowed}
+#vendorRegForm .toggle-password,#riderRegForm .toggle-password,#vendorLoginForm .toggle-password,#riderLoginForm .toggle-password{border:1px solid #dbe5f1;background:#f3f7fc;color:#173e75;font-weight:750}
+#vendorRegForm .toggle-password:hover,#riderRegForm .toggle-password:hover,#vendorLoginForm .toggle-password:hover,#riderLoginForm .toggle-password:hover{background:#e7effb}
+#photoPreview img{max-width:130px;max-height:130px;object-fit:cover;border-radius:14px;border:3px solid #fff;box-shadow:0 4px 16px rgba(8,43,104,.14)}
+
 </style>
 </head>
 <body>
@@ -403,7 +413,7 @@ body{scroll-behavior:smooth}
                 <button type="button" class="toggle-password" data-toggle-password="v-pass">Show</button>
               </div>
             </div>
-            <div class="form-group"><label>Location *</label><input type="text" id="v-location" required placeholder="e.g. Accra, Kumasi, Tamale"></div>
+            <div class="form-group"><label for="v-location">Business Location *</label><input type="text" id="v-location" required autocomplete="address-level2" placeholder="Town / area, region"><small class="kl-field-hint">Enter the town or area where your business operates, and its region.</small></div>
             <button type="submit" class="btn btn-primary" id="vendorRegBtn">Create Vendor Account</button>
           </form>
           <p style="margin-top:12px;">Already have an account? <a href="#" data-vendor-view="login" style="color:var(--accent); font-weight:600;">Login here</a></p>
@@ -472,7 +482,7 @@ body{scroll-behavior:smooth}
                 <button type="button" class="toggle-password" data-toggle-password="r-pass">Show</button>
               </div>
             </div>
-            <div class="form-group"><label>Location *</label><input type="text" id="r-location" required placeholder="e.g. Accra, Kumasi"></div>
+            <div class="form-group"><label for="r-location">Your Location *</label><input type="text" id="r-location" required autocomplete="address-level2" placeholder="Town / area, region"><small class="kl-field-hint">Enter your town or operating area and region. This helps us understand your service base.</small></div>
             <div class="form-group"><label>Recent Profile Photograph *</label><input type="file" id="r-photo" accept="image/jpeg,image/png,image/webp" required><div id="photoPreview" style="margin-top:10px;"></div></div>
             <button type="submit" class="btn btn-accent" id="riderRegBtn">Create Rider Account</button>
           </form>
