@@ -242,6 +242,23 @@ button:disabled{cursor:not-allowed;opacity:.58}
 #dashboard>.card:has(#pendingRiders)>h2:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff9a3d;box-shadow:0 0 0 4px #fff2e7}
 @media(max-width:600px){.commission-metric{min-height:88px;padding:12px}.commission-toolbar{padding:11px}.commission-toolbar label{min-width:100%}.commission-toolbar button{flex:1}#commissionReportEntries,#commissionReportHistory{padding:11px}}
 
+
+/* Admin data views: horizontal overflow protection and compact mobile controls */
+#dashboard table{max-width:100%;border-collapse:separate;border-spacing:0}
+#dashboard .table-wrap,#dashboard [style*="overflow-x:auto"]{max-width:100%;overscroll-behavior-x:contain;border:1px solid #e2eaf4;border-radius:12px}
+#dashboard table th{background:#f3f7fd;color:#24466f;font-size:.82rem;font-weight:850;white-space:nowrap}
+#dashboard table td{color:#425773;font-size:.88rem;line-height:1.5;overflow-wrap:anywhere}
+#dashboard table th:first-child{border-top-left-radius:9px}
+#dashboard table th:last-child{border-top-right-radius:9px}
+#dashboard input:not([type=checkbox]):not([type=radio]),#dashboard select,#dashboard textarea{max-width:100%;min-width:0;border-radius:9px}
+#dashboard button{max-width:100%;overflow-wrap:anywhere}
+#dashboard button:focus-visible,#dashboard a:focus-visible,#dashboard input:focus-visible,#dashboard select:focus-visible,#dashboard textarea:focus-visible{outline:3px solid rgba(255,121,0,.38);outline-offset:2px}
+#dashboard .admin-section summary{cursor:pointer;list-style:none}
+#dashboard .admin-section summary::-webkit-details-marker{display:none}
+#dashboard .admin-section summary:after{content:"+";float:right;color:#e36c00;font-size:1.2rem;font-weight:900}
+#dashboard .admin-section[open] summary:after{content:"−"}
+@media(max-width:600px){#dashboard table{min-width:560px}#dashboard .admin-section summary{padding:14px 15px}#dashboard input:not([type=checkbox]):not([type=radio]),#dashboard select,#dashboard textarea{width:100%}#dashboard button{min-height:40px}}
+
 </style><script src="/admin-password.js" defer></script>
 </head>
 <body><main class="wrap">
