@@ -1262,6 +1262,26 @@ footer{color:#718096}
 #pickupHistory>p{padding:22px;border:1px dashed #cbd9e9;border-radius:13px;background:#f9fbfe;color:#718198!important;text-align:center}
 @media(max-width:760px){#pickupHistory{grid-template-columns:minmax(0,1fr)}}
 </style>
+<style id="kl-cross-portal-operations-polish">
+
+/* Coordinated vendor and rider operations workspace polish */
+#vendorDashboard,#riderDashboard,#vendor,#rider{min-width:0}
+#vendorDashboard .card,#riderDashboard .card,#vendor .card,#rider .card{border:1px solid #e1e8f1;border-radius:16px;box-shadow:0 8px 24px rgba(10,35,75,.055);min-width:0}
+#vendorDashboard h2,#riderDashboard h2,#vendor h2,#rider h2{color:#0a2f6b;letter-spacing:-.025em}
+#pickupHistory,#availableAssignments,#acceptedAssignments,#transactionHistoryArea,#depositHistory,#secureAvailableAssignments,#secureAcceptedAssignments,#secureWalletTransactionHistory,#secureDepositHistory,#riderConnectPanel{min-width:0}
+#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item,#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{border:1px solid #dfe7f1;border-radius:14px;padding:15px;margin:11px 0;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 4px 13px rgba(10,35,75,.04);overflow-wrap:anywhere}
+#pickupHistory .pickup-item-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#pickupHistory .pickup-status{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:.78rem;font-weight:800;background:#fff1e4;color:#92500d}
+#pickupHistory .pickup-item-details,#pickupHistory .history-item,#depositHistory .history-item{color:#46566e;line-height:1.65}
+#vendorDashboard .wallet-box,#riderDashboard .wallet-box,.wallet-box{border:1px solid rgba(255,255,255,.2);border-radius:18px;overflow:hidden}
+#vendorDashboard button,#riderDashboard button,#vendor button,#rider button{max-width:100%;white-space:normal}
+#vendorDashboard input:focus-visible,#riderDashboard input:focus-visible,#vendorDashboard select:focus-visible,#riderDashboard select:focus-visible,#vendorDashboard textarea:focus-visible,#riderDashboard textarea:focus-visible,#vendorDashboard button:focus-visible,#riderDashboard button:focus-visible{outline:3px solid rgba(242,140,40,.42);outline-offset:2px}
+#riderConnectPanel,#riderDashboard #riderConnectPanel{border:1px solid #dbe6f3;border-radius:16px;background:linear-gradient(145deg,#fff,#f7faff)}
+#riderConnectPanel #connectStatus{border-radius:10px;line-height:1.55}
+@media(max-width:680px){#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item,#secureAvailableAssignments .assignment-item,#secureAcceptedAssignments .assignment-item{padding:12px}#vendorDashboard .card,#riderDashboard .card,#vendor .card,#rider .card{border-radius:13px}#vendorDashboard button,#riderDashboard button{min-height:44px}}
+@media(prefers-reduced-motion:reduce){#vendorDashboard *,#riderDashboard *{scroll-behavior:auto!important;transition:none!important}}
+
+</style>
 </head>
 <body>
   <div class="container">
