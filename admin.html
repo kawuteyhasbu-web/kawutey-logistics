@@ -1645,6 +1645,32 @@ body{color:var(--kl-brand-ink)}
 #dashboard :where(input,select,textarea):focus-visible{outline:3px solid rgba(255,121,0,.25);outline-offset:2px}
 @media(max-width:760px){#dashboardActions{display:grid;grid-template-columns:1fr;gap:10px;padding:13px!important}#dashboardActions .admin-search-label{min-width:0}#dashboardActions #adminSectionSearchCount{white-space:normal}#dashboard>section.card{border-radius:15px;margin-top:13px}#dashboard .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#dashboard .commission-metric{padding:13px!important}#dashboard .commission-toolbar{display:grid;grid-template-columns:1fr;padding:12px}#dashboard .commission-toolbar label{min-width:0}#dashboard .commission-toolbar button{width:100%}#dashboard :where(td,th){padding:10px;font-size:.78rem}}
 </style>
+<style id="kl-bulk-admin-workspace-navigation-2026-11">
+:root{--kl-admin-navy:#0a2f6b;--kl-admin-deep:#071f4a;--kl-admin-orange:#ff7900;--kl-admin-line:#dce5f0}
+#dashboard{width:min(100%,1480px);margin-inline:auto}
+#dashboard>.admin-hero{overflow:hidden;border-radius:22px;box-shadow:0 17px 42px rgba(7,31,74,.15)}
+#kl-admin-quicknav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px;border:1px solid var(--kl-admin-line);border-radius:17px;background:linear-gradient(135deg,#fff,#f4f7fb);box-shadow:0 8px 24px rgba(7,31,74,.055)}
+#kl-admin-quicknav a{display:flex;justify-content:center;align-items:center;min-width:0;min-height:43px;padding:9px 10px;border:1px solid #e5ebf3;border-radius:11px;background:#fff;color:var(--kl-admin-navy);font-weight:800;text-align:center;transition:transform .16s,border-color .16s,background .16s}
+#kl-admin-quicknav a:hover{transform:translateY(-2px);border-color:#f2bd8d;background:#fff8f1}
+#dashboardActions{position:sticky;top:8px;z-index:25;backdrop-filter:blur(14px);background:rgba(255,255,255,.94)!important}
+#dashboard>section.card{padding:clamp(16px,2.2vw,25px)}
+#dashboard>section.card>h2{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e9eef5}
+#dashboard>section.card>h2:before{content:"";width:5px;height:23px;flex:0 0 5px;border-radius:9px;background:linear-gradient(180deg,var(--kl-admin-orange),#ffb36c)}
+#dashboard .commission-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#dashboard .commission-metric{min-height:108px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+#dashboard .commission-metric span{font-size:.82rem;line-height:1.4;color:#64748b}
+#dashboard .commission-toolbar{display:flex;flex-wrap:wrap}
+#dashboard .commission-toolbar button{min-width:132px}
+@media(max-width:760px){
+ #dashboard>.admin-hero{border-radius:17px}
+ #kl-admin-quicknav{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:7px;top:5px}
+ #kl-admin-quicknav a{font-size:.77rem;min-height:42px;padding:8px 5px}
+ #dashboardActions{top:5px}
+ #dashboard .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard .commission-metric{min-height:92px}
+}
+@media(max-width:390px){#kl-admin-quicknav a{font-size:.72rem}#dashboard .commission-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
