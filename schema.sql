@@ -54,8 +54,10 @@ CREATE TABLE IF NOT EXISTS assignments (
   pickup_id BIGINT NOT NULL UNIQUE REFERENCES pickups(id),
   rider_id BIGINT REFERENCES users(id),
   status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available','accepted','cancelled','completed')),
-  accepted_at TIMESTAMPTZ
+  accepted_at TIMESTAMPTZ,
+  delivered_at TIMESTAMPTZ
 );
+ALTER TABLE assignments ADD COLUMN IF NOT EXISTS delivered_at TIMESTAMPTZ;
 CREATE TABLE IF NOT EXISTS wallet_transactions (
   id BIGSERIAL PRIMARY KEY,
   rider_id BIGINT NOT NULL REFERENCES users(id),
