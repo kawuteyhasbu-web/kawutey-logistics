@@ -546,16 +546,106 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
 }));
 
 app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
-  const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at
-    FROM wallet_transactions t JOIN users u ON u.id=t.rider_id JOIN rider_profiles r ON r.user_id=u.id
+  const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at,
+      t.related_transaction_id,t.refund_reason,t.reviewed_by,t.reviewed_at,
+      refund.id AS refund_transaction_id,refund.reference AS refund_reference,refund.created_at AS refund_created_at
+    FROM wallet_transactions t
+    JOIN users u ON u.id=t.rider_id
+    JOIN rider_profiles r ON r.user_id=u.id
+    LEFT JOIN wallet_transactions refund ON refund.related_transaction_id=t.id AND refund.type='refund' AND refund.status='successful'
     ORDER BY t.created_at DESC,t.id DESC LIMIT 300`);
   res.set("Cache-Control", "private, no-store");
   res.json({ transactions: result.rows.map(t => ({
     id:t.id, riderId:t.rider_id, riderName:t.full_name, phone:t.phone, riderCode:t.rider_code,
     type:t.type, amountGhs:Number(t.amount_pesewas)/100, status:t.status, reference:t.reference,
     providerReference:t.provider_reference, packageAssignmentId:t.package_assignment_id,
-    description:t.description, createdAt:t.created_at
+    description:t.description, createdAt:t.created_at,
+    relatedTransactionId:t.related_transaction_id, refundReason:t.refund_reason,
+    reviewedBy:t.reviewed_by, reviewedAt:t.reviewed_at,
+    hasSuccessfulRefund:Boolean(t.refund_transaction_id), refundReference:t.refund_reference,
+    refundCreatedAt:t.refund_created_at
   })) });
+}));
+
+
+app.post("/api/admin/wallet-transactions/:id/refund", authenticate, roles("admin"), asyncRoute(async (req, res) => {
+  const transactionId = Number(req.params.id);
+  const reasonType = clean(req.body?.reasonType);
+  const reason = clean(req.body?.reason).replace(/\s+/g, " ");
+  const allowedReasons = ["pickup_cancelled", "incorrect_deduction", "other_valid_reason"];
+  if (!Number.isSafeInteger(transactionId) || transactionId < 1) return res.status(400).json({ error: "Invalid wallet transaction." });
+  if (!allowedReasons.includes(reasonType)) return res.status(400).json({ error: "Choose a valid refund reason." });
+  if (reason.length < 10 || reason.length > 1000) return res.status(400).json({ error: "Please provide a clear refund explanation of at least 10 characters." });
+
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const originalResult = await client.query(
+      "SELECT id,rider_id,amount_pesewas,status,package_assignment_id FROM wallet_transactions WHERE id=$1 AND type='commission' FOR UPDATE",
+      [transactionId]
+    );
+    if (!originalResult.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Original commission transaction not found." });
+    }
+    const original = originalResult.rows[0];
+    if (original.status !== "successful" || Number(original.amount_pesewas) >= 0 || !original.package_assignment_id) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "Only a successful commission deduction linked to a pickup can be refunded." });
+    }
+
+    const existingRefund = await client.query(
+      "SELECT id FROM wallet_transactions WHERE related_transaction_id=$1 AND type='refund' AND status='successful' LIMIT 1",
+      [original.id]
+    );
+    if (existingRefund.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "This commission has already been refunded. Duplicate refunds are not allowed." });
+    }
+
+    const assignmentResult = await client.query(
+      "SELECT id,rider_id,status FROM assignments WHERE id=$1 FOR UPDATE",
+      [original.package_assignment_id]
+    );
+    if (!assignmentResult.rowCount || Number(assignmentResult.rows[0].rider_id) !== Number(original.rider_id)) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "The original pickup assignment could not be verified against this rider." });
+    }
+    const assignment = assignmentResult.rows[0];
+    if (reasonType === "pickup_cancelled" && assignment.status !== "cancelled") {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "A cancellation refund can only be issued after the pickup assignment has been formally cancelled." });
+    }
+
+    const wallet = await client.query("SELECT balance_pesewas FROM wallets WHERE rider_id=$1 FOR UPDATE", [original.rider_id]);
+    if (!wallet.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "The rider wallet could not be found. No refund was issued." });
+    }
+
+    const refundAmount = Math.abs(Number(original.amount_pesewas));
+    const reference = "REF-" + crypto.randomUUID();
+    const inserted = await client.query(
+      "INSERT INTO wallet_transactions (rider_id,type,amount_pesewas,status,reference,package_assignment_id,description,related_transaction_id,refund_reason,reviewed_by,reviewed_at) VALUES($1,'refund',$2,'successful',$3,$4,$5,$6,$7,$8,NOW()) RETURNING id,reference,amount_pesewas,created_at",
+      [original.rider_id, refundAmount, reference, original.package_assignment_id,
+       "Admin-authorized commission refund (" + reasonType + ")", original.id, reason, req.user.id]
+    );
+    const credited = await client.query(
+      "UPDATE wallets SET balance_pesewas=balance_pesewas+$1 WHERE rider_id=$2",
+      [refundAmount, original.rider_id]
+    );
+    if (!credited.rowCount) throw new Error("Rider wallet could not be credited; refund transaction rolled back.");
+
+    await client.query("COMMIT");
+    res.json({
+      message: "Refund approved and credited to the rider's wallet.",
+      refund: { id: inserted.rows[0].id, reference: inserted.rows[0].reference, amountGhs: refundAmount / 100, createdAt: inserted.rows[0].created_at }
+    });
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    if (error.code === "23505") return res.status(409).json({ error: "This commission has already been refunded. Duplicate refunds are not allowed." });
+    throw error;
+  } finally { client.release(); }
 }));
 
 app.get("/api/admin/commission-reports", authenticate, roles("admin"), asyncRoute(async (req, res) => {
@@ -858,6 +948,9 @@ async function startServer() {
     await pool.query("ALTER TABLE rider_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_by BIGINT");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ");
+    await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS related_transaction_id BIGINT REFERENCES wallet_transactions(id)");
+    await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS refund_reason TEXT");
+    await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction ON wallet_transactions(related_transaction_id) WHERE type='refund' AND status='successful'");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_settings (id INTEGER PRIMARY KEY CHECK (id=1), manual_backup_enabled BOOLEAN NOT NULL DEFAULT FALSE, momo_account_name TEXT, momo_account_number TEXT, manual_backup_reason TEXT, updated_by BIGINT, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     await pool.query("INSERT INTO payment_settings(id) VALUES(1) ON CONFLICT (id) DO NOTHING");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_mode_audit (id BIGSERIAL PRIMARY KEY, admin_user_id BIGINT NOT NULL, manual_backup_enabled BOOLEAN NOT NULL, reason TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
