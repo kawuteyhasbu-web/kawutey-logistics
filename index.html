@@ -2948,7 +2948,7 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
       const button = document.getElementById("connectSendButton");
       const status = document.getElementById("connectStatus");
       if (!select || !field || !button || !status) return;
-      const recipientId = select.value;
+      const recipientId = activeRiderConnectPeerId || select.value;
       const message = field.value.trim();
       if (!recipientId || !message) {
         status.textContent = "Choose an approved rider and write a message first.";
