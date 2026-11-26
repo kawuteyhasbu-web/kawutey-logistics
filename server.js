@@ -315,6 +315,10 @@ app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(
   if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id)) {
     return res.status(400).json({ error: "Choose a valid Rider Connect conversation." });
   }
+  const beforeId = req.query.before === undefined ? null : Number(req.query.before);
+  if (beforeId !== null && (!Number.isSafeInteger(beforeId) || beforeId < 1)) {
+    return res.status(400).json({ error: "Invalid message-history cursor." });
+  }
   const peer = await pool.query("SELECT id FROM users WHERE id=$1 AND role='rider' AND status='active'", [peerId]);
   if (!peer.rowCount) return res.status(404).json({ error: "That rider is not available on Rider Connect." });
   const result = await pool.query(`
@@ -323,13 +327,15 @@ app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(
     FROM rider_messages m
     JOIN users sender ON sender.id=m.sender_id
     JOIN users recipient ON recipient.id=m.recipient_id
-    WHERE (m.sender_id=$1 AND m.recipient_id=$2)
-       OR (m.sender_id=$2 AND m.recipient_id=$1)
-    ORDER BY m.created_at ASC, m.id ASC
-    LIMIT 200
-  `, [req.user.id, peerId]);
+    WHERE ((m.sender_id=$1 AND m.recipient_id=$2) OR (m.sender_id=$2 AND m.recipient_id=$1))
+      AND ($3::bigint IS NULL OR m.id < $3)
+    ORDER BY m.id DESC
+    LIMIT 51
+  `, [req.user.id, peerId, beforeId]);
+  const hasMore = result.rows.length > 50;
+  const messages = result.rows.slice(0, 50).reverse();
   res.set("Cache-Control", "private, no-store");
-  res.json({ messages: result.rows });
+  res.json({ messages, hasMore });
 }));
 
 app.post("/api/rider/connect/read", authenticate, roles("rider"), asyncRoute(async (req, res) => {
