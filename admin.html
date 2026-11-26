@@ -302,6 +302,45 @@ body{background:radial-gradient(ellipse at 8% 0%,rgba(36,103,180,.09),transparen
 @media(max-width:560px){.head{padding:14px;border-radius:14px}.head .brand{gap:9px}.head .brand img{height:43px;max-width:112px}.head>a{min-height:38px;padding:8px 10px;font-size:.8rem}#loginCard{margin:24px auto;padding:21px 17px}#dashboard{gap:12px}}
 @media(prefers-reduced-motion:reduce){#dashboard>.card{transition:none}}
 
+
+
+/* Admin operations workspace: clearer review queues, notifications and finance panels */
+#dashboard{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+#dashboardActions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:9px;padding:12px 14px;border-radius:14px}
+#dashboardActions button{flex:0 1 auto}
+#dashboard>.card{min-width:0;overflow:hidden}
+#dashboard>.card>h2{display:flex;align-items:center;gap:10px;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid #e8eef6;color:#10396f;font-size:clamp(1.05rem,1.7vw,1.25rem);letter-spacing:-.03em}
+#dashboard>.card>p{color:#6b7d94;line-height:1.65}
+#notifications,#cancellationRequests,#walletTransactions,#depositRequests,#pendingRiders,#approvedRiders{display:grid;gap:11px;min-width:0}
+#notifications>.item,#cancellationRequests>.item,#walletTransactions>.item,#depositRequests>.item,#pendingRiders>.item,#approvedRiders>.item{position:relative;min-width:0;margin:0;padding:15px 16px 15px 18px;border:1px solid #e0e8f2;border-radius:13px;background:linear-gradient(145deg,#fff,#f9fbff);box-shadow:0 4px 13px rgba(8,43,104,.035);overflow-wrap:anywhere}
+#notifications>.item:before,#cancellationRequests>.item:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#f28a35;border-radius:13px 0 0 13px}
+#walletTransactions>.item:before,#depositRequests>.item:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#2469ad;border-radius:13px 0 0 13px}
+#pendingRiders>.item:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#df8a36;border-radius:13px 0 0 13px}
+#dashboard .item .meta{color:#718198;font-size:.84rem;overflow-wrap:anywhere}
+#dashboard .item strong{font-weight:850}
+#dashboard .item button{margin:5px 5px 0 0}
+#commissionSummaryCard{background:linear-gradient(145deg,#fff,#f7faff)}
+#commissionSummaryCard .commission-metric{border:1px solid #e0e8f2;border-radius:13px;background:#fff;box-shadow:0 4px 13px rgba(8,43,104,.035)}
+#commissionSummaryCard .commission-metric strong{font-size:clamp(1.2rem,2vw,1.6rem);letter-spacing:-.04em}
+#commissionReportEntries,#commissionReportHistory{line-height:1.7}
+#paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+#paymentSettingsForm label{display:grid;gap:7px;color:#23466f;font-size:.86rem;font-weight:800}
+#paymentSettingsForm button,#paymentSettingsForm .full-width{grid-column:1/-1}
+#riderApprovalQueue,#pendingRiders{min-width:0}
+#dashboard .admin-section{border:1px solid #e0e8f2;border-radius:14px;background:#fff;overflow:hidden}
+#dashboard .admin-section>summary{padding:15px 17px;background:linear-gradient(100deg,#f8faff,#fff);color:#153d73;font-weight:850}
+#dashboard .admin-section[open]>summary{border-bottom:1px solid #e8eef6;background:#f4f8fe}
+@media(max-width:900px){#dashboard{grid-template-columns:minmax(0,1fr)}#dashboardActions{grid-column:1}}
+@media(max-width:600px){
+ #dashboardActions{gap:7px;padding:10px}
+ #dashboardActions button{flex:1 1 calc(50% - 7px);min-width:0}
+ #dashboard>.card{padding:15px}
+ #notifications>.item,#cancellationRequests>.item,#walletTransactions>.item,#depositRequests>.item,#pendingRiders>.item,#approvedRiders>.item{padding:13px 12px 13px 16px}
+ #paymentSettingsForm{grid-template-columns:minmax(0,1fr)}
+ #paymentSettingsForm button,#paymentSettingsForm .full-width{grid-column:1}
+}
+@media(prefers-reduced-motion:reduce){#dashboard>.card:hover{transform:none}}
+
 </style><script src="/admin-password.js" defer></script>
 </head>
 <body><main class="wrap">
