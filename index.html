@@ -712,7 +712,7 @@
               ${p.assignment_status === "completed" ? `<p class="status verified" style="margin-top:8px;">Delivered${p.delivered_at ? ` — ${escapeHtml(formatGhanaDateTime(p.delivered_at))}` : ""}</p>` : ""}
               ${p.pickup_date_passed ? `<p class="status pending" style="margin-top:8px;">Pickup date passed — this offer has expired.</p>` : ""}
               ${p.cancellation_status ? `<p style="margin-top:10px;"><strong>Cancellation request:</strong> ${escapeHtml(String(p.cancellation_status).toUpperCase())}</p>${p.cancellation_reason_type ? `<p><strong>Reason:</strong> ${escapeHtml(({customer_cancelled:"Customer cancelled the order",incorrect_pickup_details:"Incorrect pickup details",package_unavailable:"Package unavailable or not ready"})[p.cancellation_reason_type] || p.cancellation_reason_type)}</p>` : ""}${p.cancellation_explanation ? `<p><strong>Explanation:</strong> ${escapeHtml(p.cancellation_explanation)}</p>` : ""}${p.cancellation_admin_note ? `<p><strong>Administrator's note:</strong> ${escapeHtml(p.cancellation_admin_note)}</p>` : ""}` : ""}
-              ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && !p.cancellation_window_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
+              ${!["cancelled","completed"].includes(p.assignment_status) && !p.pickup_date_passed && !p.cancellation_window_passed && p.cancellation_status !== "pending" && p.cancellation_status !== "approved" ? `<div style="margin-top:12px;"><button type="button" class="cancel-pickup-button" data-pickup-id="${Number(p.id)}" ${p.accepted_at ? `data-cancel-deadline="${new Date(p.accepted_at).getTime()+600000}"` : ""} style="background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Request Cancellation</button></div>` : ""}
               ${p.assignment_status === "available" && !p.pickup_date_passed && !p.rider_id && !p.cancellation_request_id ? `<div style="margin-top:12px;"><button type="button" class="delete-pickup-button" data-pickup-id="${Number(p.id)}" style="background:#fff1f0;color:#b42318;border:1px solid #f3b7b2;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;">Delete Order</button></div>` : ""}
               <small>Request submitted: ${escapeHtml(formatGhanaDateTime(p.created_at))}</small>
             </div>`;
@@ -722,6 +722,12 @@
         });
         area.querySelectorAll(".cancel-pickup-button").forEach(button => {
           button.addEventListener("click", () => requestPickupCancellation(button.dataset.pickupId, button));
+        });
+        area.querySelectorAll(".cancel-pickup-button[data-cancel-deadline]").forEach(button => {
+          const deadline = Number(button.dataset.cancelDeadline);
+          const remaining = deadline - Date.now();
+          if (!Number.isFinite(deadline) || remaining <= 0) button.remove();
+          else window.setTimeout(() => { if (button.isConnected) button.remove(); }, remaining);
         });
         for (const p of mine) {
           if (!p.rider_name || !p.rider_has_photo) continue;
