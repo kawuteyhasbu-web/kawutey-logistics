@@ -1714,6 +1714,66 @@ footer a:focus-visible{outline:3px solid rgba(242,140,40,.55);outline-offset:3px
 }
 </style>
 
+
+<style id="kl-portal-visual-batch-2026-11">
+/* Portal visual batch: stronger page hierarchy, consistent cards and clearer mobile actions. */
+#vendorAuthCard,#riderAuthCard{
+ border:1px solid #dce6f2;border-radius:21px;
+ background:linear-gradient(145deg,#fff 0%,#f7faff 100%);
+ box-shadow:0 14px 34px rgba(8,43,104,.075);
+}
+#vendorAuthCard>h2,#riderAuthCard>h2{
+ color:#082b68;letter-spacing:-.035em;line-height:1.25;
+}
+#vendorAuthCard h3,#riderAuthCard h3{color:#123967;letter-spacing:-.02em}
+#vendorAuthCard form,#riderAuthCard form{gap:12px}
+#vendorAuthCard .form-group,#riderAuthCard .form-group{min-width:0}
+#vendorAuthCard .form-group label,#riderAuthCard .form-group label{color:#24466e;font-weight:750}
+#vendorAuthCard :is(input,select,textarea),#riderAuthCard :is(input,select,textarea){
+ border:1px solid #cbd9e9;border-radius:11px;background:#fff;
+}
+#vendorAuthCard :is(input,select,textarea):focus-visible,#riderAuthCard :is(input,select,textarea):focus-visible{
+ outline:3px solid rgba(255,121,0,.24);outline-offset:1px;border-color:#ff7900;
+}
+#vendorDashboard>h3,#riderDashboard>div:first-child h2{letter-spacing:-.035em}
+#vendorDashboard>button[data-action="togglePickupForm"]{
+ background:linear-gradient(105deg,#ff7900,#ff9633);color:#fff;
+ box-shadow:0 7px 16px rgba(255,121,0,.18)
+}
+#vendorDashboard>button[data-action="logoutVendor"],
+#riderDashboard>div:first-child button[data-action="logoutRider"]{
+ border:1px solid #d8e3f1;background:#fff;color:#24466e;
+}
+#vendorDashboard>h4,#riderDashboard .card>h3{color:#123967;letter-spacing:-.02em}
+#pickupHistory:empty:after{content:"Your submitted pickup requests will appear here.";display:block;padding:16px;border:1px dashed #cbd8e8;border-radius:13px;color:#718198;background:#fbfcff}
+#riderDashboard .wallet-stats .stat-box{
+ border:1px solid rgba(255,255,255,.2);border-radius:13px;
+ background:rgba(255,255,255,.1);min-width:0;
+}
+#riderDashboard .wallet-stats .label{line-height:1.35}
+#riderDashboard>.card>h3{padding-bottom:10px;border-bottom:1px solid #e7edf5}
+#riderDashboard #secureAvailableAssignments,
+#riderDashboard #secureAcceptedAssignments{display:grid;gap:10px}
+#riderDashboard .assignment-item{margin:0}
+@media(min-width:900px){
+ #vendorDashboard>#pickupFormArea{max-width:100%}
+ #riderDashboard>.card{align-self:start}
+ #riderDashboard .wallet-box{background:linear-gradient(125deg,#082b68,#104b91 72%,#1762a8)}
+}
+@media(max-width:650px){
+ #vendorAuthCard,#riderAuthCard{padding:18px 15px!important;border-radius:17px}
+ #vendorAuthCard>h2,#riderAuthCard>h2{font-size:1.15rem;line-height:1.3}
+ #vendorAuthCard .form-group,#riderAuthCard .form-group{margin-bottom:2px}
+ #vendorDashboard>button[data-action="logoutVendor"]{width:100%}
+ #riderDashboard>div:first-child{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+ #riderDashboard>div:first-child h2,#riderDashboard>div:first-child p{width:100%}
+ #riderDashboard>div:first-child button{width:100%;margin:2px 0 0}
+ #riderDashboard .wallet-stats .stat-box{padding:11px 9px}
+ #riderDashboard .wallet-stats .value{overflow-wrap:anywhere}
+ #riderDashboard .assignment-item button{width:100%}
+}
+</style>
+
 </head>
 <body>
   <div class="container">
