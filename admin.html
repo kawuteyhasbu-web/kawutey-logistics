@@ -129,6 +129,31 @@ button.secondary{background:#fff;color:var(--primary);border:1px solid #d5e0ef}
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 
+
+/* Unified KL admin workspace polish */
+:root{--kl-ink:#102b55;--kl-muted:#64748b;--kl-line:#dce6f2;--kl-blue:#0a2f6b;--kl-orange:#ff7900;--kl-surface:#fff;--kl-soft:#f4f7fc}
+body{background:linear-gradient(180deg,#f3f6fb 0%,#edf2f8 100%);color:var(--kl-ink)}
+.wrap{max-width:1160px}
+.head,.card{border:1px solid rgba(210,222,239,.88);box-shadow:0 9px 28px rgba(10,47,107,.065)}
+.head{position:relative;overflow:hidden}
+.head:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#082b68,#1471cb,#ff7900)}
+.card{transition:box-shadow .18s ease,border-color .18s ease}
+.card:hover{border-color:#c5d7ed;box-shadow:0 12px 30px rgba(10,47,107,.085)}
+button,a,input,select,textarea{font:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(255,121,0,.45);outline-offset:2px}
+input:not([type=checkbox]):not([type=radio]),select,textarea{border:1px solid #ccd8e8;border-radius:10px;background:#fff;color:#102b55}
+input::placeholder,textarea::placeholder{color:#8795a9}
+button{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease}
+button:disabled{cursor:not-allowed;opacity:.58}
+#dashboard>.card{scroll-margin-top:18px}
+#dashboard>.card>h2{letter-spacing:-.025em}
+#dashboard table thead{background:#f3f7fd}
+#dashboard table th{color:#24456f;font-size:.82rem;font-weight:800}
+#dashboard table tbody tr:nth-child(even){background:#fbfcff}
+#dashboard table tbody tr:hover{background:#f2f7ff}
+@media(max-width:680px){.wrap{padding:10px}.head,.card{border-radius:13px}}
+@media(prefers-reduced-motion:reduce){.card,button{transition:none}}
+
 </style><script src="/admin-password.js" defer></script>
 </head>
 <body><main class="wrap">
