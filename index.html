@@ -825,6 +825,36 @@ header:after,.header:after{content:"";position:absolute;right:-90px;top:-175px;w
 }
 @media(prefers-reduced-motion:reduce){.tabs .tab-btn{transition:none}}
 
+
+
+/* Registration finish: clear field grouping, location guidance and photo-upload treatment */
+#vendorAuthCard,#riderAuthCard{max-width:900px}
+#vendorRegSection,#riderRegSection,#vendorLoginSection,#riderLoginSection{padding:clamp(18px,3vw,28px);border:1px solid #e0e9f4;border-radius:17px;background:linear-gradient(150deg,#fff,#f8faff)}
+#vendorRegSection>.alert,#riderRegSection>.alert{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;border-radius:12px;line-height:1.6}
+#vendorRegForm .form-group,#riderRegForm .form-group{display:flex;flex-direction:column;gap:7px}
+#vendorRegForm .form-group>label,#riderRegForm .form-group>label,#vendorLoginForm .form-group>label,#riderLoginForm .form-group>label{color:#173d70;font-size:.88rem;font-weight:850}
+#vendorRegForm input:not([type=file]),#riderRegForm input:not([type=file]),#vendorLoginForm input,#riderLoginForm input{width:100%;min-width:0;min-height:49px;padding:12px 13px;border:1px solid #d2deec;border-radius:11px;background:#fbfcff;color:#102f58;transition:border-color .16s ease,box-shadow .16s ease}
+#vendorRegForm input:focus,#riderRegForm input:focus,#vendorLoginForm input:focus,#riderLoginForm input:focus{border-color:#2875c7;outline:0;box-shadow:0 0 0 3px rgba(40,117,199,.12)}
+#vendorRegForm .form-group:has(#v-location),#riderRegForm .form-group:has(#r-location){padding:13px;border:1px solid #dce7f4;border-radius:13px;background:linear-gradient(140deg,#f8fbff,#f0f6fd)}
+#vendorRegForm #v-location,#riderRegForm #r-location{background:#fff}
+.kl-field-hint{display:block;color:#6a7d96;font-size:.79rem;line-height:1.55}
+#riderRegForm .form-group:has(#r-photo){padding:14px;border:1px dashed #a9bfd9;border-radius:13px;background:#f8fbff}
+#riderRegForm #r-photo{width:100%;max-width:100%;padding:10px;border:1px solid #d5e0ed;border-radius:10px;background:#fff;color:#526984}
+#photoPreview:empty{display:none}
+#photoPreview img{max-width:116px;max-height:116px;object-fit:cover;border:3px solid #fff;border-radius:14px;box-shadow:0 4px 14px rgba(8,43,104,.15)}
+#vendorRegForm .password-wrapper,#riderRegForm .password-wrapper,#vendorLoginForm .password-wrapper,#riderLoginForm .password-wrapper{display:flex;gap:7px;min-width:0}
+#vendorRegForm .password-wrapper input,#riderRegForm .password-wrapper input,#vendorLoginForm .password-wrapper input,#riderLoginForm .password-wrapper input{flex:1;min-width:0}
+#vendorRegForm .toggle-password,#riderRegForm .toggle-password,#vendorLoginForm .toggle-password,#riderLoginForm .toggle-password{flex:0 0 auto;min-width:58px;border:1px solid #d4dfed;border-radius:10px;background:#f2f6fc;color:#174579;font-weight:800}
+#vendorRegBtn,#riderRegBtn{min-height:51px;margin-top:5px;border-radius:12px;font-weight:900;box-shadow:0 7px 16px rgba(8,43,104,.12)}
+#vendorRegSection>p a,#riderRegSection>p a,#vendorLoginSection>p a,#riderLoginSection>p a{font-weight:850;text-underline-offset:3px}
+@media(max-width:650px){
+ #vendorRegSection,#riderRegSection,#vendorLoginSection,#riderLoginSection{padding:17px 13px;border-radius:14px}
+ #vendorRegForm .form-group:has(#v-location),#riderRegForm .form-group:has(#r-location){padding:11px}
+ #vendorRegForm input:not([type=file]),#riderRegForm input:not([type=file]),#vendorLoginForm input,#riderLoginForm input{min-height:47px}
+ #riderRegForm .form-group:has(#r-photo){padding:11px}
+}
+@media(prefers-reduced-motion:reduce){#vendorRegForm input,#riderRegForm input,#vendorLoginForm input,#riderLoginForm input{transition:none}}
+
 </style>
 </head>
 <body>
