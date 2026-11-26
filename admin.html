@@ -720,13 +720,22 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboard #commissionReportHistory .report-row:last-child{border-bottom:1px solid #e6edf5}
 @media(max-width:620px){#dashboardActions{top:5px}#dashboard .commission-toolbar{display:grid;grid-template-columns:minmax(0,1fr)}#dashboard .commission-toolbar label{min-width:0}#dashboard .commission-toolbar button{width:100%}}
 @media(prefers-reduced-motion:reduce){.admin-section{transition:none}}
+
+/* KL redesign batch 7: searchable administrator workspace navigation */
+#dashboardActions{position:sticky;top:8px;z-index:6;display:grid;grid-template-columns:minmax(220px,1fr) auto auto;align-items:center;gap:10px;padding:12px 15px!important;background:rgba(255,255,255,.94);backdrop-filter:blur(12px)}
+#dashboardActions .admin-search-label{display:block;min-width:0;margin:0;color:#173d70;font-size:.79rem;font-weight:850}
+#dashboardActions #adminSectionSearch{display:block;width:100%;min-height:42px;margin-top:5px;padding:9px 12px;border:1px solid #d9e3f0;border-radius:11px;background:#f9fbff;font-size:.92rem}
+#dashboardActions #adminSectionSearchCount{white-space:nowrap}
+#dashboardActions button{margin:0;min-height:40px}
+#dashboard>details.admin-section[hidden]{display:none!important}
+@media(max-width:650px){#dashboardActions{grid-template-columns:minmax(0,1fr) auto;gap:8px}#dashboardActions .admin-search-label{grid-column:1/-1}#dashboardActions #adminSectionSearchCount{white-space:normal}#dashboardActions #logoutButton{grid-column:2;grid-row:2}}
 </style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
 <section class="card" id="loginCard"><h2>Administrator Login</h2><p>Sign in with the administrator account provided during secure setup.</p><form id="loginForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" required><button type="button" class="secondary password-toggle" id="togglePassword" aria-controls="password" aria-pressed="false">Show</button></div><button id="loginButton">Sign in</button></form><p class="meta" id="adminSignupAccess" style="margin-top:12px">Need another administrator account? <a id="adminSignupLink" href="#" style="color:var(--primary);font-weight:700">Admin Sign Up</a></p><div id="loginMessage" class="notice hidden" role="status"></div></section>
 <section id="dashboard" class="hidden">
-<div class="card" id="dashboardActions" style="display:flex;justify-content:flex-end;padding:10px 16px"><button type="button" class="secondary" id="logoutButton">Log out</button></div>
+<div class="card" id="dashboardActions"><label class="admin-search-label" for="adminSectionSearch">Find an administrator section<input id="adminSectionSearch" type="search" placeholder="Search vendors, refunds, riders, reports…" autocomplete="off"></label><span id="adminSectionSearchCount" class="meta" aria-live="polite">All sections shown</span><button type="button" class="secondary" id="clearAdminSectionSearch" hidden>Clear search</button><button type="button" class="secondary" id="logoutButton">Log out</button></div>
 <section class="card" id="commissionSummaryCard">
 <h2>Today's Rider Commission Collections</h2>
 <p class="meta">Successful commission deductions recorded from rider wallets today. Daily reporting uses Ghana time (GMT). This figure is commission deducted, not confirmation of funds received into Paystack.</p>
@@ -769,6 +778,9 @@ function compactDashboardSections(){
     dashboard.insertBefore(details,card);details.append(summary,card);card.classList.add("section-card");
   });
 }
+function filterAdminSections(){const input=$("adminSectionSearch");if(!input)return;const query=input.value.trim().toLowerCase();let visible=0;document.querySelectorAll("#dashboard > details.admin-section").forEach(section=>{const match=!query||section.textContent.toLowerCase().includes(query);section.hidden=!match;if(match)visible++;});$("adminSectionSearchCount").textContent=query?visible+" matching section"+(visible===1?"":"s"):"All sections shown";$("clearAdminSectionSearch").hidden=!query;}
+$("adminSectionSearch").addEventListener("input",filterAdminSections);
+$("clearAdminSectionSearch").addEventListener("click",()=>{$("adminSectionSearch").value="";filterAdminSections();$("adminSectionSearch").focus();});
 function openDashboard(){ compactDashboardSections(); $("loginCard").classList.add("hidden");$("dashboard").classList.remove("hidden");loadAdminAccountCount();loadNotifications();loadDeposits();loadWalletTransactions();loadCancellationRequests();loadPaymentSettings();loadCommissionReport(); if(!commissionRefreshTimer)commissionRefreshTimer=setInterval(()=>{if(!document.hidden&&sessionStorage.getItem(tokenKey))loadCommissionReport();},60000); }
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function formatGhanaDateTime(value){const date=new Date(value);if(!Number.isFinite(date.getTime()))return "Date unavailable";return new Intl.DateTimeFormat("en-GH",{timeZone:"Africa/Accra",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true}).format(date);}
