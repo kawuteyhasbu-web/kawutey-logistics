@@ -764,6 +764,24 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 @media(prefers-reduced-motion:reduce){#dashboard button{transition:none}#dashboard button:not(:disabled):hover{transform:none}}
 
 </style>
+<style id="admin-vendor-pickup-oversight-polish">
+
+/* Administrator vendor and pickup oversight responsive workspace */
+#dashboard #vendorManagement,#dashboard #pickupManagement,#dashboard #vendorOversight,#dashboard #pickupOversight{scroll-margin-top:28px}
+#dashboard .vendor-row,#dashboard .pickup-row,#dashboard .vendor-record,#dashboard .pickup-record{border:1px solid #dfe7f1;border-radius:14px;background:linear-gradient(145deg,#fff,#f8faff);padding:15px;margin:10px 0;box-shadow:0 4px 14px rgba(15,35,65,.045);overflow-wrap:anywhere}
+#dashboard .vendor-row h3,#dashboard .pickup-row h3,#dashboard .vendor-record h3,#dashboard .pickup-record h3{color:#102f60;letter-spacing:-.015em}
+#dashboard .vendor-row p,#dashboard .pickup-row p,#dashboard .vendor-record p,#dashboard .pickup-record p{line-height:1.6;color:#45556d}
+#dashboard .vendor-row .actions,#dashboard .pickup-row .actions{display:flex;flex-wrap:wrap;gap:8px}
+#dashboard .status-pill,#dashboard .status-badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:.76rem;font-weight:800;background:#fff1e3;color:#8c4b0b}
+#dashboard .status-pill.success,#dashboard .status-badge.success{background:#e8f5ed;color:#17633a}
+#dashboard .status-pill.neutral,#dashboard .status-badge.neutral{background:#eef2f7;color:#475569}
+#dashboard .table-wrap{width:100%;overflow-x:auto;border-radius:12px;-webkit-overflow-scrolling:touch}
+#dashboard .table-wrap table{min-width:620px}
+#dashboard .search-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#dashboard .search-row input{flex:1 1 220px;min-width:0}
+@media(max-width:680px){#dashboard .vendor-row,#dashboard .pickup-row,#dashboard .vendor-record,#dashboard .pickup-record{padding:12px}#dashboard .vendor-row .actions,#dashboard .pickup-row .actions{display:grid;grid-template-columns:1fr}#dashboard .search-row{align-items:stretch;flex-direction:column}#dashboard .search-row input{width:100%}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
