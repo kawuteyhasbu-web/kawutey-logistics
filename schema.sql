@@ -110,8 +110,11 @@ CREATE TABLE IF NOT EXISTS rider_messages (
   sender_id BIGINT NOT NULL REFERENCES users(id),
   recipient_id BIGINT NOT NULL REFERENCES users(id),
   message TEXT NOT NULL CHECK (length(message) BETWEEN 1 AND 2000),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  read_at TIMESTAMPTZ
 );
+ALTER TABLE rider_messages ADD COLUMN IF NOT EXISTS read_at TIMESTAMPTZ;
+CREATE INDEX IF NOT EXISTS rider_messages_unread_idx ON rider_messages(recipient_id, sender_id, created_at DESC) WHERE read_at IS NULL;
 CREATE TABLE IF NOT EXISTS exchange_requests (
   id BIGSERIAL PRIMARY KEY,
   assignment_id BIGINT NOT NULL REFERENCES assignments(id),
