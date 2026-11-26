@@ -615,6 +615,22 @@ button:disabled{cursor:not-allowed;opacity:.58}
 .kl-content-page .btn{min-height:43px;border-radius:10px;font-weight:850}
 @media(max-width:600px){#vendorAuthCard>h2,#riderAuthCard>h2{margin-bottom:12px;padding:22px 17px}#vendorRegSection,#riderRegSection{padding:13px;border-radius:14px}#vendorRegForm .form-group,#riderRegForm .form-group{padding:10px;margin-bottom:11px}#vendorRegForm>button[type=submit],#riderRegForm>button[type=submit]{width:100%}}
 
+
+/* Final public-site navigation and informational page consistency */
+:root{scroll-padding-top:88px}
+html{scroll-behavior:smooth}
+header{backdrop-filter:saturate(150%) blur(12px)}
+nav a,nav button{font-weight:750}
+nav a[aria-current="page"],nav button.active{color:#ff7900}
+.kl-content-page{scroll-margin-top:82px}
+.kl-page-hero{isolation:isolate}
+.kl-page-hero .kl-eyebrow{text-transform:uppercase}
+.kl-contact-grid>a:focus-visible,.kl-steps-grid article:focus-within{outline:3px solid rgba(255,121,0,.35);outline-offset:3px}
+footer a{transition:color .16s ease}
+footer a:hover{color:#ff8a24}
+@media(max-width:680px){:root{scroll-padding-top:68px}html{scroll-behavior:auto}header{backdrop-filter:blur(8px)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}footer a{transition:none}}
+
 </style>
 </head>
 <body>
