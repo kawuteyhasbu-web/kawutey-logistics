@@ -341,7 +341,7 @@ app.get("/api/rider/wallet", authenticate, roles("rider"), asyncRoute(async (req
     GROUP BY w.balance_pesewas,rp.rider_code`, [req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: "Wallet not found." });
   const row = result.rows[0];
-  const transactions = await pool.query(`SELECT id,type,amount_pesewas,status,reference,provider_reference,package_assignment_id,description,created_at
+  const transactions = await pool.query(`SELECT id,type,amount_pesewas,status,reference,provider_reference,package_assignment_id,description,refund_reason,created_at
     FROM wallet_transactions WHERE rider_id=$1 ORDER BY created_at DESC,id DESC LIMIT 100`, [req.user.id]);
   res.set("Cache-Control", "private, no-store");
   res.json({
@@ -353,7 +353,7 @@ app.get("/api/rider/wallet", authenticate, roles("rider"), asyncRoute(async (req
     transactions: transactions.rows.map(t => ({
       id: t.id, type: t.type, amountGhs: Number(t.amount_pesewas) / 100,
       status: t.status, reference: t.reference, providerReference: t.provider_reference,
-      assignmentId: t.package_assignment_id, description: t.description, createdAt: t.created_at
+      assignmentId: t.package_assignment_id, description: t.description, refundReason: t.refund_reason, createdAt: t.created_at
     }))
   });
 }));
@@ -548,10 +548,12 @@ app.patch("/api/admin/payment-settings", authenticate, roles("admin"), asyncRout
 app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
   const result = await pool.query(`SELECT t.id,t.rider_id,u.full_name,u.phone,r.rider_code,t.type,t.amount_pesewas,t.status,t.reference,t.provider_reference,t.package_assignment_id,t.description,t.created_at,
       t.related_transaction_id,t.refund_reason,t.reviewed_by,t.reviewed_at,
-      refund.id AS refund_transaction_id,refund.reference AS refund_reference,refund.created_at AS refund_created_at
+      refund.id AS refund_transaction_id,refund.reference AS refund_reference,refund.created_at AS refund_created_at,
+      reviewer.full_name AS reviewer_name
     FROM wallet_transactions t
     JOIN users u ON u.id=t.rider_id
     JOIN rider_profiles r ON r.user_id=u.id
+    LEFT JOIN users reviewer ON reviewer.id=t.reviewed_by
     LEFT JOIN wallet_transactions refund ON refund.related_transaction_id=t.id AND refund.type='refund' AND refund.status='successful'
     ORDER BY t.created_at DESC,t.id DESC LIMIT 300`);
   res.set("Cache-Control", "private, no-store");
@@ -561,7 +563,7 @@ app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRou
     providerReference:t.provider_reference, packageAssignmentId:t.package_assignment_id,
     description:t.description, createdAt:t.created_at,
     relatedTransactionId:t.related_transaction_id, refundReason:t.refund_reason,
-    reviewedBy:t.reviewed_by, reviewedAt:t.reviewed_at,
+    reviewedBy:t.reviewed_by, reviewedAt:t.reviewed_at, reviewedByName:t.reviewer_name,
     hasSuccessfulRefund:Boolean(t.refund_transaction_id), refundReference:t.refund_reference,
     refundCreatedAt:t.refund_created_at
   })) });
