@@ -172,7 +172,7 @@ async function loadWalletTransactions(){
       const hasApprovedVendorCancellation=Boolean(t.cancellationReasonType);
       const showVendorCancellationDetails=hasApprovedVendorCancellation;
       const refundControl=eligible
-        ? '<div class="refund-controls"><label>Refund reason category<select data-refund-reason-type><option value="incorrect_deduction" '+(!hasApprovedVendorCancellation? "selected":"")+'>Incorrect commission deduction</option><option value="pickup_cancelled" '+(hasApprovedVendorCancellation? "selected":"")+'>Accepted pickup cancelled</option><option value="other_valid_reason">Other valid reason</option></select></label><p class="meta" data-vendor-cancellation-reason '+(showVendorCancellationDetails?'':'hidden')+'><strong>Vendor cancellation reason:</strong> '+escapeHtml(cancellationReasonLabels[t.cancellationReasonType]||t.cancellationReasonType||"")+'</p><label>Explanation (required)<textarea data-refund-reason maxlength="1000" rows="3" placeholder="Enter the reason supporting this refund." '+(showVendorCancellationDetails?'':'disabled')+'>'+escapeHtml(showVendorCancellationDetails?(t.cancellationExplanation||""):"")+'</textarea></label><button type="button" data-issue-refund="'+Number(t.id)+'">Approve and issue full refund</button></div>'
+        ? '<div class="refund-controls"><label>Refund reason category<select data-refund-reason-type><option value="incorrect_deduction" '+(!hasApprovedVendorCancellation? "selected":"")+'>Incorrect commission deduction</option><option value="pickup_cancelled" '+(hasApprovedVendorCancellation? "selected":"")+'>Accepted pickup cancelled</option><option value="other_valid_reason">Other valid reason</option></select></label><p class="meta" data-vendor-cancellation-reason '+(showVendorCancellationDetails?'':'hidden')+'><strong>Vendor cancellation reason:</strong> '+escapeHtml(cancellationReasonLabels[t.cancellationReasonType]||t.cancellationReasonType||"")+'</p><label data-refund-explanation-label>Explanation (required)<textarea data-refund-reason data-vendor-explanation="'+escapeHtml(t.cancellationExplanation||"")+'" data-has-vendor-cancellation="'+(hasApprovedVendorCancellation?'true':'false')+'" maxlength="1000" rows="3" placeholder="Enter the reason supporting this refund." '+(showVendorCancellationDetails?'':'disabled')+'>'+escapeHtml(showVendorCancellationDetails?(t.cancellationExplanation||""):"")+'</textarea></label><button type="button" data-issue-refund="'+Number(t.id)+'">Approve and issue full refund</button></div>'
         : "";
       const refundStatus=t.hasSuccessfulRefund?'<p><strong>Refund already issued:</strong> '+escapeHtml(t.refundReference||"Recorded")+'</p><p><strong>Approved by:</strong> '+escapeHtml(t.reviewedByName||"Administrator")+(t.reviewedAt?' · '+escapeHtml(formatGhanaDateTime(t.reviewedAt)):'')+'</p>':"";
       return '<article class="item" data-has-vendor-cancellation="'+(hasApprovedVendorCancellation?'true':'false')+'" data-vendor-cancellation-explanation="'+escapeHtml(t.cancellationExplanation||"")+'"><span class="tag '+(t.status==="successful"?"read":"")+'">'+escapeHtml(String(t.status).toUpperCase())+'</span> <strong>'+escapeHtml(labels[t.type]||String(t.type).toUpperCase())+'</strong><p><strong>Rider:</strong> '+escapeHtml(t.riderName)+' ('+escapeHtml(t.riderCode)+')</p><p><strong>Phone:</strong> '+escapeHtml(t.phone)+'</p><p><strong>Amount:</strong> GH₵'+Math.abs(Number(t.amountGhs)).toFixed(2)+(Number(t.amountGhs)<0?' deducted':' credited')+'</p><p><strong>Reference:</strong> '+escapeHtml(t.reference)+'</p>'+(t.providerReference?'<p><strong>Provider reference:</strong> '+escapeHtml(t.providerReference)+'</p>':'')+(t.packageAssignmentId?'<p><strong>Pickup assignment:</strong> '+escapeHtml(t.packageAssignmentId)+'</p>':'')+(t.relatedTransactionId?'<p><strong>Original transaction ID:</strong> '+escapeHtml(t.relatedTransactionId)+'</p>':'')+(t.refundReason?'<p><strong>Refund reason:</strong> '+escapeHtml(t.refundReason)+'</p>':'')+'<p>'+escapeHtml(t.description||"")+'</p>'+refundStatus+'<p class="meta">'+escapeHtml(formatGhanaDateTime(t.createdAt))+'</p>'+refundControl+'</article>';
@@ -189,6 +189,22 @@ $("walletTransactions").addEventListener("change",e=>{
   const showVendorDetails=category.value==="pickup_cancelled"&&Boolean(card.dataset.hasVendorCancellation==="true");
   explanation.value=showVendorDetails?card.dataset.vendorCancellationExplanation||"":"";
   vendorReason.hidden=!showVendorDetails;
+});
+$("walletTransactions").addEventListener("change",e=>{
+  const select=e.target.closest("[data-refund-reason-type]");
+  if(!select)return;
+  const card=select.closest(".item");
+  const field=card.querySelector("[data-refund-reason]");
+  const label=card.querySelector("[data-refund-explanation-label]");
+  const vendorReason=card.querySelector("[data-vendor-cancellation-reason]");
+  if(!field||!label)return;
+  const hasVendorCancellation=field.dataset.hasVendorCancellation==="true";
+  if(!hasVendorCancellation)return;
+  const matches=select.value==="pickup_cancelled";
+  label.hidden=!matches;
+  field.disabled=!matches;
+  field.value=matches?field.dataset.vendorExplanation:"";
+  if(vendorReason)vendorReason.hidden=!matches;
 });
 $("walletTransactions").addEventListener("click",async e=>{
   const button=e.target.closest("[data-issue-refund]");
