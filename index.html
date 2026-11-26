@@ -488,6 +488,8 @@
 
     document.addEventListener("change", event => {
       if (event.target.id === "r-photo") previewPhoto(event);
+      const deliveryCheckbox = event.target.closest("[data-secure-deliver]");
+      if (deliveryCheckbox && deliveryCheckbox.checked) markSecureAssignmentDelivered(deliveryCheckbox.getAttribute("data-secure-deliver"), deliveryCheckbox);
     });
 
     document.addEventListener("submit", event => {
@@ -1066,7 +1068,7 @@
           accepted.forEach(a => {
             const card = document.createElement("div");
             card.className = "assignment-item";
-            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p>" + (a.accepted_at ? "<p>Accepted: " + escapeHtml(formatGhanaDateTime(a.accepted_at)) + "</p>" : "") + "<p>Packages: " + Number(a.total_packages) + "</p>" + (a.status === "completed" ? "<p class='status verified'>Delivered" + (a.delivered_at ? " — " + escapeHtml(formatGhanaDateTime(a.delivered_at)) : "") + "</p>" : "<span class='status verified'>Accepted</span><p><button type='button' class='btn btn-accent' data-secure-deliver='" + Number(a.id) + "'>Mark as Delivered</button></p>");
+            card.innerHTML = "<strong>" + escapeHtml(a.description || "Package pickup") + "</strong><p>Vendor: " + escapeHtml(a.vendor_name || "Vendor") + "</p><p>Pickup time: " + escapeHtml(formatGhanaDateTime(a.preferred_at)) + "</p>" + (a.accepted_at ? "<p>Accepted: " + escapeHtml(formatGhanaDateTime(a.accepted_at)) + "</p>" : "") + "<p>Packages: " + Number(a.total_packages) + "</p>" + (a.status === "completed" ? "<p class='status verified'>Delivered" + (a.delivered_at ? " — " + escapeHtml(formatGhanaDateTime(a.delivered_at)) : "") + "</p>" : "<span class='status verified'>Accepted</span><p><label style='display:inline-flex;align-items:center;gap:8px;font-weight:600;'><input type='checkbox' data-secure-deliver='" + Number(a.id) + "'> Mark as Delivered</label></p>");
             acceptedArea.appendChild(card);
           });
         }
@@ -1270,14 +1272,14 @@
       } finally { button.disabled = false; }
     }
 
-    async function markSecureAssignmentDelivered(id, button) {
-      if (!window.confirm("Confirm that this package has been delivered to the customer?")) return;
-      button.disabled = true;
+    async function markSecureAssignmentDelivered(id, checkbox) {
+      if (!window.confirm("Confirm that this package has been delivered to the customer?")) { checkbox.checked = false; return; }
+      checkbox.disabled = true;
       try {
         const result = await apiRequest("/api/rider/assignments/" + encodeURIComponent(id) + "/deliver", { method: "POST", riderAuth: true });
         alert(result.message);
         await loadSecureRiderAssignments();
-      } catch (error) { alert(error.message || "Could not mark this pickup as delivered."); button.disabled = false; }
+      } catch (error) { alert(error.message || "Could not mark this pickup as delivered."); checkbox.checked = false; checkbox.disabled = false; }
     }
 
     async function acceptSecureAssignment(id, button) {
