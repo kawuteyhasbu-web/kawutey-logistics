@@ -484,6 +484,30 @@ html{scroll-behavior:smooth}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+
+
+/* Batch 2: administrator account review and approval workspace */
+#pendingRiders,#approvedRiders,#pendingVendors,#approvedVendors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+#pendingRiders>article,#approvedRiders>article,#pendingRiders>.item,#approvedRiders>.item,
+#pendingVendors>article,#approvedVendors>article,#pendingVendors>.item,#approvedVendors>.item{
+ min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:9px;padding:16px;border:1px solid #dce5f2;border-radius:15px;background:linear-gradient(150deg,#fff,#f7faff);box-shadow:0 5px 16px rgba(8,43,104,.045);overflow-wrap:anywhere
+}
+#pendingRiders>article strong,#approvedRiders>article strong,#pendingVendors>article strong,#approvedVendors>article strong{color:#0b3473}
+#pendingRiders img,#approvedRiders img{max-width:100%;height:auto;object-fit:cover;border-radius:12px}
+#pendingRiders button,#approvedRiders button,#pendingVendors button,#approvedVendors button{min-height:43px;border-radius:10px;font-weight:850}
+#pendingRiders button[id*="approve"],#pendingVendors button[id*="approve"]{background:linear-gradient(100deg,#ff7900,#ff9630);border:0;color:#fff}
+#pendingRiders button[id*="reject"],#pendingVendors button[id*="reject"]{background:#fff;border:1px solid #e2caca;color:#9a3030}
+#depositRequests,#walletTransactions{display:grid;gap:10px;min-width:0}
+#depositRequests>*,#walletTransactions>*{min-width:0;padding:14px;border:1px solid #dce5f2;border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#dashboard table tbody tr:hover{background:#f7faff}
+@media(max-width:700px){
+ #pendingRiders,#approvedRiders,#pendingVendors,#approvedVendors{grid-template-columns:minmax(0,1fr);gap:10px}
+ #pendingRiders>article,#approvedRiders>article,#pendingRiders>.item,#approvedRiders>.item,
+ #pendingVendors>article,#approvedVendors>article,#pendingVendors>.item,#approvedVendors>.item{padding:14px;border-radius:14px}
+ #pendingRiders button,#approvedRiders button,#pendingVendors button,#approvedVendors button{width:100%;min-height:46px}
+ #depositRequests>*,#walletTransactions>*{padding:13px;border-radius:13px}
+}
+
 </style><script src="/admin-password.js" defer></script>
 <style>
 /* KL administrator interface — refined command-centre visual layer */
