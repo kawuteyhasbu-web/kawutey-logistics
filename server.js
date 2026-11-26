@@ -788,34 +788,23 @@ app.get("/api/admin/wallet-reconciliation", authenticate, roles("admin"), asyncR
       COUNT(t.id) FILTER (WHERE t.status='successful')::int AS successful_transaction_count,
       COUNT(t.id) FILTER (WHERE t.status='pending')::int AS pending_transaction_count,
       MAX(t.created_at) AS latest_transaction_at
-    FROM wallets w
-    JOIN users u ON u.id=w.rider_id
+    FROM users u
     JOIN rider_profiles r ON r.user_id=u.id
-    LEFT JOIN wallet_transactions t ON t.rider_id=w.rider_id
+    LEFT JOIN wallets w ON w.rider_id=u.id
+    LEFT JOIN wallet_transactions t ON t.rider_id=u.id
+    WHERE u.role='rider'
     GROUP BY u.id,u.full_name,r.rider_code,w.balance_pesewas
     ORDER BY u.full_name,u.id
   `);
-  const rows = result.rows.map(row => ({
-    riderId: row.rider_id,
-    riderName: row.full_name,
-    riderCode: row.rider_code,
-    walletBalancePesewas: Number(row.balance_pesewas),
-    ledgerBalancePesewas: Number(row.ledger_balance_pesewas),
-    differencePesewas: Number(row.balance_pesewas) - Number(row.ledger_balance_pesewas),
-    successfulTransactionCount: row.successful_transaction_count,
-    pendingTransactionCount: row.pending_transaction_count,
-    latestTransactionAt: row.latest_transaction_at
-  }));
-  const mismatches = rows.filter(row => row.differencePesewas !== 0);
-  res.set("Cache-Control", "private, no-store");
-  res.json({
-    checkedAt: new Date().toISOString(),
-    riderCount: rows.length,
-    matchedCount: rows.length - mismatches.length,
-    mismatchCount: mismatches.length,
-    mismatches,
-    pendingTransactionCount: rows.reduce((sum, row) => sum + row.pendingTransactionCount, 0)
+  const rows = result.rows.map(row => {
+    const walletMissing = row.balance_pesewas === null;
+    const walletBalancePesewas = walletMissing ? null : Number(row.balance_pesewas);
+    const ledgerBalancePesewas = Number(row.ledger_balance_pesewas);
+    return { riderId:row.rider_id, riderName:row.full_name, riderCode:row.rider_code, walletMissing, walletBalancePesewas, ledgerBalancePesewas, differencePesewas:walletMissing?null:walletBalancePesewas-ledgerBalancePesewas, successfulTransactionCount:row.successful_transaction_count, pendingTransactionCount:row.pending_transaction_count, latestTransactionAt:row.latest_transaction_at };
   });
+  const mismatches = rows.filter(row => row.walletMissing || row.differencePesewas !== 0);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ checkedAt:new Date().toISOString(), riderCount:rows.length, matchedCount:rows.length-mismatches.length, mismatchCount:mismatches.length, missingWalletCount:rows.filter(row=>row.walletMissing).length, mismatches, pendingTransactionCount:rows.reduce((sum,row)=>sum+row.pendingTransactionCount,0) });
 }));
 
 app.get("/api/admin/wallet-transactions", authenticate, roles("admin"), asyncRoute(async (req, res) => {
