@@ -1017,7 +1017,7 @@ async function startServer() {
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS related_transaction_id BIGINT REFERENCES wallet_transactions(id)");
     await pool.query("ALTER TABLE wallet_transactions ADD COLUMN IF NOT EXISTS refund_reason TEXT");
     await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_successful_refund_per_transaction ON wallet_transactions(related_transaction_id) WHERE type='refund' AND status='successful'");
-    await pool.query("CREATE TABLE IF NOT EXISTS pickup_cancellation_requests (
+    await pool.query(`CREATE TABLE IF NOT EXISTS pickup_cancellation_requests (
       id BIGSERIAL PRIMARY KEY,
       assignment_id BIGINT NOT NULL REFERENCES assignments(id),
       vendor_id BIGINT NOT NULL REFERENCES users(id),
@@ -1032,7 +1032,7 @@ async function startServer() {
       reviewed_by BIGINT REFERENCES users(id),
       reviewed_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )");
+    )`);
     await pool.query("CREATE UNIQUE INDEX IF NOT EXISTS one_pending_cancellation_per_assignment ON pickup_cancellation_requests(assignment_id) WHERE status='pending'");
     await pool.query("CREATE INDEX IF NOT EXISTS cancellation_requests_status_created_idx ON pickup_cancellation_requests(status,created_at DESC)");
     await pool.query("CREATE TABLE IF NOT EXISTS payment_settings (id INTEGER PRIMARY KEY CHECK (id=1), manual_backup_enabled BOOLEAN NOT NULL DEFAULT FALSE, momo_account_name TEXT, momo_account_number TEXT, manual_backup_reason TEXT, updated_by BIGINT, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
