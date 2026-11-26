@@ -287,6 +287,8 @@ app.get("/api/rider/connect/messages", authenticate, roles("rider"), asyncRoute(
   if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id)) {
     return res.status(400).json({ error: "Choose a valid Rider Connect conversation." });
   }
+  const peer = await pool.query("SELECT id FROM users WHERE id=$1 AND role='rider' AND status='active'", [peerId]);
+  if (!peer.rowCount) return res.status(404).json({ error: "That rider is not available on Rider Connect." });
   const result = await pool.query(`
     SELECT m.id, m.sender_id, m.recipient_id, m.message, m.created_at, m.read_at,
       sender.full_name AS sender_name, recipient.full_name AS recipient_name
@@ -307,6 +309,8 @@ app.post("/api/rider/connect/read", authenticate, roles("rider"), asyncRoute(asy
   if (!Number.isSafeInteger(peerId) || peerId < 1 || peerId === Number(req.user.id)) {
     return res.status(400).json({ error: "Choose a valid Rider Connect conversation." });
   }
+  const peer = await pool.query("SELECT id FROM users WHERE id=$1 AND role='rider' AND status='active'", [peerId]);
+  if (!peer.rowCount) return res.status(404).json({ error: "That rider is not available on Rider Connect." });
   await pool.query(
     "UPDATE rider_messages SET read_at=NOW() WHERE sender_id=$1 AND recipient_id=$2 AND read_at IS NULL",
     [peerId, req.user.id]
