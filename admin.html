@@ -682,6 +682,21 @@ body{min-height:100vh;background:radial-gradient(ellipse at 8% 0%,rgba(213,228,2
 #dashboard #commissionReportEntries:empty:after{content:"No commission entries to display for this reporting period.";display:block;padding:16px;border:1px dashed #cbd9e9;border-radius:12px;color:#718198;text-align:center}
 #dashboard :is(#cancellationRequests,#notifications,#walletTransactions,#depositRequests,#approvedRiders,#pendingRiders):empty:after{content:"No records to display at the moment.";display:block;padding:15px;border:1px dashed #d5e0ed;border-radius:12px;color:#718198;text-align:center;background:#fbfcfe}
 @media(max-width:760px){#dashboard #paymentSettingsForm{grid-template-columns:minmax(0,1fr)}#dashboard #paymentSettingsForm label[for="momoAccountName"],#dashboard #paymentSettingsForm label[for="momoAccountNumber"]{grid-column:auto}#dashboard #paymentSettingsForm p,#dashboard #paymentSettingsForm button{grid-column:auto}#dashboard #paymentSettingsForm button{width:100%}}
+
+/* KL redesign batch 5: administrator accessibility and dense-data usability */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #f28a35!important;outline-offset:3px!important;box-shadow:0 0 0 4px rgba(242,138,53,.16)}
+#dashboard :is(.table-wrap,.table-responsive,.report-table-wrap){max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+#dashboard table{width:100%;border-collapse:separate;border-spacing:0;min-width:560px}
+#dashboard th{position:sticky;top:0;z-index:1;background:#f2f6fc;color:#153d70;font-size:.78rem;font-weight:850;letter-spacing:.025em;text-align:left}
+#dashboard :is(th,td){padding:11px 13px;border-bottom:1px solid #e6edf5;vertical-align:middle}
+#dashboard td{font-size:.88rem;line-height:1.55;overflow-wrap:anywhere}
+#dashboard tbody tr:hover{background:#f8faff}
+#dashboard :is(input,select,textarea){min-height:43px;border-radius:10px}
+#dashboard button{min-height:40px;border-radius:10px;font-weight:750}
+#dashboard :is(.status,.badge,.tag){max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#dashboard .card{min-width:0;overflow-wrap:anywhere}
+@media(max-width:620px){#dashboard .card{padding:15px}#dashboard :is(th,td){padding:9px 10px}#dashboard button{max-width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body><main class="wrap">
