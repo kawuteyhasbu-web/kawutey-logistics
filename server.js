@@ -591,7 +591,7 @@ app.get("/api/rider/assignments", authenticate, roles("rider"), asyncRoute(async
     return new Date(a.preferred_at) - new Date(b.preferred_at);
   });
   res.set("Cache-Control", "private, no-store");
-  res.json({ assignments, locationReceived: hasLocation, routingAvailable: routable.length > 0 && assignments.some(a => a.distanceKm !== null) });
+  res.json({ assignments: assignments.map(({ pickup_latitude, pickup_longitude, ...assignment }) => assignment), locationReceived: hasLocation, routingAvailable: routable.length > 0 && assignments.some(a => a.distanceKm !== null) });
 }));
 
 app.post("/api/rider/assignments/:id/accept", authenticate, roles("rider"), asyncRoute(async (req, res) => {
