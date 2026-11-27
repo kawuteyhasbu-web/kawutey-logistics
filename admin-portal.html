@@ -366,6 +366,22 @@ button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 10px 22px rg
 @media(max-width:760px){.brand-mark{width:43px;height:43px;border-radius:13px}.auth-top{align-items:flex-start}.auth-top .secure{font-size:.72rem}.auth-side .intro{margin-bottom:17px}.auth-side form label{margin-top:3px}}
 
 </style>
+
+<!-- KL-COMPONENT-QUALITY-AND-RESPONSIVE-SYSTEM-2026-11-27 -->
+<style>
+/* KL administrator authentication accessible controls and small-screen polish */
+.auth-side form{min-width:0}
+.auth-side form input:not([type=checkbox]):not([type=radio]),.auth-side form select{box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:49px;padding:12px 14px;border:1px solid #d8e2ee;border-radius:12px;background:#fbfcfe;color:#173455;font-size:16px}
+.auth-side form input:focus,.auth-side form select:focus{outline:0;border-color:#ff7900;box-shadow:0 0 0 3px rgba(255,121,0,.14)}
+.auth-side form label{display:block;max-width:100%;color:#294665;font-size:.88rem;font-weight:750;overflow-wrap:anywhere}
+.auth-side form button{min-height:47px;border-radius:12px;font-weight:800}
+.auth-side form button:focus-visible,.auth-side .tabs button:focus-visible{outline:3px solid rgba(255,121,0,.32);outline-offset:2px}
+.auth-side .tabs{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px;border:1px solid #e0e8f2;border-radius:14px;background:#f5f8fc}
+.auth-side .tabs button{min-width:0;padding:10px 8px;border-radius:10px;overflow-wrap:anywhere}
+#message{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:760px){.auth-side form input:not([type=checkbox]):not([type=radio]),.auth-side form select{min-height:51px}.auth-side form{gap:10px}.auth-side .tabs{margin-bottom:17px}}
+
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
