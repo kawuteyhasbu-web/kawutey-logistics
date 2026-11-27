@@ -2761,6 +2761,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  #dashboardActions .admin-search-label{grid-column:auto}
 }
 </style>
+<style id="kl-admin-quicknav-and-review-refinement-2026-11-27">
+/* More legible administrator navigation and task review grouping */
+#kl-admin-quicknav{position:sticky;top:8px;z-index:8;display:flex;gap:8px;align-items:center;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:10px;margin:14px 0;border:1px solid #e0e8f3;border-radius:15px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(13,43,91,.07)}
+#kl-admin-quicknav a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border:1px solid #e0e8f3;border-radius:10px;background:#f7faff;color:#173d70;text-decoration:none;font-size:.84rem;font-weight:750;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
+#kl-admin-quicknav a:hover{background:#fff1e6;border-color:#ffd0a8;color:#a94b00}
+#kl-admin-quicknav a:focus-visible{outline:3px solid rgba(255,121,0,.32);outline-offset:2px}
+#dashboardActions{display:grid;grid-template-columns:minmax(220px,1fr) auto auto auto;gap:10px;align-items:end;padding:14px}
+#dashboardActions .admin-search-label{min-width:0}
+#dashboardActions .admin-search-label input{margin-top:6px}
+#dashboardActions #adminSectionSearchCount{align-self:center;padding:8px 4px}
+#dashboardActions button{min-width:95px}
+#commissionSummaryCard .commission-grid{gap:12px}
+#commissionSummaryCard .commission-metric{border:1px solid #e1e9f3;border-radius:15px;padding:16px;background:linear-gradient(145deg,#fff,#f8faff)}
+#commissionSummaryCard .commission-metric strong{display:block;font-size:clamp(1.35rem,3vw,1.9rem);font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+#commissionSummaryCard .commission-metric span{display:block;margin-top:6px;color:#61738b;line-height:1.4}
+#commissionSummaryCard .commission-total{border-color:#f6d2b5;background:linear-gradient(145deg,#fff8f1,#fff)}
+#dashboard .admin-section>summary{display:flex;align-items:center;gap:10px}
+#dashboard .admin-section[open]>summary{border-bottom:1px solid #e5ecf5}
+#dashboard .admin-section .section-card{padding:clamp(13px,2vw,21px)}
+#dashboard .notification-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:11px 13px;border:1px solid #e3eaf4;border-radius:12px;background:#f8faff}
+#dashboard .notification-filter{display:flex;align-items:center;gap:8px}
+#walletReconciliationCard{background:linear-gradient(145deg,#fff,#f8faff)}
+#walletReconciliationCard #walletReconciliationStatus{border-radius:12px}
+#walletReconciliationCard #walletReconciliationResults{min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){
+ #kl-admin-quicknav{top:4px;margin:10px 0;padding:8px;border-radius:12px}
+ #kl-admin-quicknav a{min-height:40px;padding:8px 11px}
+ #dashboardActions{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+ #dashboardActions .admin-search-label{grid-column:1/-1}
+ #dashboardActions #adminSectionSearchCount{grid-column:1/-1;align-self:auto;padding:0}
+ #dashboardActions button{width:100%;min-width:0}
+ #commissionSummaryCard .commission-grid{grid-template-columns:minmax(0,1fr)}
+ #commissionSummaryCard .commission-metric{padding:13px}
+ #dashboard .notification-toolbar{align-items:flex-start}
+}
+@media(max-width:390px){
+ #dashboardActions{grid-template-columns:minmax(0,1fr)}
+ #dashboardActions .admin-search-label,#dashboardActions #adminSectionSearchCount{grid-column:auto}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
