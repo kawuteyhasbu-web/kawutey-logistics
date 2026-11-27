@@ -4104,6 +4104,92 @@ button:focus-visible,a:focus-visible,.btn:focus-visible,.tab-btn:focus-visible{o
  .header-right{text-align:left;max-width:100%;width:100%;padding-left:53px}
 }
 </style>
+<style id="kl-bulk-visual-system-polish-2026-11-27">
+/* BULK VISUAL PASS: public experience, Vendor workspace and Rider workspace */
+:root{--kl-navy:#082b68;--kl-blue:#104b91;--kl-orange:#f47716;--kl-orange-soft:#fff2e8;--kl-ink:#193653;--kl-muted:#657991;--kl-line:#e2eaf3;--kl-surface:#fff;--kl-canvas:#f5f8fc}
+.container{max-width:1240px}
+.container>header{position:relative;overflow:hidden}
+.container>header:after{content:"";position:absolute;right:-65px;top:-95px;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(244,119,22,.11),transparent 70%);pointer-events:none}
+nav.tabs{position:sticky;top:8px;z-index:15;backdrop-filter:blur(14px)}
+nav.tabs .tab-btn{transition:background .18s,color .18s,box-shadow .18s,transform .18s}
+nav.tabs .tab-btn:hover{transform:translateY(-1px)}
+#home .kl-hero{isolation:isolate}
+#home .kl-hero-copy{max-width:680px}
+#home .kl-hero h2{font-size:clamp(2.25rem,5vw,4.4rem);line-height:1.02;letter-spacing:-.06em}
+#home .kl-hero-description{font-size:clamp(.95rem,1.5vw,1.08rem);line-height:1.8}
+#home .kl-hero-actions .btn{min-height:48px;padding-inline:20px}
+#home .kl-audience-card{position:relative;overflow:hidden}
+#home .kl-audience-card:after{content:"";position:absolute;right:-28px;bottom:-35px;width:100px;height:100px;border-radius:50%;background:rgba(244,119,22,.055);pointer-events:none}
+#home .kl-content-grid article,#home .kl-steps-grid article{border:1px solid var(--kl-line);border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(8,43,104,.045)}
+#vendor,#rider{scroll-margin-top:90px}
+#vendor>.card,#rider>.card{border:1px solid var(--kl-line);border-radius:19px;box-shadow:0 12px 32px rgba(8,43,104,.055)}
+#vendorAuthCard,#riderAuthCard{overflow:hidden}
+#vendorAuthCard>h2,#riderAuthCard>h2{line-height:1.18}
+#vendorRegSection,#vendorLoginSection,#riderRegSection,#riderLoginSection{min-width:0}
+#vendorRegForm,#vendorLoginForm,#riderRegForm,#riderLoginForm{display:grid;gap:12px}
+#vendorRegForm .form-group,#vendorLoginForm .form-group,#riderRegForm .form-group,#riderLoginForm .form-group{margin:0}
+#vendorRegForm input,#vendorRegForm select,#vendorRegForm textarea,#vendorLoginForm input,#riderRegForm input,#riderRegForm select,#riderRegForm textarea,#riderLoginForm input{min-height:47px;border:1px solid #dbe5f0;border-radius:11px;background:#fff}
+#vendorRegForm input:focus-visible,#vendorRegForm select:focus-visible,#vendorRegForm textarea:focus-visible,#vendorLoginForm input:focus-visible,#riderRegForm input:focus-visible,#riderRegForm select:focus-visible,#riderRegForm textarea:focus-visible,#riderLoginForm input:focus-visible{outline:3px solid rgba(244,119,22,.2);border-color:#ef9a5a}
+#vendorDashboard,#riderDashboard{display:grid;gap:15px}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid var(--kl-line);border-radius:16px}
+#vendorDashboard>h3,#riderDashboard h3{letter-spacing:-.025em}
+#vendorDashboard [data-action=togglePickupForm],#riderDashboard .wallet-box [data-action=showDepositForm],#riderDashboard .wallet-box [data-action=showWalletHistory]{min-height:46px}
+#pickupFormArea{border:1px solid #e5edf6;border-radius:15px;background:#f9fbfe;padding:15px!important}
+#pickupForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#pickupForm>.alert,#pickupForm>#pickupLocationStatus,#pickupForm>button[type=button],#pickupForm>.form-group:has(textarea),#pickupForm>button[type=submit]{grid-column:1/-1}
+#pickupForm .form-group{min-width:0;margin:0}
+#pickupForm .form-group label{font-weight:750;color:#34516f}
+#pickupForm .form-group input,#pickupForm .form-group textarea{width:100%;min-height:46px;border-radius:10px;background:#fff}
+#pickupForm>button{min-height:47px}
+#pickupHistory{display:grid;gap:11px;margin-top:12px}
+#pickupHistory>.pickup-item{border:1px solid var(--kl-line);border-radius:14px;background:#fff;padding:14px;box-shadow:0 5px 15px rgba(8,43,104,.035)}
+#pickupHistory .pickup-item button{min-height:40px}
+#riderDashboard>.card:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#riderDashboard .wallet-box{border:1px solid rgba(255,255,255,.15);border-radius:19px;box-shadow:0 14px 34px rgba(8,43,104,.16)}
+#riderDashboard .wallet-box h3{color:#fff}
+#riderDashboard .wallet-box .balance{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:850;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+#riderDashboard .wallet-stats{gap:10px}
+#riderDashboard .stat-box{border-radius:13px;min-width:0}
+#riderDashboard .stat-box .value{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#riderDashboard #secureAvailableAssignments,#riderDashboard #secureAcceptedAssignments,#riderDashboard #secureWalletTransactionHistory,#riderDashboard #secureDepositHistory{display:grid;gap:10px}
+#riderDashboard #secureAvailableAssignments>*,#riderDashboard #secureAcceptedAssignments>*,#riderDashboard #secureWalletTransactionHistory>*,#riderDashboard #secureDepositHistory>*{min-width:0}
+#riderDashboard .assignment-item,#riderDashboard .pickup-item{border:1px solid var(--kl-line);border-radius:14px;background:#fff;padding:14px}
+#riderDashboard .assignment-item button{min-height:43px}
+#riderConnectPanel{border:1px solid var(--kl-line);border-radius:17px;background:linear-gradient(150deg,#fff,#f8faff)}
+#riderConnectPanel .connect-start,#riderConnectPanel .connect-threads,#riderConnectPanel .connect-chat{border:1px solid #e3ebf4;border-radius:13px;background:#fff;padding:13px}
+#riderConnectPanel .connect-layout{gap:12px}
+#riderConnectPanel .connect-threads button,#riderConnectPanel .connect-chat button{min-height:40px}
+#riderConnectPanel #connectConversationSearch,#riderConnectPanel #connectMessage{width:100%;min-height:45px;border-radius:10px}
+#riderConnectPanel .connect-thread{border-radius:12px;background:#f5f8fc}
+#riderConnectPanel .msg-box{overflow-wrap:anywhere;line-height:1.5}
+#riderDashboard .rider-card{border:1px solid var(--kl-line);border-radius:14px;padding:12px;background:#fff}
+#vendorDashboard :where(button,a),#riderDashboard :where(button,a){transition:transform .15s ease,box-shadow .15s ease}
+#vendorDashboard :where(button,a):focus-visible,#riderDashboard :where(button,a):focus-visible{outline:3px solid rgba(244,119,22,.3);outline-offset:2px}
+.kl-footer{border-top:1px solid var(--kl-line)}
+@media(max-width:700px){
+ nav.tabs{top:4px}
+ #home .kl-hero{padding:22px 17px}
+ #home .kl-hero h2{font-size:clamp(2rem,9vw,3.1rem)}
+ #vendor>.card,#rider>.card{padding:15px;border-radius:16px}
+ #vendorDashboard,#riderDashboard{gap:11px}
+ #pickupForm{grid-template-columns:minmax(0,1fr)}
+ #pickupForm>*{grid-column:1/-1}
+ #pickupFormArea{padding:12px!important}
+ #pickupForm>button[type=submit],#pickupForm>button[type=button]{width:100%;min-height:48px}
+ #pickupHistory>.pickup-item{padding:12px}
+ #riderDashboard .wallet-box{padding:16px}
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #riderDashboard .wallet-box .btn{width:100%;margin:4px 0}
+ #riderConnectPanel .connect-layout{grid-template-columns:minmax(0,1fr)}
+ #riderConnectPanel .connect-start-row{grid-template-columns:minmax(0,1fr)}
+ #riderConnectPanel .connect-thread{min-height:210px;max-height:340px}
+}
+@media(max-width:370px){
+ #riderDashboard .wallet-stats{grid-template-columns:minmax(0,1fr)}
+ #riderDashboard>.card:first-child{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){#vendorDashboard :where(button,a),#riderDashboard :where(button,a),nav.tabs .tab-btn{transition:none!important}}
+</style>
 </head>
 <body>
   <div class="container">

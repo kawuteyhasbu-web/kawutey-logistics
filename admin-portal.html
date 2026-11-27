@@ -770,6 +770,61 @@ button.primary:active{transform:translateY(1px)}
  .auth-side form h2{font-size:1.12rem}
 }
 </style>
+<style id="kl-admin-auth-premium-bulk-pass-2026-11-27">
+/* BULK VISUAL PASS: administrator sign-in and invitation registration */
+.shell{isolation:isolate}
+.visual{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 12%,rgba(255,139,51,.22),transparent 27%),linear-gradient(145deg,#061b42 0%,#0a3474 58%,#14549a 100%)}
+.visual:after{content:"";position:absolute;right:-125px;bottom:-160px;width:360px;height:360px;border:1px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02);pointer-events:none}
+.visual .brand{position:relative;z-index:1}
+.visual .hero{position:relative;z-index:1;max-width:610px}
+.visual .hero h1{max-width:12ch;font-size:clamp(2.3rem,4.5vw,4rem);letter-spacing:-.055em;text-wrap:balance}
+.visual .hero>p{max-width:55ch;font-size:1rem;line-height:1.8;color:#d6e4f7}
+.visual .feature-grid{gap:10px}
+.visual .feature{border:1px solid rgba(255,255,255,.17);border-radius:13px;background:rgba(255,255,255,.075);backdrop-filter:blur(8px);padding:13px}
+.visual .feature strong{font-size:.9rem}
+.visual .feature span{line-height:1.5}
+.auth-side{position:relative;background:linear-gradient(155deg,#fff 0%,#fbfcff 100%)}
+.auth-side>.auth-top{margin-bottom:20px}
+.auth-side .auth-label{color:#0b326d;font-weight:850;letter-spacing:.02em}
+.auth-side .secure{border-color:#dce7f2;background:#f4f8fd;color:#31577f}
+.auth-side>h2{font-size:clamp(1.65rem,3vw,2.2rem);letter-spacing:-.045em}
+.auth-side>.intro{max-width:47ch;font-size:.94rem;line-height:1.75}
+.auth-side .tabs{margin:22px 0 17px;padding:5px;border:1px solid #e1e9f3;border-radius:13px;background:#f1f5fa}
+.auth-side .tabs button{min-height:44px;border-radius:9px;font-weight:800}
+.auth-side .tabs button.active{background:#fff;color:#0b326d;box-shadow:0 3px 12px rgba(8,43,104,.09)}
+.auth-side form{gap:11px}
+.auth-side form h2{font-size:1.18rem;margin-bottom:4px}
+.auth-side form label{margin:3px 0 -4px;color:#34516f;font-weight:750}
+.auth-side form input{min-height:49px;border:1px solid #dce6f1;border-radius:11px;background:#fff}
+.auth-side form input::placeholder{color:#91a0b2}
+.auth-side form input:focus-visible{outline:3px solid rgba(244,119,22,.2);border-color:#ef9a5a}
+.auth-side form button.primary{min-height:50px;border-radius:11px;background:linear-gradient(110deg,#ed6d08,#ff9638);box-shadow:0 7px 16px rgba(237,109,8,.16);font-weight:850}
+.auth-side form button.primary:hover{filter:brightness(1.03);transform:translateY(-1px)}
+.auth-side form p.small{border:1px solid #e3ebf4;border-radius:11px;background:#f6f9fd;padding:12px;line-height:1.65}
+.auth-side #message{border-radius:11px;line-height:1.55}
+.auth-side :where(button,a,input):focus-visible{outline:3px solid rgba(244,119,22,.27);outline-offset:2px}
+@media(max-width:760px){
+ .shell{grid-template-columns:minmax(0,1fr)}
+ .visual{min-height:unset;padding:25px 22px 23px}
+ .visual .hero{margin:23px 0 14px}
+ .visual .hero h1{font-size:clamp(2rem,9vw,2.8rem)}
+ .visual .hero>p{font-size:.9rem;line-height:1.65}
+ .visual .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .visual .feature{padding:10px}
+ .visual .visual-foot{padding-top:10px}
+ .auth-side{padding:25px 22px calc(28px + env(safe-area-inset-bottom,0px))}
+ .auth-side>.auth-top{margin-bottom:16px}
+ .auth-side .tabs{margin:17px 0 14px}
+}
+@media(max-width:390px){
+ .visual{padding-inline:17px}
+ .visual .feature-grid{grid-template-columns:minmax(0,1fr)}
+ .visual .feature{display:flex;justify-content:space-between;align-items:center;gap:10px}
+ .visual .feature span{text-align:right;max-width:52%}
+ .auth-side{padding-inline:17px}
+}
+@media(prefers-reduced-motion:reduce){.auth-side form button.primary{transition:none}}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
