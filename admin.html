@@ -2075,6 +2075,35 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(max-width:700px){.admin-hero-pills{display:flex;flex-wrap:wrap}.admin-hero-pills span{font-size:.74rem}#commissionSummaryCard .commission-metric{min-height:92px}#commissionSummaryCard .commission-metric span{font-size:.79rem}#paymentSettingsForm input:not([type=checkbox]),#paymentSettingsForm select{font-size:16px}#dashboard .admin-section>summary:hover{background:#fff}}
 
 </style>
+
+<!-- KL-COMPONENT-QUALITY-AND-RESPONSIVE-SYSTEM-2026-11-27 -->
+<style>
+/* KL admin unified data-dense component system */
+#dashboard .card{min-width:0}
+#dashboard .card h2,#dashboard .card h3{color:#0a326f;letter-spacing:-.025em}
+#dashboard button:focus-visible,#dashboard a:focus-visible,#dashboard input:focus-visible,#dashboard select:focus-visible{outline:3px solid rgba(255,121,0,.27);outline-offset:2px}
+#dashboard input:not([type=checkbox]):not([type=radio]),#dashboard select,#dashboard textarea{max-width:100%;min-width:0;border:1px solid #d8e2ee;border-radius:11px;background:#fff;color:#173455}
+#dashboard input:not([type=checkbox]):not([type=radio]):focus,#dashboard select:focus,#dashboard textarea:focus{border-color:#ff7900;box-shadow:0 0 0 3px rgba(255,121,0,.13)}
+#dashboard .status{display:inline-flex;align-items:center;width:fit-content;max-width:100%;padding:6px 10px;border:1px solid #e1e9f2;border-radius:999px;background:#f3f7fc;color:#3c5878;font-size:.78rem;font-weight:800;overflow-wrap:anywhere}
+#dashboard .commission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#dashboard .commission-grid>*{min-width:0;border:1px solid #e1e9f2;border-radius:15px;padding:15px;background:linear-gradient(145deg,#fff,#f8faff)}
+#dashboard .commission-grid strong{font-size:clamp(1.15rem,2.3vw,1.8rem);letter-spacing:-.04em;overflow-wrap:anywhere}
+#dashboard .admin-section{min-width:0;overflow:hidden;border:1px solid #e0e8f2;border-radius:17px;background:#fff}
+#dashboard .section-card{min-width:0;overflow-x:auto;overscroll-behavior-x:contain}
+#dashboard table{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
+#dashboard th{background:#f3f7fc;color:#385575;font-size:.78rem;font-weight:850;text-align:left;white-space:nowrap}
+#dashboard td,#dashboard th{padding:11px 13px;border-bottom:1px solid #e8eef5}
+#dashboard td{color:#284665;font-size:.88rem;overflow-wrap:anywhere}
+#dashboard tr:last-child td{border-bottom:0}
+#dashboard .admin-section>summary{min-width:0;overflow-wrap:anywhere}
+#dashboard .admin-section>summary strong{color:#173c70}
+#dashboard .card button{min-height:40px;border-radius:11px}
+#dashboard .card p{line-height:1.65}
+#dashboard .commission-grid .label,#dashboard .commission-grid small{color:#6c8099;line-height:1.45}
+@media(max-width:760px){#dashboard .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#dashboard .commission-grid>*{padding:12px}#dashboard td,#dashboard th{padding:10px;font-size:.8rem}#dashboard .section-card{margin-inline:-2px}#dashboard .admin-section{border-radius:14px}}
+@media(max-width:390px){#dashboard .commission-grid{grid-template-columns:1fr}#dashboard .commission-grid>*{min-height:unset}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
