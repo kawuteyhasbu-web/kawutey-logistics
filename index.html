@@ -2658,6 +2658,92 @@ body{background:linear-gradient(180deg,#f6f8fc 0,#fff 480px,#f7f9fc 100%);color:
 }
 @media(max-width:370px){.kl-bottom-cta>div:last-child{grid-template-columns:1fr}.kl-art-bubble{font-size:.66rem}}
 </style>
+<style id="kl-cross-portal-workspace-polish-2026-11">
+/* Rider Connect: full inbox/chat workspace */
+#riderConnectPanel{margin-top:22px;padding:clamp(17px,2.6vw,28px)!important;border:1px solid #dfe7f1;border-radius:22px;background:linear-gradient(145deg,#fff 0%,#f7faff 100%);box-shadow:0 16px 38px rgba(7,31,74,.075)}
+#riderConnectPanel>h3{display:flex;align-items:center;gap:11px;margin:0 0 8px;color:#092f69;font-size:1.35rem;letter-spacing:-.035em}
+#riderConnectPanel>h3:before{content:"";width:10px;height:27px;border-radius:9px;background:linear-gradient(#ff9a42,#ef6900)}
+#riderConnectPanel>p{max-width:72ch;color:#5b6f88;line-height:1.65}
+#riderConnectPanel .connect-start{margin:18px 0;padding:16px;border:1px solid #e4eaf2;border-radius:16px;background:#fff}
+#riderConnectPanel .connect-start-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:8px}
+#riderConnectPanel .connect-layout{display:grid;grid-template-columns:minmax(245px,.78fr) minmax(0,1.7fr);gap:15px;align-items:stretch;margin:16px 0}
+#riderConnectPanel .connect-threads,#riderConnectPanel .connect-chat{min-width:0;border:1px solid #e0e7f0;border-radius:17px;background:#fff;overflow:hidden}
+#riderConnectPanel .connect-threads{padding:15px}
+#riderConnectPanel .connect-threads h4{margin:0 0 12px;color:#12396e}
+#riderConnectPanel .connect-inbox-filters{display:flex;gap:7px;margin:10px 0}
+#riderConnectPanel .connect-inbox-filters button{flex:1}
+#riderConnectPanel #connectThreads{display:grid;gap:7px;max-height:430px;overflow:auto;overscroll-behavior:contain}
+#riderConnectPanel .connect-thread-item{border:1px solid #e7edf4;border-radius:12px;background:#fbfcfe;overflow:hidden}
+#riderConnectPanel .connect-thread-button{width:100%;padding:12px;text-align:left;background:transparent;border:0}
+#riderConnectPanel .connect-thread-button:hover{background:#f2f6fc}
+#riderConnectPanel .connect-chat{display:flex;flex-direction:column;min-height:480px}
+#riderConnectPanel .connect-chat-header{padding:16px 18px;border-bottom:1px solid #e8edf4;background:#fbfcff;color:#10366c;font-weight:850}
+#riderConnectPanel .connect-history-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 13px;border-bottom:1px solid #edf0f5}
+#riderConnectPanel .connect-history-tools input{flex:1;min-width:150px}
+#riderConnectPanel .connect-thread{display:flex;flex:1;flex-direction:column;gap:9px;min-height:230px;max-height:460px;overflow:auto;padding:16px;background:linear-gradient(180deg,#f8faff,#fff);overscroll-behavior:contain}
+#riderConnectPanel .connect-compose{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid #e8edf4;background:#fff}
+#riderConnectPanel #connectMessage{margin:0 13px;max-width:calc(100% - 26px);min-height:88px}
+#riderConnectPanel .connect-search-result{margin:0;padding:0 13px}
+#riderConnectPanel button,#riderConnectPanel input,#riderConnectPanel select,#riderConnectPanel textarea{min-height:42px}
+#riderConnectPanel #connectMessage{min-height:88px}
+#riderConnectPanel #connectCharacterCount{color:#718198;font-variant-numeric:tabular-nums}
+/* Vendor pickup creation and history */
+#vendorDashboard{min-width:0}
+#vendorDashboard>[data-action="togglePickupForm"]{min-height:48px;padding-inline:23px;box-shadow:0 9px 20px rgba(239,105,0,.18)}
+#pickupFormArea{padding:clamp(15px,2.5vw,25px)!important;border:1px solid #e1e8f1;border-radius:18px;background:linear-gradient(145deg,#fff,#f8faff)}
+#pickupFormArea h4{margin:0 0 14px;color:#0b326c;font-size:1.12rem}
+#pickupForm .form-group{margin-bottom:15px}
+#pickupForm .package-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,150px);align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #e9eef5;background:#fff}
+#pickupForm .package-row:first-child{border-radius:12px 12px 0 0}
+#pickupForm .package-row:last-child{border-radius:0 0 12px 12px;border-bottom:0}
+#pickupHistory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:16px}
+#pickupHistory:empty{display:block}
+#pickupHistory .pickup-item{min-width:0;padding:17px;border:1px solid #e2e9f2;border-radius:16px;background:#fff;box-shadow:0 7px 20px rgba(7,31,74,.045)}
+#pickupHistory .pickup-item-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+#pickupHistory .pickup-item-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+#pickupHistory .pickup-item-details>*{min-width:0;padding:9px;border-radius:10px;background:#f6f8fb;overflow-wrap:anywhere}
+#pickupHistory .pickup-status{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#edf3fc;color:#17477e;font-size:.75rem;font-weight:850}
+#pickupHistory :where(button){min-height:40px}
+/* Secure rider wallet and operational cards */
+#riderDashboard .wallet-box{padding:clamp(19px,3vw,30px)!important;border:1px solid rgba(255,255,255,.2);border-radius:22px;background:linear-gradient(130deg,#092d68,#1253a1 68%,#1764b8);box-shadow:0 16px 35px rgba(7,38,89,.18)}
+#riderDashboard .wallet-box .balance{font-size:clamp(2rem,5vw,3.1rem);font-weight:950;letter-spacing:-.055em}
+#riderDashboard .recent-deposit-box{display:grid;gap:5px;margin-top:17px;padding:14px;border:1px solid rgba(255,255,255,.2);border-radius:14px;background:rgba(255,255,255,.09)}
+#riderDashboard .recent-deposit-label{font-size:.7rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+#riderDashboard .recent-deposit-box strong{font-size:1.15rem}
+#riderDashboard section.card{border:1px solid #e1e8f1;border-radius:18px;box-shadow:0 10px 25px rgba(7,31,74,.045)}
+#riderDashboard #secureManualSubmitForm{display:grid;gap:9px;padding:16px;border:1px solid #f0d2b6;border-radius:15px;background:#fff9f3}
+#riderDashboard #secureDepositHistory,#riderDashboard #secureWalletTransactionHistory{display:grid;gap:9px}
+#riderDashboard #availableAssignments,#riderDashboard #acceptedAssignments{grid-template-columns:repeat(2,minmax(0,1fr))}
+#riderDashboard #availableAssignments>* ,#riderDashboard #acceptedAssignments>*{min-width:0;padding:16px;border:1px solid #e0e8f2;border-radius:15px;background:#fff;box-shadow:0 7px 20px rgba(7,31,74,.04)}
+#riderDashboard #ridersList{grid-template-columns:repeat(2,minmax(0,1fr))}
+#riderDashboard #ridersList>*{min-width:0;padding:13px;border:1px solid #e3eaf3;border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#riderDashboard .wallet-stats{gap:10px}
+#riderDashboard .stat-box{min-width:0;padding:15px;border:1px solid #e3eaf3;border-radius:15px;background:linear-gradient(145deg,#fff,#f7faff)}
+@media(max-width:800px){
+ #riderConnectPanel .connect-layout{grid-template-columns:1fr}
+ #riderConnectPanel .connect-threads{order:1}
+ #riderConnectPanel .connect-chat{order:2;min-height:390px}
+ #riderConnectPanel #connectThreads{max-height:220px}
+ #riderConnectPanel .connect-thread{max-height:340px}
+ #pickupHistory{grid-template-columns:1fr}
+ #riderDashboard #availableAssignments,#riderDashboard #acceptedAssignments{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+ #riderConnectPanel{padding:13px!important;border-radius:16px}
+ #riderConnectPanel .connect-start{padding:12px}
+ #riderConnectPanel .connect-start-row{grid-template-columns:1fr}
+ #riderConnectPanel .connect-history-tools{align-items:stretch}
+ #riderConnectPanel .connect-history-tools>*{flex:1 1 100%}
+ #riderConnectPanel .connect-compose{align-items:stretch;flex-direction:column}
+ #riderConnectPanel .connect-compose button{width:100%}
+ #riderConnectPanel #connectMessage{margin:0 9px;max-width:calc(100% - 18px)}
+ #pickupForm .package-row{grid-template-columns:minmax(0,1fr) 95px;padding:9px}
+ #pickupHistory .pickup-item{padding:13px}
+ #pickupHistory .pickup-item-details{grid-template-columns:1fr 1fr}
+ #riderDashboard #ridersList{grid-template-columns:1fr}
+ #riderDashboard .stat-box{padding:11px}
+}
+</style>
 </head>
 <body>
   <div class="container">
