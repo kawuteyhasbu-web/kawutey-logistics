@@ -419,3 +419,12 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Improved secure administrator entry form spacing, touch sizing, focus visibility and narrow-screen resilience.
 - CSS-only presentation update. No administrator authorization, session, API, payment, wallet, refund, commission, rider approval, or vendor/rider account logic has been changed.
 - Visual QA still requires actual browser/device inspection; source-level checks alone do not establish rendered appearance.
+
+
+### Vendor and Rider workspace hierarchy pass — 27 November 2026
+- Added a substantial responsive presentation pass for authenticated Vendor and Rider workspaces, including pickup request entry, package quantity fields, pickup history, rider status header, wallet metrics, deposits, transaction history, available and accepted assignments, rider directory and messaging.
+- Vendor pickup fields now use clearer grouped layouts that progressively collapse from three columns to two and then one on narrow phones. Pickup history has a calm empty-state treatment without changing its data source.
+- Rider wallet metrics use a four-to-two-column responsive layout, with the wallet action controls reflowing for small screens. Assignment, transaction, rider-directory and communication surfaces receive consistent card treatment and overflow protection.
+- The rider profile/status header and vendor dashboard welcome area receive clearer visual hierarchy. All dynamic data continues to come from the existing application logic.
+- CSS-only changes. No pickup deletion rules, assignment acceptance rules, rider identity checks, wallet balance calculations, GH₵5 commission, deposit processing, refunds, or messaging APIs were changed.
+- Actual rendered browser/device QA and financial/workflow regression testing remain required before release promotion.
