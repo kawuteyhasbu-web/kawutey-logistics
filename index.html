@@ -4190,6 +4190,37 @@ nav.tabs .tab-btn:hover{transform:translateY(-1px)}
 }
 @media(prefers-reduced-motion:reduce){#vendorDashboard :where(button,a),#riderDashboard :where(button,a),nav.tabs .tab-btn{transition:none!important}}
 </style>
+<style id="kl-public-vendor-rider-detail-pass-2026-11-27">
+/* Visual refinement batch: responsive public, Vendor and Rider details */
+:root{scroll-padding-top:88px}
+.container{min-width:0}
+.container :where(section,article,form,nav){min-width:0}
+.container :where(input,select,textarea,button){font:inherit}
+.container :where(input,select,textarea){max-width:100%;box-sizing:border-box}
+#home .kl-hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+#home .kl-content-grid article,#home .kl-steps-grid article{min-width:0;overflow-wrap:anywhere}
+#vendorDashboard .pickup-item,#riderDashboard .assignment-item{min-width:0;overflow-wrap:anywhere}
+#vendorDashboard .pickup-item :where(button,a),#riderDashboard .assignment-item :where(button,a){max-width:100%}
+#vendorDashboard .pickup-item button,#riderDashboard .assignment-item button{min-height:44px}
+#pickupForm .form-group :where(input,select,textarea){box-sizing:border-box;width:100%;font-size:16px}
+#riderDashboard .wallet-box :where(button,a){min-height:44px}
+#riderDashboard .stat-box{overflow-wrap:anywhere}
+#riderConnectPanel :where(input,textarea,button){box-sizing:border-box;max-width:100%}
+#riderConnectPanel .msg-box{max-width:100%;white-space:pre-wrap}
+.container :where(button,a,input,select,textarea):focus-visible{outline:3px solid rgba(244,119,22,.28);outline-offset:2px}
+@media(max-width:700px){
+ .container{padding-inline:clamp(12px,4vw,20px)}
+ #home .kl-hero-actions{display:grid;grid-template-columns:minmax(0,1fr)}
+ #home .kl-hero-actions .btn{width:100%;justify-content:center}
+ #vendorDashboard .pickup-item button,#riderDashboard .assignment-item button{width:100%}
+ #riderConnectPanel .connect-chat{min-width:0}
+}
+@media(max-width:360px){
+ #riderDashboard .wallet-stats{grid-template-columns:minmax(0,1fr)}
+ #vendor>.card,#rider>.card{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){.container *{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
 </head>
 <body>
   <div class="container">
