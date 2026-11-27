@@ -371,3 +371,17 @@ These changes are code additions only. They have not been deployed or verified a
 - Browser notifications currently require the Rider Portal to remain open and permission to be granted; this is not a background push-notification service.
 - Do not use the public OSRM demo endpoint as a production routing dependency. Production routing provider, limits, privacy terms and operating cost require review.
 - Keep production branch/database unchanged; do not merge or launch without separate approval.
+
+## Visual design direction and delivery standard — 27 November 2026
+
+The approved visual direction is a unified, premium Kawutey Logistics experience across the public website, Vendor Portal, Rider Portal, and Administrator Portal. Use the navy, white, and orange brand palette consistently. The public experience should communicate trust, clarity, and easy access to delivery services. Authenticated workspaces should prioritize operational information, readable status, financial clarity, and efficient task completion.
+
+### Responsive design requirements
+- Treat desktop and mobile as first-class layouts for every portal; do not merely shrink desktop screens.
+- Use clear visual hierarchy, consistent spacing, readable typography, accessible focus states, touch-friendly controls, responsive cards, and mobile-safe tables.
+- Preserve existing portal workflows, authentication, permissions, business rules, and financial behavior while changing presentation.
+- Keep Vendor and Rider operational workspaces easy to scan, with pickup/assignment states, wallet information, transaction history, profile details, and Rider Connect legible and usable on small screens.
+- Keep administrator navigation, review queues, notifications, wallet reconciliation, commission reporting, and operational controls organized without hiding critical information.
+- Do not introduce fake metrics, sample transactions, or misleading status indicators as decoration.
+- Commit visual work only to `setup/secure-backend-prep`. Do not modify `main` or `production-release`, and do not promote or merge without explicit user approval.
+- Keep the approved Preview, Testing, and Kawutey Logistics Render services integrated with the development branch. Public access links remain restricted to the approved Public Portal and Administrator Portal links.
