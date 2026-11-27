@@ -2636,6 +2636,42 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 }
 </style>
 
+
+<style id="kl-admin-data-table-mobile-finish-2026-11-27">
+/* Administrator data surfaces: responsive tables, review queues and action groups */
+#dashboard :where(table){width:100%;border-collapse:separate;border-spacing:0;table-layout:auto}
+#dashboard :where(thead th){position:sticky;top:0;z-index:1;background:#f4f7fb;color:#24456e;font-size:.78rem;font-weight:800;letter-spacing:.025em}
+#dashboard :where(th,td){padding:11px 12px;vertical-align:middle;border-bottom:1px solid #e7edf4;text-align:left}
+#dashboard :where(tbody tr:hover){background:#fbfdff}
+#dashboard :where(td){overflow-wrap:anywhere;line-height:1.45}
+#dashboard :where(td button,td a){margin:2px;white-space:normal}
+#dashboard :where(.admin-section){scroll-margin-top:90px}
+#dashboard :where(.admin-section > summary){cursor:pointer;min-height:48px;display:flex;align-items:center;gap:12px}
+#dashboard :where(.admin-section > summary:focus-visible){outline:3px solid rgba(240,120,22,.32);outline-offset:3px;border-radius:8px}
+#dashboard :where(.admin-section > summary)::marker{color:#e87516}
+#dashboard :where(.admin-section > *:not(summary)){min-width:0}
+#dashboard :where(.admin-section .card){min-width:0}
+#dashboard :where(.admin-section input,#dashboard .admin-section select,#dashboard .admin-section textarea){max-width:100%;min-width:0;font-size:16px}
+#dashboard :where(.admin-section button){min-height:40px}
+#dashboard :where(.admin-section .status,#dashboard .admin-section [role="status"]){overflow-wrap:anywhere}
+@media(max-width:760px){
+ #dashboard :where(table){display:block;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+ #dashboard :where(th,td){min-width:112px;padding:10px}
+ #dashboard :where(th:first-child,td:first-child){position:sticky;left:0;z-index:2;background:#fff}
+ #dashboard :where(thead th:first-child){z-index:3;background:#f4f7fb}
+ #dashboard :where(.admin-section > summary){align-items:flex-start;padding-block:12px}
+ #dashboard :where(.admin-section){scroll-margin-top:24px}
+ #dashboard :where(.admin-section button){min-height:44px}
+}
+@media(max-width:380px){
+ #dashboard :where(th,td){min-width:104px;padding:9px;font-size:.82rem}
+ #dashboard :where(.admin-section){padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ #dashboard :where(*):focus{scroll-behavior:auto}
+}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>

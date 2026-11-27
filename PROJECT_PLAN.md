@@ -500,3 +500,10 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Refined Rider wallet/stat cards, assignment items and Rider Connect thread/chat layout, including narrow-screen stacking and message wrapping.
 - CSS-only update targeting existing IDs/classes; no pickup cancellation/deletion rules, assignment acceptance, commission, wallet, deposit, refund, messaging, authentication or API logic was changed.
 - Source selectors were checked against the current HTML before styling. Render deployments and real-browser visual checks remain pending for this commit.
+
+
+### Administrator data-table and review-queue mobile finish — 27 November 2026
+- Improved the existing Administrator dashboard tables for horizontal scrolling on narrow screens, readable cell wrapping, sticky first-column context and compact mobile spacing.
+- Refined expandable operational-section headings, focus indicators, section scroll offsets and action-control touch targets.
+- Styling targets existing dashboard tables and admin-section elements; no data, table contents, endpoints, permissions, finance calculations, approval decisions or workflow handlers were changed.
+- This is a source-level responsive styling pass. Browser/device rendering and functional regression testing are still required before sign-off.
