@@ -385,3 +385,11 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Do not introduce fake metrics, sample transactions, or misleading status indicators as decoration.
 - Commit visual work only to `setup/secure-backend-prep`. Do not modify `main` or `production-release`, and do not promote or merge without explicit user approval.
 - Keep the approved Preview, Testing, and Kawutey Logistics Render services integrated with the development branch. Public access links remain restricted to the approved Public Portal and Administrator Portal links.
+
+
+### Portal dashboard component standards — 27 November 2026
+- Vendor dashboard: prioritize the welcome/business identity, clear pickup action, a legible pickup request form and scan-friendly pickup history. Package counts and optional pickup location controls must remain usable on small screens.
+- Rider dashboard: give wallet balance and its four existing financial/eligibility measures a clear hierarchy; keep deposit, transaction history and refund actions accessible; visually separate available assignments, accepted work and Rider Connect.
+- Collapsible dashboard sections must keep their existing accessible expanded state and keyboard-operable controls. Responsive styling must not change which sections are open by default or alter any data/action behavior.
+- Registration and sign-in forms should use responsive field grids on desktop and a single column on mobile. Ghana Card information and profile photographs remain subject to existing privacy and access restrictions.
+- Visual-only changes must not change the GH₵5 commission, wallet accounting, refund authorization, pickup deletion restrictions, rider approval, or assignment acceptance logic.
