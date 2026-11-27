@@ -2265,6 +2265,95 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(max-width:380px){.wrap{width:calc(100% - 12px)}#commissionSummaryCard .commission-grid{grid-template-columns:1fr}#kl-admin-quicknav a{padding:8px 9px;font-size:.71rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
+<!-- KL-BULK-VISUAL-PASS-2-ADMIN-COMMAND-CENTRE-2026-11-27 --><style>
+/* Real admin dashboard structure and live operational queues */
+#dashboard{gap:14px}
+.admin-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);align-items:center;gap:24px;min-height:270px;padding:clamp(25px,4vw,48px);overflow:hidden;border-radius:22px;color:#fff}
+.admin-hero:after{content:"";position:absolute;z-index:-1;right:-115px;bottom:-200px;width:430px;height:430px;border:1px solid rgba(255,255,255,.14);border-radius:50%;box-shadow:0 0 0 32px rgba(255,255,255,.035),0 0 0 72px rgba(255,255,255,.025)}
+.admin-hero-kicker{display:inline-flex;align-items:center;gap:9px;color:#ffd3ac;font-size:.7rem;font-weight:950;letter-spacing:.14em}
+.admin-hero-kicker i{width:8px;height:8px;border-radius:50%;background:#ff8a27;box-shadow:0 0 0 5px rgba(255,138,39,.16)}
+.admin-hero-copy h2{margin:15px 0 10px;color:#fff;font-size:clamp(2rem,4vw,3.35rem);letter-spacing:-.06em;line-height:1.03}
+.admin-hero-copy p{max-width:570px;color:#d7e5f6;font-size:.97rem;line-height:1.75}
+.admin-hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:21px}
+.admin-hero-pills span{padding:8px 11px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.09);color:#f2f6fc;font-size:.72rem;font-weight:800}
+.admin-hero-art{position:relative;display:grid;place-items:center;min-height:215px;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:19px;background:radial-gradient(circle at center,rgba(255,255,255,.13),transparent 55%),rgba(255,255,255,.045)}
+.route-orbit{position:absolute;width:180px;height:180px;border:1px solid rgba(255,255,255,.23);border-radius:50%;box-shadow:0 0 0 20px rgba(255,255,255,.035),0 0 0 43px rgba(255,255,255,.025)}
+.route-orbit.orbit-two{width:125px;height:125px;border-style:dashed;border-color:rgba(255,164,91,.5)}
+.route-line{position:absolute;width:155px;height:70px;border-top:2px dashed rgba(255,255,255,.6);border-radius:50%;transform:rotate(-24deg)}
+.route-pin{position:absolute;display:grid;place-items:center;width:26px;height:26px;border:3px solid #fff;border-radius:50%;background:#ff8a24;color:transparent;box-shadow:0 6px 15px rgba(0,0,0,.2)}
+.route-pin.pin-a{left:22%;top:27%}.route-pin.pin-b{right:20%;bottom:26%;background:#fff}
+.route-core{position:relative;z-index:1;display:grid;place-content:center;width:76px;height:76px;border:1px solid rgba(255,255,255,.4);border-radius:24px;background:linear-gradient(145deg,#ff9b39,#ed6900);text-align:center;box-shadow:0 12px 25px rgba(0,0,0,.2);transform:rotate(-5deg)}
+.route-core b{font-size:1.5rem;color:#fff}.route-core small{font-size:.53rem;color:#fff;letter-spacing:.16em;font-weight:900}
+.route-caption{position:absolute;right:12px;bottom:10px;color:#d9e7f8;font-size:.57rem;letter-spacing:.1em;text-align:right}.route-caption strong{color:#ffbb82}
+#kl-admin-quicknav{position:sticky;z-index:30;display:flex;gap:7px;flex-wrap:wrap;padding:9px;border:1px solid #dfe7f1;background:rgba(255,255,255,.95);box-shadow:0 8px 22px rgba(8,43,104,.06);backdrop-filter:blur(12px)}
+#kl-admin-quicknav a{display:inline-flex;align-items:center;min-height:39px;padding:8px 12px;border:1px solid #e1e9f2;border-radius:10px;background:#f8faff;color:#294b72;text-decoration:none;font-size:.78rem;font-weight:850}
+#kl-admin-quicknav a:hover{border-color:#f2bd91;background:#fff7f0;color:#a64c08}
+.admin-search-label{display:grid;gap:8px;color:#25466d;font-size:.83rem;font-weight:850}
+#dashboardActions{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:end;gap:10px}
+#dashboardActions .meta{grid-column:1/-1}
+#dashboardActions button{min-height:44px;margin:0}
+#commissionSummaryCard{border:1px solid #dce6f2;background:linear-gradient(145deg,#fff,#f9fbfe)}
+#commissionSummaryCard>h2{font-size:1.22rem;letter-spacing:-.035em}
+#commissionSummaryCard>.meta{max-width:950px;line-height:1.65}
+.commission-grid{gap:12px}
+.commission-metric{display:flex;flex-direction:column;justify-content:center;min-height:104px;border:1px solid #e1e9f2;background:#f6f9fd}
+.commission-metric strong{font-size:clamp(1.35rem,2.5vw,1.9rem);letter-spacing:-.04em}
+.commission-total{border-color:#cddcf0;background:linear-gradient(145deg,#edf4ff,#f7faff)}
+.commission-total strong{color:#0b3675}
+.commission-toolbar{align-items:end;padding:14px;border:1px solid #e4ebf4;border-radius:13px;background:#f8faff}
+.commission-toolbar label{display:grid;gap:7px;color:#315274;font-size:.8rem;font-weight:800}
+.commission-toolbar input{min-height:43px}
+.commission-toolbar button{min-height:43px}
+#commissionReportEntries,#commissionReportHistory,#paymentModeAudit,#walletReconciliationResults,#walletTransactions,#depositRequests,#approvedRiders,#pendingRiders,#cancellationRequests,#notifications{min-width:0;overflow-wrap:anywhere}
+#commissionReportEntries table,#commissionReportHistory table,#walletReconciliationResults table,#walletTransactions table{width:100%;min-width:620px}
+#commissionReportEntries,#commissionReportHistory{overflow-x:auto}
+#notifications{display:grid;gap:10px}
+#notifications>*{padding:14px;border:1px solid #e1e9f2;border-radius:13px;background:#fbfcfe}
+.notification-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px;border:1px solid #e4ebf4;border-radius:12px;background:#f8faff}
+.notification-filter{display:inline-flex;align-items:center;gap:8px;margin:0;padding:7px 10px;border-radius:9px;background:#fff}
+.notification-filter input{width:17px;height:17px;min-height:0}
+#paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:16px;border:1px solid #e3eaf3;border-radius:14px;background:#fbfcfe}
+#paymentSettingsForm label{display:grid;gap:7px;margin:0;color:#315274;font-size:.82rem;font-weight:800}
+#paymentSettingsForm label:has(#manualBackupEnabled){grid-column:1/-1;display:flex;align-items:center;gap:10px}
+#paymentSettingsForm #manualBackupEnabled{width:18px;height:18px;min-height:0}
+#paymentSettingsForm p,#paymentSettingsForm button{grid-column:1/-1}
+#paymentSettingsForm button{justify-self:start;min-width:180px}
+#paymentModeStatus,#walletReconciliationStatus,#commissionReportStatus,#paymentSettingsMessage,#depositStatus,#walletTransactionsStatus,#cancellationRequestsStatus{overflow-wrap:anywhere}
+#walletReconciliationResults{display:grid;gap:9px;margin-top:12px}
+#walletReconciliationResults>*{padding:13px;border:1px solid #e1e9f2;border-radius:12px;background:#fbfcfe}
+#depositRequests,#walletTransactions,#pendingRiders,#approvedRiders,#cancellationRequests{display:grid;gap:10px;margin-top:11px}
+#depositRequests>*,#walletTransactions>*,#pendingRiders>*,#approvedRiders>*,#cancellationRequests>*{min-width:0;padding:14px;border:1px solid #e1e9f2;border-radius:13px;background:#fbfcfe}
+#loginCard{max-width:580px;margin:clamp(28px,7vh,80px) auto;padding:clamp(23px,4vw,38px)}
+#loginCard>h2{font-size:1.7rem;letter-spacing:-.045em}
+#loginCard>p{color:#687c96;line-height:1.65}
+#loginForm{display:grid;gap:8px}
+#loginForm label{margin:9px 0 0;color:#2e4b6d;font-size:.84rem;font-weight:800}
+#loginForm input{min-height:49px;font-size:16px}
+#loginButton{min-height:49px;margin-top:9px;background:linear-gradient(105deg,#f47708,#ff9637);box-shadow:0 8px 18px rgba(239,100,10,.18)}
+#adminSignupAccess{line-height:1.6}
+@media(max-width:760px){
+ .admin-hero{grid-template-columns:1fr;min-height:0;padding:21px;border-radius:16px}
+ .admin-hero-copy h2{font-size:clamp(1.9rem,8vw,2.7rem)}
+ .admin-hero-art{min-height:165px}
+ #kl-admin-quicknav{position:sticky;top:0;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:7px}
+ #kl-admin-quicknav::-webkit-scrollbar{display:none}
+ #kl-admin-quicknav a{flex:0 0 auto;min-height:39px;padding:8px 10px;font-size:.73rem}
+ #dashboardActions{grid-template-columns:minmax(0,1fr) auto}
+ #dashboardActions .admin-search-label{grid-column:1/-1}
+ #dashboardActions .meta{grid-column:1/-1}
+ #commissionSummaryCard{padding:15px}
+ .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .commission-metric{min-height:89px;padding:11px}
+ .commission-total{grid-column:1/-1}
+ .commission-toolbar{display:grid;grid-template-columns:1fr 1fr}
+ .commission-toolbar label{grid-column:1/-1;min-width:0}
+ #paymentSettingsForm{grid-template-columns:1fr;padding:12px}
+ #paymentSettingsForm label:has(#manualBackupEnabled){grid-column:auto}
+ #paymentSettingsForm p,#paymentSettingsForm button{grid-column:auto}
+ #loginCard{margin:16px auto;padding:21px 16px;border-radius:16px}
+}
+@media(max-width:380px){#dashboardActions{grid-template-columns:1fr}#dashboardActions>*{grid-column:1!important}.commission-grid{grid-template-columns:1fr}.commission-total{grid-column:auto}.commission-toolbar{grid-template-columns:1fr}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
