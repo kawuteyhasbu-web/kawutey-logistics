@@ -3065,6 +3065,99 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
 @media(max-width:390px){nav.tabs .tab-btn{font-size:.72rem;padding-inline:3px}#riderDashboard .wallet-stats{grid-template-columns:1fr 1fr}#riderConnectPanel #connectSendButton{min-width:76px}}
 
 </style>
+  <style id="kl-unified-experience-2026-11">
+  /* Kawutey Logistics — unified public, vendor and rider experience */
+  :root{--primary:#082b68;--primary-dark:#061d49;--accent:#ff7900;--accent-hover:#e96800;--dark:#10264b;--border:#dce5f1;--surface:#fff;--canvas:#f3f6fb}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(ellipse at 8% 0%,rgba(213,229,255,.72),transparent 34%),linear-gradient(180deg,#f5f8fd 0%,#eef3fa 100%);color:#10264b}
+  .container{max-width:1320px;padding:24px clamp(14px,3vw,38px) 40px}
+  header{position:sticky;top:10px;z-index:30;padding:14px 20px;border:1px solid rgba(220,229,241,.9);border-radius:20px;box-shadow:0 12px 34px rgba(8,43,104,.09);backdrop-filter:blur(16px);background:rgba(255,255,255,.94)}
+  .logo-area img{height:54px}
+  .logo-text h1{font-size:1.42rem;letter-spacing:-.04em}
+  .logo-text span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .header-right{font-size:.88rem;line-height:1.7}
+  .tabs{position:sticky;top:92px;z-index:25;display:flex;gap:8px;padding:9px;margin:0 0 22px;border:1px solid #e0e8f3;border-radius:16px;background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(8,43,104,.06);backdrop-filter:blur(14px)}
+  .tab-btn{flex:0 0 auto;padding:11px 17px;border:1px solid transparent;border-radius:11px;font-size:.9rem;font-weight:750}
+  .tab-btn.active{background:linear-gradient(115deg,#082b68,#124b98);box-shadow:0 6px 14px rgba(8,43,104,.18)}
+  .tab-btn:hover:not(.active){background:#fff5ec;border-color:#ffd6b6;color:#c65a00}
+  .section{min-width:0}
+  .kl-home{overflow:hidden;border:1px solid #e1e9f4;border-radius:26px;background:#fff;box-shadow:0 18px 50px rgba(12,43,88,.07)}
+  .kl-hero{min-height:390px;padding:clamp(26px,5vw,64px);gap:36px;background:radial-gradient(circle at 90% 10%,rgba(255,121,0,.11),transparent 25%),linear-gradient(120deg,#fff 0%,#f3f7ff 100%)}
+  .kl-hero-copy{max-width:650px}
+  .kl-hero h1,.kl-hero h2{font-size:clamp(2.25rem,4.4vw,4.4rem);line-height:1.04;letter-spacing:-.055em;color:#082b68}
+  .kl-hero p{max-width:580px;font-size:clamp(1rem,1.3vw,1.14rem);line-height:1.8;color:#536782}
+  .kl-hero-actions{gap:12px;margin-top:24px}
+  .kl-hero-actions a,.kl-bottom-cta a{min-height:48px;border-radius:13px;padding:13px 20px;font-weight:800}
+  .kl-hero-art{border-radius:24px}
+  .kl-trust-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:20px 26px;background:#082b68;color:#fff}
+  .kl-trust-strip>div{padding:13px 15px;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.07)}
+  .kl-trust-strip strong{font-size:1rem}
+  .kl-audience{padding:clamp(24px,4vw,48px)}
+  .kl-section-heading{max-width:720px;margin:0 auto 26px;text-align:center}
+  .kl-section-heading h2{font-size:clamp(1.7rem,3vw,2.5rem);letter-spacing:-.04em}
+  .kl-audience-grid,.kl-content-grid,.kl-steps-grid,.kl-contact-grid{gap:18px}
+  .kl-audience-grid>*,.kl-content-grid>*,.kl-steps-grid>*,.kl-contact-grid>*{border:1px solid #e1e9f4;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(12,43,88,.045)}
+  .kl-card-icon{width:48px;height:48px;border-radius:15px;background:#fff0e3;color:#ed6b00}
+  .kl-bottom-cta{margin:10px 24px 24px;padding:clamp(22px,4vw,40px);border-radius:20px;background:linear-gradient(115deg,#082b68,#124b98);color:#fff}
+  .kl-bottom-cta h2,.kl-bottom-cta h3{color:#fff}
+  .kl-footer{padding:26px;background:#061d49;color:#eaf1fc}
+  .kl-footer a{color:#fff}
+  .kl-content-page{padding:clamp(18px,3vw,34px);border:1px solid #e1e9f4;border-radius:24px;background:#fff;box-shadow:0 14px 38px rgba(12,43,88,.06)}
+  .kl-page-hero{padding:clamp(22px,4vw,42px);border-radius:19px;background:linear-gradient(120deg,#f0f5ff,#fff7f0)}
+  .kl-page-hero h2{font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:-.045em}
+  .card{padding:clamp(18px,2.5vw,28px);border:1px solid #e1e9f4;border-radius:19px;box-shadow:0 10px 30px rgba(8,43,104,.065);background:#fff}
+  #vendor,#rider{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+  #vendor>.card,#rider>.card{width:100%;min-width:0}
+  #vendor h2,#rider h2{font-size:clamp(1.25rem,2vw,1.65rem);letter-spacing:-.025em}
+  .form-group{margin-bottom:18px}
+  label{font-size:.9rem;font-weight:750;color:#203b60}
+  input,select,textarea{min-height:48px;padding:12px 14px;border:1.5px solid #d9e3f0;border-radius:12px;background:#fbfdff;font:inherit}
+  textarea{min-height:110px}
+  input:focus,select:focus,textarea:focus{border-color:#ff7900;box-shadow:0 0 0 4px rgba(255,121,0,.12)}
+  .btn,button{min-height:44px;border-radius:12px;font-weight:750;transition:transform .16s,box-shadow .16s}
+  .btn-primary{background:linear-gradient(110deg,#082b68,#124b98)}
+  .btn-accent{background:linear-gradient(110deg,#ff7900,#ff9638)}
+  .btn:hover,button:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(8,43,104,.13)}
+  .pickup-item,.assignment-item,.rider-card{padding:17px;border:1px solid #e0e8f3;border-radius:16px;background:#fbfcff}
+  .wallet-box{padding:clamp(20px,3vw,30px);border-radius:20px;background:radial-gradient(circle at 90% 0%,rgba(255,255,255,.18),transparent 30%),linear-gradient(125deg,#082b68,#14509c);box-shadow:0 14px 28px rgba(8,43,104,.16)}
+  .wallet-box .balance{font-size:clamp(2rem,4vw,2.8rem);letter-spacing:-.04em}
+  .stat-box{border:1px solid rgba(255,255,255,.14);border-radius:13px}
+  .status{padding:5px 11px;font-size:.76rem}
+  :focus-visible{outline:3px solid rgba(255,121,0,.55);outline-offset:3px}
+  @media(min-width:900px){#vendor,#rider{grid-template-columns:repeat(2,minmax(0,1fr))}#vendor>#vendorDashboard,#rider>#riderDashboard{grid-column:1/-1}}
+  @media(max-width:760px){
+    .container{padding:10px 10px 28px}
+    header{position:relative;top:auto;padding:12px;border-radius:16px;gap:10px}
+    .logo-area img{height:44px}.logo-text h1{font-size:1.12rem}
+    .header-right{text-align:left;font-size:.78rem}
+    .tabs{top:0;overflow-x:auto;flex-wrap:nowrap;margin:0 -2px 14px;padding:7px;border-radius:13px;scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab-btn{padding:10px 13px;font-size:.82rem}
+    .kl-home{border-radius:18px}
+    .kl-hero{min-height:0;grid-template-columns:1fr;padding:25px 20px;gap:20px}
+    .kl-hero h1,.kl-hero h2{font-size:clamp(2rem,9vw,3rem)}
+    .kl-hero-art{min-height:210px}
+    .kl-trust-strip{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px;gap:8px}
+    .kl-trust-strip>div{padding:11px}
+    .kl-audience{padding:24px 16px}
+    .kl-audience-grid,.kl-content-grid,.kl-steps-grid,.kl-contact-grid{grid-template-columns:1fr}
+    .kl-bottom-cta{margin:8px 12px 14px;padding:22px 18px}
+    .kl-footer{padding:22px 16px}
+    .kl-content-page{padding:12px;border-radius:17px}
+    .card{padding:17px;border-radius:16px}
+    #vendor,#rider{grid-template-columns:minmax(0,1fr);gap:12px}
+    .grid-2{grid-template-columns:1fr}
+    .package-row{align-items:stretch;gap:8px}
+    .package-row label{min-width:100%}
+    .package-row input{max-width:none}
+    .wallet-box .balance{font-size:2rem}
+    .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .rider-card{align-items:flex-start}
+    .btn,button{max-width:100%}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+  </style>
 </head>
 <body>
   <div class="container">
@@ -3126,7 +3219,7 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
         </div>
       </section>
       <section class="kl-bottom-cta"><div><span>READY WHEN YOU ARE</span><h2>Let's get your next delivery moving.</h2><p>Choose the portal that matches what you do.</p></div><div><button class="btn btn-accent" data-section="vendor">I'm a Vendor</button><button class="btn kl-outline-light" data-section="rider">I'm a Rider</button></div></section>
-      <footer class="kl-footer"><div><strong>Kawutey Logistics</strong><p>Your package, Our priority.</p></div><div class="kl-footer-contact"><a href="tel:0242267974">024 226 7974</a><a href="tel:0591114638">059 111 4638</a><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a></div><div class="kl-social"><span>Follow Kawutey Logistics</span><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer" aria-label="TikTok">@ TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎ Instagram</a><small>@kawuteylogistics4u</small></div></footer>
+      <footer class="kl-footer"><div><strong>Kawutey Logistics</strong><p>Your package, Our priority.</p></div><div class="kl-footer-contact"><a href="tel:0242267974">024 226 7974</a><a href="tel:0591114638">059 111 4638</a><a href="mailto:kawuteyhasbu@gmail.com">kawuteyhasbu@gmail.com</a></div><div class="kl-social"><span>Follow Kawutey Logistics</span><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer" aria-label="TikTok">@ TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">◎ Instagram</a><small>@kawuteylogistics4u</small></div></footer>
     </div>
 
 
@@ -3155,7 +3248,7 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
       <div class="kl-contact-grid">
         <a href="tel:0242267974"><small>CALL US</small><strong>024 226 7974</strong><span>Speak with our team</span></a>
         <a href="tel:0591114638"><small>CALL US</small><strong>059 111 4638</strong><span>Speak with our team</span></a>
-        <a href="mailto:kwauteyhasbu@gmail.com"><small>EMAIL US</small><strong>kwauteyhasbu@gmail.com</strong><span>Send us an enquiry</span></a>
+        <a href="mailto:kawuteyhasbu@gmail.com"><small>EMAIL US</small><strong>kawuteyhasbu@gmail.com</strong><span>Send us an enquiry</span></a>
       </div>
       <div class="kl-page-cta"><h3>Follow our updates</h3><p>Find Kawutey Logistics on TikTok and Instagram.</p><a href="https://www.tiktok.com/@kawuteylogistics4u" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on TikTok</a><a href="https://www.instagram.com/kawuteylogistics4u/" target="_blank" rel="noopener noreferrer">@kawuteylogistics4u on Instagram</a></div>
     </section>
@@ -3168,7 +3261,7 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
         <article><b>02</b><h3>Pickup requests</h3><p>Provide accurate package counts, pickup details and preferred collection times when submitting a request.</p></article>
         <article><b>03</b><h3>Follow your request</h3><p>Check your vendor dashboard for pickup status and assigned rider information when available.</p></article>
       </div>
-      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team and include the pickup details relevant to your enquiry. Do not send passwords or Ghana Card information by email.</p><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a><a href="tel:0242267974">024 226 7974</a></div>
+      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team and include the pickup details relevant to your enquiry. Do not send passwords or Ghana Card information by email.</p><a href="mailto:kawuteyhasbu@gmail.com">kawuteyhasbu@gmail.com</a><a href="tel:0242267974">024 226 7974</a></div>
     </section>
     <section id="riderSupportPage" class="section hidden kl-content-page">
       <div class="kl-page-hero"><span class="kl-eyebrow">RIDER SUPPORT</span><h2>Support for your rider journey.</h2><p>Guidance for rider account approval, pickup offers, assignments and wallet activity.</p></div>
@@ -3177,7 +3270,7 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
         <article><b>02</b><h3>Pickup opportunities</h3><p>Eligible active riders can view available pickup offers. Location estimates may be unavailable when location or routing data is missing.</p></article>
         <article><b>03</b><h3>Wallet and transactions</h3><p>Review your wallet history for deposits, acceptance commissions and any separately processed refunds.</p></article>
       </div>
-      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team with your rider reference and a brief description of the issue. Never share your password or full Ghana Card number.</p><a href="mailto:kwauteyhasbu@gmail.com">kwauteyhasbu@gmail.com</a><a href="tel:0591114638">059 111 4638</a></div>
+      <div class="kl-page-cta"><h3>Need direct assistance?</h3><p>Contact our team with your rider reference and a brief description of the issue. Never share your password or full Ghana Card number.</p><a href="mailto:kawuteyhasbu@gmail.com">kawuteyhasbu@gmail.com</a><a href="tel:0591114638">059 111 4638</a></div>
     </section>
 
     <!-- VENDOR PORTAL -->

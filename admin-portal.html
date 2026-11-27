@@ -64,6 +64,26 @@ button:disabled{opacity:.6;cursor:not-allowed}
  .intro{margin-bottom:19px}
 }
 @media(max-width:360px){.visual{padding:20px 17px}.auth-side{padding:23px 17px}.visual-foot span:last-child{display:none}}
+
+/* Admin access — polished responsive shell */
+body{background:radial-gradient(circle at 10% 5%,#e1ebff 0,transparent 34%),radial-gradient(circle at 95% 95%,#ffe8d7 0,transparent 28%),#f2f5fa}
+.shell{width:min(1240px,100%);min-height:min(760px,calc(100vh - 52px));border-radius:30px;box-shadow:0 30px 90px rgba(5,28,68,.17)}
+.visual{padding:clamp(26px,4vw,54px)}
+.hero{max-width:560px}
+.form-panel{padding:clamp(26px,4.5vw,62px)}
+input{min-height:50px;border:1.5px solid #d9e3f0;border-radius:12px;padding:13px 15px;font:inherit}
+input:focus{outline:0;border-color:#ff7900;box-shadow:0 0 0 4px rgba(255,121,0,.12)}
+button{min-height:48px;border-radius:13px;font-weight:800}
+@media(max-width:760px){
+ body{display:block;padding:12px}
+ .shell{min-height:0;grid-template-columns:1fr;border-radius:20px}
+ .visual{padding:23px 21px;min-height:270px}
+ .hero{margin:28px 0 18px}
+ h1{font-size:clamp(2rem,9vw,3rem)}
+ .feature-grid{gap:8px}
+ .form-panel{padding:24px 20px}
+}
+
 </style>
 <style id="kl-secure-entry-visual-redesign-2026-11">
 /* SECURE ADMIN ENTRY — premium responsive access experience */
