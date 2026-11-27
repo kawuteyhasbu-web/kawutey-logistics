@@ -453,3 +453,11 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Main website navigation is horizontally scrollable on narrow screens rather than wrapping into crowded rows; mobile sticky positioning, keyboard focus indicators and touch-sized tabs are included.
 - All CTA buttons continue to use existing data-section navigation targets. No new portal route, account flow, service claim, or business rule was introduced.
 - CSS-only presentation pass; rendered browser/device QA remains required.
+
+
+### Secure administrator entry experience finish — 27 November 2026
+- Final responsive refinement for the restricted administrator sign-in and invitation-only registration screen.
+- Improved form width and hierarchy, input affordances, password/invitation visibility controls, validation feedback, keyboard focus rings, small-screen spacing and safe-area padding.
+- Preserved existing secure portal route, noindex metadata, sign-in endpoint, administrator role verification, session token storage, invitation-code requirement, password length requirement and four-administrator cap. No authentication or registration logic was changed.
+- Latest prior homepage design deployment was confirmed live across Preview, Testing and Kawutey Logistics before this new commit.
+- This pass is source-committed presentation work; rendered browser/device verification remains outstanding.
