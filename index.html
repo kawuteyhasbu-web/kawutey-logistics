@@ -3158,6 +3158,49 @@ nav.tabs .tab-btn.active{border-color:#f4d4b8;background:#fff1e5;color:#a34b05;b
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
   </style>
+<style id="kl-operational-dashboard-refinement-2026-11">
+/* Portal workspace refinement: operational dashboards */
+#vendorDashboard:not(.hidden),#riderDashboard:not(.hidden){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+#vendorDashboard>h3,#vendorDashboard>p,#vendorDashboard>#pickupFormArea,
+#riderDashboard>.wallet-box,#riderDashboard>.card:first-child{grid-column:1/-1}
+#vendorDashboard>h3{margin:0;padding:18px 20px 0;font-size:1.35rem;letter-spacing:-.03em;color:#082b68}
+#vendorDashboard>p{margin:0;padding:0 20px;color:#5b6f89}
+#vendorDashboard>[data-action="togglePickupForm"]{justify-self:start;margin-left:20px}
+#vendorDashboard>[data-action="logoutVendor"]{justify-self:end;margin-right:20px}
+#vendorDashboard>#pickupFormArea{width:100%;padding:22px;border:1px solid #e0e8f3;border-radius:18px;background:#f8faff}
+#vendorDashboard>#pickupHistory,#vendorDashboard>#vendorProfileArea,
+#vendorDashboard>#vendorWalletArea{min-width:0;padding:18px;border:1px solid #e0e8f3;border-radius:17px;background:#fff}
+#riderDashboard>.wallet-box{padding:clamp(20px,3vw,30px);border:0}
+#riderDashboard>.card{min-width:0}
+#riderDashboard>.card h3,#riderDashboard>.card h2{color:#082b68;letter-spacing:-.025em}
+#riderDashboard .wallet-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+#riderDashboard .stat-box{padding:12px;min-width:0}
+#riderDashboard .stat-box .value{font-size:clamp(1.05rem,2vw,1.45rem);font-weight:850;overflow-wrap:anywhere}
+#riderDashboard .stat-box .label{font-size:.76rem;line-height:1.4;opacity:.9}
+#riderDashboard .wallet-box>div:last-child{display:flex;gap:9px;flex-wrap:wrap}
+#riderDashboard .wallet-box button{flex:1 1 150px}
+#riderDashboard .card table{width:100%;border-collapse:separate;border-spacing:0}
+#riderDashboard .card th,#riderDashboard .card td{padding:11px 12px;border-bottom:1px solid #e5ebf3;text-align:left;vertical-align:top}
+#riderDashboard .card th{background:#f3f7fd;color:#24466f;font-size:.82rem}
+#riderDashboard .card tr:last-child td{border-bottom:0}
+#riderDashboard .ref-code{padding:14px;border-radius:13px;overflow-wrap:anywhere}
+@media(max-width:760px){
+ #vendorDashboard:not(.hidden),#riderDashboard:not(.hidden){grid-template-columns:minmax(0,1fr);gap:11px}
+ #vendorDashboard>h3{padding:14px 14px 0;font-size:1.18rem}
+ #vendorDashboard>p{padding:0 14px;font-size:.9rem}
+ #vendorDashboard>[data-action="togglePickupForm"]{margin-left:14px;width:calc(100% - 28px)}
+ #vendorDashboard>[data-action="logoutVendor"]{margin:0 14px 6px;width:calc(100% - 28px)}
+ #vendorDashboard>#pickupFormArea{padding:15px;border-radius:15px}
+ #vendorDashboard>#pickupHistory,#vendorDashboard>#vendorProfileArea,#vendorDashboard>#vendorWalletArea{padding:14px}
+ #riderDashboard>.wallet-box{padding:19px 16px;border-radius:16px}
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #riderDashboard .stat-box{padding:10px}
+ #riderDashboard .wallet-box>div:last-child{display:grid;grid-template-columns:1fr}
+ #riderDashboard .wallet-box button{width:100%}
+ #riderDashboard .card{padding:14px}
+ #riderDashboard .card table{display:block;overflow-x:auto;white-space:nowrap}
+}
+</style>
 </head>
 <body>
   <div class="container">
