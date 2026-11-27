@@ -687,6 +687,30 @@ button.primary:active{transform:translateY(1px)}
 @media(min-width:761px){.auth-side{position:relative}.auth-side:before{content:"";position:absolute;left:0;top:12%;bottom:12%;width:1px;background:linear-gradient(transparent,#e7edf5,transparent)}}
 @media(max-width:760px){.shell{overflow:visible}.visual{border-radius:0 0 22px 22px}.auth-side{border-radius:0 0 20px 20px}}
 </style>
+<style id="kl-admin-entry-final-touch-pass-2026-11-27">
+/* Secure admin access: compact-device legibility and clear input feedback */
+.auth-side{min-width:0}
+.auth-side h2,.auth-side .intro{max-width:52ch}
+.auth-side input{min-height:50px;font-size:16px}
+.auth-side .tabs{gap:6px}
+.auth-side .tabs button{line-height:1.25}
+.auth-side button.primary{letter-spacing:.01em}
+.auth-side .notice{line-height:1.6;overflow-wrap:anywhere}
+.visual-foot{line-height:1.55}
+@media(max-width:760px){
+ .shell{min-height:100svh}
+ .visual{padding-top:max(22px,env(safe-area-inset-top,0px))}
+ .auth-side{padding-top:24px}
+ .auth-side .auth-top{gap:12px;flex-wrap:wrap}
+ .auth-side .secure{white-space:normal}
+}
+@media(max-width:340px){
+ .brand{gap:9px}
+ .brand-mark{width:38px;height:38px}
+ .hero h1{font-size:1.9rem}
+ .auth-side .tabs button{font-size:10px}
+}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
