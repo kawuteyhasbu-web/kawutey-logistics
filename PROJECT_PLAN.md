@@ -461,3 +461,12 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Preserved existing secure portal route, noindex metadata, sign-in endpoint, administrator role verification, session token storage, invitation-code requirement, password length requirement and four-administrator cap. No authentication or registration logic was changed.
 - Latest prior homepage design deployment was confirmed live across Preview, Testing and Kawutey Logistics before this new commit.
 - This pass is source-committed presentation work; rendered browser/device verification remains outstanding.
+
+
+### Vendor and Rider daily-operations workspace visual pass — 27 November 2026
+- Refined the authenticated Vendor workspace header, pickup request form, location-sharing status and pickup-history cards for a clear two-column desktop form and single-column mobile form.
+- Refined Rider wallet balance and four financial metrics, primary wallet actions, deposit/history areas, assignment cards, profile image treatment and rider-to-customer/vendor messaging workspace.
+- Improved responsive messaging thread/chat layout, scroll areas, form controls, and fixed mobile navigation safe-area spacing.
+- All visual changes use existing IDs and current portal sections. Existing order deletion restrictions, assignment acceptance, commission deduction, wallet deposits/refunds, messaging, profile-photo access and location-sharing logic were not intentionally changed.
+- The most recent secure administrator access commit was confirmed live on all three Render services before this new change.
+- CSS-only source update; browser-level responsive inspection and financial/workflow regression tests remain outstanding.
