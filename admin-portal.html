@@ -321,6 +321,30 @@ button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 10px 22px rg
 @media(max-width:380px){.visual{padding:19px 16px 15px}.feature-grid{grid-template-columns:1fr}.feature{padding:10px}.auth-side{padding:21px 16px 25px}}
 
 </style>
+
+<!-- KL-MAJOR-PORTAL-IA-AND-WORKFLOW-2026-11-27 -->
+<style>
+/* KL administrator secure entry final form and trust hierarchy */
+.shell{min-height:0;max-width:1220px}
+.visual{display:flex;flex-direction:column;justify-content:space-between}
+.visual .hero{flex:1;display:flex;flex-direction:column;justify-content:center}
+.visual .feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.feature{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);backdrop-filter:blur(8px)}
+.auth-side{min-width:0}
+.auth-side form{width:100%;max-width:440px;margin-inline:auto}
+.auth-side form input{box-sizing:border-box;width:100%;min-width:0;min-height:49px;padding:12px 14px;border:1px solid #d9e2ed;border-radius:12px;background:#fbfcfe;color:#142b4d}
+.auth-side form input:focus{outline:3px solid rgba(255,121,0,.17);border-color:#ff7900}
+.auth-side form button[type=submit]{width:100%;min-height:50px;border:0;border-radius:13px;background:linear-gradient(110deg,#ff7900,#f05b00);color:#fff;font-weight:850;box-shadow:0 9px 20px rgba(240,91,0,.19)}
+.auth-side form button[type=submit]:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.auth-side .tabs{max-width:440px;margin-inline:auto;width:100%}
+.auth-side .notice{max-width:440px;margin-inline:auto}
+.auth-side .small{max-width:440px;margin-inline:auto;line-height:1.65}
+#message:empty{display:none}
+@media(min-width:1000px){.shell{grid-template-columns:1.04fr .96fr}.visual{min-height:690px}.auth-side{padding:clamp(42px,5vw,76px)}}
+@media(max-width:760px){.shell{margin:0 auto}.visual .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.auth-side form,.auth-side .tabs,.auth-side .notice,.auth-side .small{max-width:none}.auth-side form input{min-height:50px}}
+@media(max-width:360px){.visual .feature-grid{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
