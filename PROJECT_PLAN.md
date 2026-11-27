@@ -393,3 +393,13 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Collapsible dashboard sections must keep their existing accessible expanded state and keyboard-operable controls. Responsive styling must not change which sections are open by default or alter any data/action behavior.
 - Registration and sign-in forms should use responsive field grids on desktop and a single column on mobile. Ghana Card information and profile photographs remain subject to existing privacy and access restrictions.
 - Visual-only changes must not change the GH₵5 commission, wallet accounting, refund authorization, pickup deletion restrictions, rider approval, or assignment acceptance logic.
+
+
+### Responsive experience finish and accessibility pass — 27 November 2026
+- Added a coordinated final presentation layer across the public website, Administrator workspace, and secure Administrator entry page. This supplements the existing Vendor/Rider operational styling without replacing application markup or workflow logic.
+- Public navigation remains horizontally accessible on small screens; the homepage hero and calls to action reflow into a single-column mobile composition. Public content sections, forms, and portal workspaces receive consistent scroll positioning and narrow-screen overflow safeguards.
+- Administrator review sections, finance tables, action groups, and form controls receive additional responsive sizing, keyboard focus visibility, and readable dense-data treatment. Wide financial tables remain horizontally scrollable rather than compressing or hiding columns.
+- Administrator sign-in and registration receive additional narrow-device safeguards, accessible focus treatment, and more resilient feedback wrapping.
+- Reduced-motion preferences are respected in the new presentation layers.
+- These changes are CSS-only. They do not alter authentication, authorization, API calls, wallet calculations, GH₵5 acceptance commission, refunds, pickup deletion restrictions, rider approval, assignment acceptance, or financial records.
+- Continue to verify each page at desktop, tablet, and narrow mobile widths in a real browser. Source-level CSS changes are not a substitute for visual QA or functional regression testing.

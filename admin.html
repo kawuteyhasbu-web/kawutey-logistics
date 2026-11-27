@@ -2354,6 +2354,49 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 }
 @media(max-width:380px){#dashboardActions{grid-template-columns:1fr}#dashboardActions>*{grid-column:1!important}.commission-grid{grid-template-columns:1fr}.commission-total{grid-column:auto}.commission-toolbar{grid-template-columns:1fr}}
 </style>
+
+<style id="kl-admin-review-workspace-finish-2026-11">
+/* Admin: dense review and finance workspaces remain legible at every width */
+#dashboard{min-width:0}
+#dashboard .admin-section{scroll-margin-top:82px}
+#dashboard .admin-section>summary{min-height:58px;line-height:1.4}
+#dashboard .admin-section>summary:focus-visible{outline:3px solid rgba(255,121,0,.42);outline-offset:-3px}
+#dashboard .section-card{min-width:0}
+#dashboard .section-card h3{color:#153b70;letter-spacing:-.02em}
+#dashboard .item{line-height:1.6}
+#dashboard .item strong{overflow-wrap:anywhere}
+#dashboard .item button{min-height:40px}
+#dashboard table{font-variant-numeric:tabular-nums}
+#dashboard table th{position:sticky;top:0;z-index:1;background:#f1f6fd}
+#dashboard .admin-section [role=group],#dashboard .admin-section .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#dashboard .admin-section input[type=search],#dashboard .admin-section input[type=text],#dashboard .admin-section input[type=email],#dashboard .admin-section input[type=number],#dashboard .admin-section select{min-height:44px}
+#dashboard .admin-section textarea{min-height:100px;resize:vertical}
+#dashboard .notice[role=alert],#dashboard [role=alert]{overflow-wrap:anywhere}
+#kl-admin-quicknav{scrollbar-width:thin;overscroll-behavior-x:contain}
+#kl-admin-quicknav a{scroll-margin-inline:10px}
+#dashboardActions{scroll-margin-top:10px}
+@media(max-width:760px){
+ #dashboard .admin-section>summary{min-height:54px;padding:13px 14px}
+ #dashboard .section-card{padding:13px}
+ #dashboard .item{padding:12px}
+ #dashboard .item button{width:auto;max-width:100%;white-space:normal}
+ #dashboard table{font-size:.82rem}
+ #dashboard table th,#dashboard table td{padding:9px 10px}
+ #kl-admin-quicknav{max-width:100%;scroll-snap-type:x proximity}
+ #kl-admin-quicknav a{scroll-snap-align:start}
+}
+@media(max-width:390px){
+ .brand h1{font-size:1.12rem}
+ .brand img{height:43px}
+ #dashboard .commission-grid{gap:7px}
+ #dashboard .commission-metric{padding:10px}
+ #dashboard .commission-metric span{font-size:.73rem}
+}
+@media(prefers-reduced-motion:reduce){
+ #dashboard .admin-section,#dashboard button{transition:none!important}
+}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>

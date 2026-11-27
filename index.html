@@ -3375,6 +3375,74 @@ button:disabled,.btn:disabled{cursor:not-allowed;opacity:.58;transform:none;box-
  #pickupForm .package-row{grid-template-columns:minmax(0,1fr) 84px}
 }
 </style>
+
+<style id="kl-public-experience-finish-2026-11">
+/* Public experience: responsive navigation, section rhythm and accessible interactions */
+:root{--kl-brand-navy:#082b68;--kl-brand-orange:#ff7900;--kl-brand-ink:#10264b;--kl-brand-line:#dce5f2;--kl-brand-muted:#64748b}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{overflow-x:hidden}
+.container{min-width:0}
+header,.tabs,.kl-home,.kl-hero,.kl-section,.kl-bottom-cta,footer{min-width:0}
+header{gap:16px}
+.logo-area{min-width:0}
+.logo-text h1{line-height:1.15}
+.tabs{align-items:center;max-width:100%;overscroll-behavior-x:contain;scrollbar-width:thin}
+.tab-btn{min-height:43px;white-space:nowrap}
+.kl-home{display:grid;gap:clamp(20px,3vw,34px)}
+.kl-hero{isolation:isolate}
+.kl-hero-copy{min-width:0}
+.kl-hero-description{line-height:1.75}
+.kl-hero-actions .btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center}
+.kl-section{scroll-margin-top:18px}
+.kl-section-heading{max-width:760px}
+.kl-section-heading h2{line-height:1.12;letter-spacing:-.04em}
+.kl-section-heading p{color:var(--kl-brand-muted);line-height:1.75}
+.kl-bottom-cta{overflow:hidden}
+.card,.pickup-item,.assignment-item,.rider-card,.msg-box{min-width:0}
+input,select,textarea{min-width:0;max-width:100%;font-size:16px}
+button,.btn{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(255,121,0,.42);outline-offset:3px}
+button:disabled,.btn:disabled{cursor:not-allowed;opacity:.58;transform:none;box-shadow:none}
+#vendorDashboard,#riderDashboard{scroll-margin-top:18px}
+#pickupHistory,#transactionHistoryArea,#depositHistory,#availableAssignments,#acceptedAssignments,#messagesArea,#ridersList{overflow-wrap:anywhere}
+footer{line-height:1.75}
+@media(max-width:760px){
+ .container{padding:13px}
+ header{align-items:center;padding:13px 15px}
+ .logo-area img{height:47px}
+ .tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;overflow-x:auto;padding:8px 2px 11px;margin:0 -2px 14px;background:rgba(243,246,251,.96);backdrop-filter:blur(12px);scroll-snap-type:x proximity}
+ .tab-btn{flex:0 0 auto;scroll-snap-align:start;padding:10px 14px;font-size:.82rem}
+ .kl-home{gap:20px}
+ .kl-hero{grid-template-columns:1fr;min-height:0;border-radius:19px}
+ .kl-hero-copy{padding:30px 23px 25px}
+ .kl-hero h2{font-size:clamp(2.25rem,9vw,3.6rem)}
+ .kl-slogan{font-size:1.12rem}
+ .kl-hero-description{font-size:.94rem}
+ .kl-hero-art{min-height:210px}
+ .kl-section{padding:clamp(20px,5vw,30px)!important}
+ .kl-hero-actions{display:grid;grid-template-columns:1fr}
+ .kl-hero-actions .btn{width:100%}
+ footer{padding:18px 10px}
+}
+@media(max-width:420px){
+ .container{padding:9px}
+ header{border-radius:14px}
+ .logo-area{gap:8px}
+ .logo-area img{height:40px}
+ .logo-text h1{font-size:1.08rem}
+ .logo-text span{font-size:.62rem}
+ .header-right{font-size:.75rem}
+ .kl-hero-copy{padding:25px 18px 20px}
+ .kl-hero h2{font-size:2.2rem}
+ .kl-hero-art{min-height:175px}
+ .card{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
 </head>
 <body>
   <div class="container">
