@@ -2414,6 +2414,63 @@ header{border:1px solid #e1e8f1;border-radius:18px!important;box-shadow:0 10px 3
  #connectMessage{font-size:16px!important}
 }
 </style>
+<style id="kl-homepage-and-workflow-visual-suite-2026-11">
+:root{--kl-navy:#0a2f6b;--kl-deep:#071f4a;--kl-orange:#ff7900;--kl-ink:#142b47;--kl-muted:#687b91;--kl-line:#dfe7f1;--kl-soft:#f5f8fc}
+.kl-home{isolation:isolate;position:relative}
+.kl-home .kl-art-card{border:1px solid var(--kl-line);border-radius:22px;background:linear-gradient(150deg,#fff,#f6f9fd);box-shadow:0 13px 35px rgba(7,31,74,.07);transition:transform .2s,border-color .2s,box-shadow .2s}
+.kl-home .kl-art-card:hover{transform:translateY(-3px);border-color:#f2c49f;box-shadow:0 19px 42px rgba(7,31,74,.1)}
+.kl-home .kl-section-heading{letter-spacing:-.04em;text-wrap:balance}
+.kl-home .kl-audience-card{position:relative;overflow:hidden;border:1px solid var(--kl-line);border-radius:19px;background:#fff;box-shadow:0 9px 25px rgba(7,31,74,.055);transition:transform .18s,border-color .18s,box-shadow .18s}
+.kl-home .kl-audience-card:hover{transform:translateY(-3px);border-color:#f1bd8d;box-shadow:0 15px 34px rgba(7,31,74,.09)}
+.kl-home .kl-card-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#fff1e5;color:#d96d0a}
+.kl-home .kl-card-kicker{font-size:.7rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#d96d0a}
+.kl-content-page{max-width:1160px;margin-inline:auto}
+.kl-content-page>h2,.kl-content-page>h3{letter-spacing:-.035em;color:var(--kl-deep)}
+.kl-content-page :where(.card,.kl-art-card){border:1px solid var(--kl-line);border-radius:18px;box-shadow:0 9px 26px rgba(7,31,74,.055)}
+#vendorDashboard,#riderDashboard{max-width:1200px;margin-inline:auto}
+#vendorDashboard>h3{font-size:clamp(1.45rem,3vw,2rem);letter-spacing:-.04em;color:var(--kl-deep)}
+#vendorDashboard>p{line-height:1.65}
+#pickupFormArea{background:linear-gradient(150deg,#fff,#f7faff);border:1px solid var(--kl-line)!important;border-radius:18px;padding:clamp(14px,2.5vw,24px)!important}
+#pickupFormArea>h4{font-size:1.15rem;letter-spacing:-.02em;color:var(--kl-deep)}
+#pickupForm .form-group{min-width:0}
+#pickupForm .form-group label,#vendorRegForm label,#riderRegForm label{display:block;margin-bottom:7px;color:#294666;font-size:.84rem;font-weight:800}
+#pickupForm :where(input,select,textarea),#vendorRegForm :where(input,select),#riderRegForm :where(input,select){width:100%;min-width:0;border:1px solid #d8e2ee;border-radius:11px;background:#fff;transition:border-color .16s,box-shadow .16s}
+#pickupForm :where(input,select,textarea):focus,#vendorRegForm :where(input,select):focus,#riderRegForm :where(input,select):focus{border-color:#f2a45e;box-shadow:0 0 0 3px rgba(255,121,0,.12);outline:0}
+#pickupForm .alert{border-radius:12px;line-height:1.6}
+#pickupForm [data-action="capturePickupLocation"]{min-height:43px}
+#vendorDashboard .pickup-item{border:1px solid var(--kl-line);border-radius:16px;background:#fff;box-shadow:0 7px 22px rgba(7,31,74,.045);padding:16px;transition:border-color .16s,box-shadow .16s}
+#vendorDashboard .pickup-item:hover{border-color:#c7d6e8;box-shadow:0 11px 27px rgba(7,31,74,.075)}
+#vendorDashboard .pickup-item-heading{gap:10px;align-items:center}
+#vendorDashboard .pickup-item-details{color:#5c7088;line-height:1.7}
+#vendorDashboard .cancel-pickup-button{border-radius:10px}
+#riderDashboard>.card{border:1px solid var(--kl-line);border-radius:18px;box-shadow:0 8px 24px rgba(7,31,74,.05)}
+#riderDashboard .wallet-box{border:1px solid rgba(255,255,255,.16);border-radius:22px;background:radial-gradient(circle at 92% 0,rgba(255,255,255,.17),transparent 30%),linear-gradient(125deg,#071f4a,#0a3977 72%,#14518b);box-shadow:0 17px 39px rgba(7,31,74,.17)}
+#riderDashboard .wallet-box h3,#riderDashboard .wallet-box .label{color:rgba(255,255,255,.85)}
+#riderDashboard .wallet-box .balance{font-size:clamp(2rem,5vw,3.1rem);font-weight:900;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+#riderDashboard .wallet-stats .stat-box{min-width:0;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(255,255,255,.09)}
+#riderDashboard .wallet-stats .value{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#riderDashboard .connect-layout{display:grid;grid-template-columns:minmax(220px,.78fr) minmax(0,1.5fr);gap:14px}
+#riderDashboard .connect-threads,#riderDashboard .connect-chat{min-width:0;border:1px solid var(--kl-line);border-radius:16px;background:#fff}
+#riderDashboard #connectChatHeader{color:var(--kl-deep);font-weight:850}
+#riderDashboard #connectMessages{overscroll-behavior:contain;scrollbar-gutter:stable}
+#riderDashboard #connectMessage{min-height:100px;border:1px solid #d8e2ee;border-radius:12px}
+#riderDashboard .connect-compose{display:flex;align-items:center;justify-content:space-between;gap:10px}
+@media(max-width:760px){
+ .kl-home .kl-art-card,.kl-home .kl-audience-card{border-radius:17px}
+ .kl-content-page{padding:14px}
+ #pickupFormArea{padding:13px!important}
+ #vendorDashboard .pickup-item{padding:13px;border-radius:14px}
+ #riderDashboard .wallet-box{border-radius:18px;padding:19px!important}
+ #riderDashboard .wallet-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #riderDashboard .wallet-stats .stat-box{padding:11px}
+ #riderDashboard .connect-layout{grid-template-columns:1fr}
+ #riderDashboard .connect-threads{max-height:245px;overflow:auto}
+ #riderDashboard .connect-chat{min-height:350px}
+ #riderDashboard #connectMessage{font-size:16px!important}
+}
+@media(max-width:380px){#riderDashboard .wallet-stats{grid-template-columns:1fr 1fr}#vendorDashboard .pickup-item-heading{align-items:flex-start;flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.kl-home .kl-art-card,.kl-home .kl-audience-card,#vendorDashboard .pickup-item{transition:none!important}}
+</style>
 </head>
 <body>
   <div class="container">
