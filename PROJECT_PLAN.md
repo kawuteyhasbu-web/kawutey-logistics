@@ -403,3 +403,10 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Reduced-motion preferences are respected in the new presentation layers.
 - These changes are CSS-only. They do not alter authentication, authorization, API calls, wallet calculations, GH₵5 acceptance commission, refunds, pickup deletion restrictions, rider approval, assignment acceptance, or financial records.
 - Continue to verify each page at desktop, tablet, and narrow mobile widths in a real browser. Source-level CSS changes are not a substitute for visual QA or functional regression testing.
+
+
+### Mobile app-style navigation and public contact consistency — 27 November 2026
+- Added a fixed, safe-area-aware mobile bottom navigation bar for Home, Vendor, Rider, and Contact/Help. It reuses the existing section-switching behavior and active-state updates; it does not introduce a second navigation state or alter portal access.
+- The mobile bar is limited to narrow screens, keeps touch targets readable, respects reduced-motion preferences, and reserves page-bottom space so it does not cover portal content or controls.
+- Corrected the legacy footer's outdated contact number so all public contact placements consistently use the approved business numbers: 024 226 7974 and 059 111 4638.
+- This is a front-end presentation/contact consistency update only; no authentication, payment, wallet, assignment, or refund logic was changed.
