@@ -2852,6 +2852,42 @@ img{max-width:100%}
 @media(max-width:760px){#vendorDashboard,#riderDashboard{gap:12px}#vendorDashboard>.card,#riderDashboard>.card{padding:15px;border-radius:17px}#riderDashboard>.wallet-box{padding:21px;border-radius:20px}#riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#riderDashboard .wallet-stats .stat-box{padding:12px;min-height:82px}#riderConnectPanel .connect-layout{grid-template-columns:1fr}#riderConnectPanel .connect-chat{min-height:320px}#pickupForm .form-group{padding:11px}#pickupHistory .pickup-item,#availableAssignments>.assignment-item,#acceptedAssignments>.assignment-item{padding:14px}}
 
 </style>
+
+<!-- KL-MAJOR-PORTAL-IA-AND-WORKFLOW-2026-11-27 -->
+<style>
+/* KL cross-screen navigation and operational polish */
+:root{--kl-ink:#132b4b;--kl-muted:#667b96;--kl-line:#dce6f1;--kl-navy:#0a2f6b;--kl-orange:#ff7900}
+header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);border-bottom:1px solid rgba(10,47,107,.09);box-shadow:0 7px 24px rgba(10,47,107,.055);backdrop-filter:blur(16px)}
+.logo-area{min-width:0}.logo-text h1{font-size:clamp(1rem,1.6vw,1.3rem);font-weight:850;letter-spacing:-.035em}
+.header-right{color:var(--kl-muted);font-weight:650}
+.tabs{position:sticky;top:78px;z-index:25;display:flex;flex-wrap:wrap;gap:8px;padding:9px;margin:0 auto 22px;border:1px solid #e1e9f3;border-radius:17px;background:rgba(255,255,255,.94);box-shadow:0 8px 22px rgba(10,47,107,.055);backdrop-filter:blur(12px)}
+.tab-btn{flex:1 1 120px;min-height:45px;font-weight:750;letter-spacing:-.01em}
+.tab-btn.active{color:#fff;background:linear-gradient(120deg,#092c67,#15519b);box-shadow:0 7px 16px rgba(10,47,107,.18)}
+.section{scroll-margin-top:145px}
+#home .kl-hero{overflow:hidden;isolation:isolate}
+#aboutPage,#howPage,#contactPage,#vendorSupportPage,#riderSupportPage{max-width:1180px;margin-inline:auto}
+#aboutPage .kl-content-grid,#howPage .kl-steps-grid,#contactPage .kl-contact-grid{align-items:stretch}
+#aboutPage .kl-content-grid>*,#howPage .kl-steps-grid>*,#contactPage .kl-contact-grid>*{border:1px solid #e0e8f2;border-radius:19px;background:linear-gradient(145deg,#fff,#f8faff);box-shadow:0 10px 25px rgba(10,47,107,.05);padding:clamp(17px,2.3vw,25px)}
+#vendor,#rider{scroll-margin-top:145px}
+#vendorAuthCard,#riderAuthCard{border:1px solid #dce6f1;border-radius:23px;background:linear-gradient(150deg,#fff,#f8faff);box-shadow:0 16px 38px rgba(10,47,107,.075);padding:clamp(18px,2.6vw,29px)}
+#vendorRegForm,#vendorLoginForm,#riderRegForm,#riderLoginForm{display:grid;gap:12px}
+#vendorRegForm .form-group,#vendorLoginForm .form-group,#riderRegForm .form-group,#riderLoginForm .form-group{margin:0}
+#vendorRegForm input,#vendorLoginForm input,#riderRegForm input,#riderLoginForm input{width:100%;min-width:0}
+#vendorRegBtn,#riderRegBtn,#vendorLoginForm button[type=submit],#riderLoginForm button[type=submit]{width:100%;min-height:49px;border-radius:14px;font-weight:800}
+#vendorDashboard,#riderDashboard{scroll-margin-top:140px}
+#vendorDashboard>h3,#riderDashboard>h2{margin:5px 0 0}
+#vendorDashboard .card,#riderDashboard .card{min-width:0}
+#pickupHistory .pickup-item,#availableAssignments .assignment-item,#acceptedAssignments .assignment-item{transition:transform .18s,border-color .18s,box-shadow .18s}
+#pickupHistory .pickup-item:hover,#availableAssignments .assignment-item:hover,#acceptedAssignments .assignment-item:hover{transform:translateY(-2px);border-color:#c7d7ea;box-shadow:0 12px 25px rgba(10,47,107,.075)}
+#depositHistory .history-item,#transactionHistoryArea .history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#riderConnectPanel .connect-chat-header{position:sticky;top:0;z-index:2;background:rgba(255,255,255,.96);backdrop-filter:blur(10px)}
+#riderConnectPanel .connect-compose{position:sticky;bottom:0;background:rgba(255,255,255,.97);padding:12px 0 2px}
+#riderConnectPanel .connect-thread-button:focus-visible,#riderConnectPanel button:focus-visible{outline:3px solid rgba(255,121,0,.38);outline-offset:2px}
+@media(min-width:1050px){.container{max-width:1320px}.tabs{max-width:1120px}.section{padding-top:12px}}
+@media(max-width:760px){header{position:relative;display:flex;flex-wrap:wrap;gap:8px;padding:11px 13px}.header-right{width:100%;font-size:.82rem}.tabs{position:sticky;top:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 14px;padding:7px;border-radius:14px}.tab-btn{min-width:0;min-height:43px;padding:9px 5px;font-size:.78rem;white-space:normal}.section{scroll-margin-top:80px}#vendorAuthCard,#riderAuthCard{padding:16px;border-radius:18px}#vendorDashboard>h3,#riderDashboard>h2{font-size:1.35rem}#riderConnectPanel .connect-chat-header{top:0}#riderConnectPanel .connect-compose{position:relative}}
+@media(max-width:390px){.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.tab-btn{font-size:.76rem}}
+
+</style>
 </head>
 <body>
   <div class="container">
