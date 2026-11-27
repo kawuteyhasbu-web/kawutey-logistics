@@ -1671,6 +1671,41 @@ body{color:var(--kl-brand-ink)}
 }
 @media(max-width:390px){#kl-admin-quicknav a{font-size:.72rem}#dashboard .commission-grid{grid-template-columns:1fr}}
 </style>
+<style id="kl-admin-review-queue-and-finance-visual-suite-2026-11">
+:root{--kl-admin-navy:#0a2f6b;--kl-admin-deep:#071f4a;--kl-admin-orange:#ff7900;--kl-admin-line:#dfe7f1}
+#dashboard .admin-section{border:1px solid var(--kl-admin-line);border-radius:18px;background:#fff;box-shadow:0 8px 25px rgba(7,31,74,.05);overflow:hidden}
+#dashboard .admin-section>summary{min-height:60px;padding:17px 20px;background:linear-gradient(105deg,#fff,#f6f9fd);font-size:.94rem;letter-spacing:-.012em;transition:background .16s,color .16s}
+#dashboard .admin-section>summary:hover{background:#fff7ef;color:#a94e05}
+#dashboard .admin-section[open]>summary{background:#edf3fb;border-bottom:1px solid var(--kl-admin-line);color:var(--kl-admin-deep)}
+#dashboard .admin-section>summary:after{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#fff0e4;font-weight:900}
+#dashboard .admin-section .section-card{padding:clamp(15px,2.5vw,24px)}
+#dashboard .admin-section .section-card>h2{display:block;margin:0 0 10px;padding-bottom:11px;border-bottom:1px solid #e9eef5;color:var(--kl-admin-deep);font-size:1.15rem;letter-spacing:-.025em}
+#dashboard .admin-section .section-card>p{max-width:80ch;color:#64778e;line-height:1.65}
+#dashboard .admin-section .section-card>button,#dashboard .admin-section .section-card form button{min-height:42px;border-radius:10px}
+#dashboard #notifications{display:grid;gap:10px}
+#dashboard #notifications>*{border:1px solid var(--kl-admin-line);border-radius:14px;background:#fff;padding:14px}
+#dashboard #paymentSettingsForm{display:grid;gap:10px;padding:17px;border:1px solid var(--kl-admin-line);border-radius:15px;background:#f8fafd}
+#dashboard #paymentSettingsForm label{color:#36516f;font-weight:750;font-size:.85rem}
+#dashboard #paymentSettingsForm input:not([type=checkbox]){width:100%;min-height:44px;border:1px solid #d9e3ef;border-radius:10px;background:#fff}
+#dashboard #paymentSettingsForm button{justify-self:start;min-width:150px}
+#dashboard #walletTransactions,#dashboard #depositRequests,#dashboard #pendingRiders,#dashboard #approvedRiders{min-width:0}
+#dashboard #walletTransactions:empty:after,#dashboard #depositRequests:empty:after,#dashboard #pendingRiders:empty:after,#dashboard #approvedRiders:empty:after{content:"No records to display.";display:block;padding:20px;border:1px dashed #d5dfeb;border-radius:12px;color:#71839a;text-align:center;background:#f9fbfd}
+#dashboard .admin-section :where(.item,.rider-item,.deposit-item,.transaction-item){border:1px solid var(--kl-admin-line);border-radius:13px;background:#fff;padding:14px;margin:10px 0}
+#dashboard .admin-section :where(.item,.rider-item,.deposit-item,.transaction-item) :where(h3,h4,strong){color:var(--kl-admin-deep)}
+#dashboard .admin-section :where(img){max-width:100%;border-radius:12px}
+#dashboard .admin-section :where(button){transition:filter .15s,transform .15s}
+#dashboard .admin-section :where(button:hover){filter:brightness(.97)}
+#dashboard .admin-section :where(button:active){transform:translateY(1px)}
+@media(max-width:760px){
+ #dashboard .admin-section{border-radius:15px;margin-bottom:11px}
+ #dashboard .admin-section>summary{min-height:55px;padding:14px;font-size:.86rem}
+ #dashboard .admin-section .section-card{padding:13px}
+ #dashboard .admin-section .section-card>h2{font-size:1.03rem}
+ #dashboard #paymentSettingsForm{padding:13px}
+ #dashboard #paymentSettingsForm button{width:100%}
+ #dashboard #notifications>*{padding:12px}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
