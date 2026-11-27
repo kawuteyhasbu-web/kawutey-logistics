@@ -1804,6 +1804,81 @@ body{background:linear-gradient(180deg,#f3f6fb,#fff 420px,#f5f8fc);color:var(--k
 @media(max-width:380px){#dashboard .commission-grid{grid-template-columns:1fr}.admin-hero-copy h2{font-size:1.9rem}}
 @media(prefers-reduced-motion:reduce){#kl-admin-quicknav a{transition:none!important}}
 </style>
+<style id="kl-admin-command-centre-depth-and-responsive-workflows-2026-11">
+/* Command-centre composition, reporting, operational accordion and dense-data behavior */
+.admin-hero{min-height:330px;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);padding:clamp(30px,4.5vw,55px);border-radius:26px}
+.admin-hero-copy h2{font-size:clamp(2.4rem,4.5vw,3.8rem);max-width:12ch;letter-spacing:-.06em}
+.admin-hero-copy p{font-size:1rem;max-width:54ch}
+.admin-hero-kicker{display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.08)}
+.admin-hero-kicker i{width:8px;height:8px;border-radius:50%;background:#ff9a43;box-shadow:0 0 0 5px rgba(255,154,67,.14)}
+.admin-hero-art{position:relative;display:grid;place-items:center;min-height:255px}
+.route-orbit{position:absolute;width:220px;height:220px;border:1px solid rgba(255,255,255,.2);border-radius:50%;box-shadow:0 0 0 22px rgba(255,255,255,.035),0 0 0 48px rgba(255,255,255,.02)}
+.route-orbit.orbit-two{width:165px;height:165px;border-style:dashed;animation:kl-orbit 28s linear infinite}
+.route-core{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;width:132px;height:132px;border:1px solid rgba(255,255,255,.45);border-radius:34px;background:linear-gradient(145deg,#ff922e,#e86700);box-shadow:0 18px 35px rgba(0,0,0,.2);transform:rotate(-5deg)}
+.route-core b{color:#fff;font-size:2.7rem;line-height:1;font-weight:950}.route-core small{margin-top:8px;color:#fff;font-size:.7rem;font-weight:900;letter-spacing:.17em}
+.route-pin{position:absolute;z-index:3;display:grid;place-items:center;width:32px;height:32px;border:4px solid rgba(255,255,255,.85);border-radius:50%;background:#ff8b28;color:#fff;font-size:.5rem;box-shadow:0 8px 18px rgba(0,0,0,.2)}
+.route-pin.pin-a{top:20%;left:17%}.route-pin.pin-b{right:14%;bottom:18%}
+.route-line{position:absolute;width:72%;height:2px;background:linear-gradient(90deg,transparent,#ffbd82,transparent);transform:rotate(-27deg)}
+.route-caption{position:absolute;right:0;bottom:2px;color:rgba(255,255,255,.75);font-size:.67rem;line-height:1.5;letter-spacing:.14em;text-align:right}.route-caption strong{color:#fff}
+#kl-admin-quicknav{grid-template-columns:repeat(8,minmax(0,1fr));padding:8px}
+#kl-admin-quicknav a{min-height:47px;padding:7px 5px;font-size:.75rem;line-height:1.25}
+#dashboardActions{display:grid;grid-template-columns:minmax(220px,1fr) auto auto auto;align-items:center;gap:12px;padding:15px 18px}
+#dashboardActions .admin-search-label{display:block}
+#dashboardActions .admin-search-label input{display:block;width:100%}
+#dashboardActions button{margin:0;white-space:nowrap}
+#commissionSummaryCard{position:relative;overflow:hidden}
+#commissionSummaryCard:after{content:"";position:absolute;top:-90px;right:-85px;width:230px;height:230px;border:1px solid rgba(10,47,107,.08);border-radius:50%;box-shadow:0 0 0 25px rgba(10,47,107,.025),0 0 0 52px rgba(10,47,107,.018);pointer-events:none}
+#commissionSummaryCard>h2{font-size:1.4rem}
+#commissionSummaryCard .commission-metric{position:relative;z-index:1;min-height:125px;padding:20px;border-radius:16px}
+#commissionSummaryCard .commission-total{background:linear-gradient(135deg,#fff3e8,#fff);border-color:#f3d0b1}
+#commissionSummaryCard .commission-total strong{color:#c65d05}
+#dashboard details.admin-section{border-radius:17px;transition:border-color .18s,box-shadow .18s}
+#dashboard details.admin-section[open]{border-color:#c6d7eb;box-shadow:0 12px 30px rgba(7,31,74,.075)}
+#dashboard details.admin-section>summary{position:relative;min-height:67px;padding:18px 22px 18px 62px}
+#dashboard details.admin-section>summary:before{content:"";position:absolute;left:20px;display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:#fff0e4;box-shadow:inset 0 0 0 1px #f7d7bc}
+#dashboard details.admin-section[open]>summary:before{background:#0a2f6b;box-shadow:none}
+#dashboard details.admin-section>.section-card{padding:clamp(17px,2.5vw,27px)}
+#dashboard details.admin-section .section-card>h2{display:block;margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid #e8edf4;font-size:1.14rem}
+#dashboard details.admin-section .section-card>h2:before{content:"";display:inline-block;width:4px;height:20px;margin-right:9px;border-radius:8px;background:#ff7900;vertical-align:middle}
+#dashboard .item{border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f9fbfe)}
+#dashboard .item+.item{margin-top:11px}
+#dashboard .refund-controls{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(220px,1.2fr) auto;align-items:end;gap:10px}
+#dashboard .refund-controls>*{min-width:0}
+#dashboard .report-row{padding:13px 0}
+#dashboard .reconciliation-summary{gap:12px}
+#dashboard .reconciliation-metric{min-width:0;padding:16px;border-radius:14px}
+#dashboard .reconciliation-metric strong{font-size:clamp(1.05rem,2vw,1.4rem);overflow-wrap:anywhere}
+#dashboard :where(button){min-height:42px}
+#dashboard :where(table){font-variant-numeric:tabular-nums}
+@keyframes kl-orbit{to{transform:rotate(360deg)}}
+@media(min-width:1200px){.wrap{max-width:1440px}#dashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}#dashboard>.admin-hero,#dashboard>#kl-admin-quicknav,#dashboard>#dashboardActions,#dashboard>#commissionSummaryCard{grid-column:1/-1}#dashboard>.admin-section{align-self:start;margin:0}#dashboard details.admin-section[open]{grid-column:1/-1}}
+@media(max-width:900px){#kl-admin-quicknav{grid-template-columns:repeat(4,minmax(0,1fr))}#dashboardActions{grid-template-columns:minmax(0,1fr) auto auto}#dashboardActions .admin-search-label{grid-column:1/-1}}
+@media(max-width:700px){
+ .admin-hero{grid-template-columns:1fr;min-height:0;padding:24px 19px;gap:5px}
+ .admin-hero-copy h2{font-size:clamp(2.2rem,9vw,2.9rem)}
+ .admin-hero-art{min-height:190px;max-width:370px;width:100%;margin:0 auto}
+ .route-orbit{width:165px;height:165px}.route-orbit.orbit-two{width:125px;height:125px}
+ .route-core{width:105px;height:105px;border-radius:27px}.route-core b{font-size:2.15rem}
+ .route-pin.pin-a{left:18%;top:13%}.route-pin.pin-b{right:15%;bottom:12%}
+ #kl-admin-quicknav{top:3px;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:6px}
+ #kl-admin-quicknav a{min-height:43px;font-size:.68rem;padding:6px 3px}
+ #dashboardActions{position:relative;top:auto;grid-template-columns:1fr 1fr;gap:8px;padding:11px}
+ #dashboardActions .admin-search-label{grid-column:1/-1}
+ #dashboardActions .admin-search-label input{font-size:16px}
+ #dashboardActions button{width:100%;font-size:.78rem;padding:9px 7px}
+ #commissionSummaryCard .commission-metric{min-height:100px;padding:13px}
+ #dashboard details.admin-section>summary{min-height:58px;padding:14px 14px 14px 49px;font-size:.83rem}
+ #dashboard details.admin-section>summary:before{left:13px;width:25px;height:25px}
+ #dashboard details.admin-section>.section-card{padding:13px}
+ #dashboard details.admin-section .section-card>h2{font-size:1rem}
+ #dashboard .refund-controls{grid-template-columns:1fr}
+ #dashboard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #dashboard .reconciliation-metric{padding:12px}
+ #dashboard .item{padding:12px}
+}
+@media(max-width:390px){#kl-admin-quicknav{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard .commission-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.route-orbit.orbit-two{animation:none}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
