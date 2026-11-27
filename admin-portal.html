@@ -729,6 +729,29 @@ button.primary:active{transform:translateY(1px)}
  .auth-side form{gap:9px}
 }
 </style>
+<style id="kl-admin-entry-responsive-finish-2026-11-27">
+/* Compact-phone composition and consistent focus for the existing secure entry */
+@media(min-width:761px){
+ .shell{grid-template-columns:minmax(0,1.04fr) minmax(390px,.96fr)}
+ .visual{padding:clamp(30px,4vw,48px)}
+ .auth-side{padding:clamp(28px,4vw,52px)}
+}
+.auth-side input:focus-visible,.auth-side button:focus-visible,.auth-side a:focus-visible{outline:3px solid rgba(255,121,0,.34);outline-offset:3px}
+.auth-side .small{max-width:48ch}
+@media(max-width:760px){
+ .shell{min-height:100svh}
+ .visual{min-height:280px}
+ .hero{max-width:100%}
+ .visual-foot{padding-top:10px}
+ .auth-side{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:380px){
+ .visual{min-height:260px}
+ .hero h1{font-size:1.95rem}
+ .auth-top{align-items:flex-start;gap:10px;flex-wrap:wrap}
+ .auth-label{font-size:10px}
+}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">

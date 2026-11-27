@@ -4028,6 +4028,49 @@ button:focus-visible,a:focus-visible,.btn:focus-visible,.tab-btn:focus-visible{o
 }
 @media(prefers-reduced-motion:reduce){.kl-contact-grid>a{transition:none!important}}
 </style>
+<style id="kl-portal-daily-use-visual-pass-2026-11-27">
+/* Daily-use polish for existing Vendor/Rider dashboards and mobile navigation */
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid #e1e9f3;background:linear-gradient(155deg,#fff 0%,#fbfdff 100%)}
+#vendorDashboard h2,#riderDashboard h2{display:flex;align-items:center;gap:9px}
+#vendorDashboard .section,#riderDashboard .section{border:1px solid #e3eaf4;border-radius:15px;background:#fff;padding:16px;margin:12px 0;box-shadow:0 5px 16px rgba(8,43,104,.035)}
+#vendorDashboard .section>h3,#riderDashboard .section>h3{padding-bottom:9px;border-bottom:1px solid #edf1f7}
+#vendorDashboard .form-group,#riderDashboard .form-group{min-width:0}
+#vendorDashboard .alert,#riderDashboard .alert{border-radius:12px;line-height:1.55}
+#vendorDashboard .pickup-item,#riderDashboard .assignment-item{box-shadow:0 4px 12px rgba(8,43,104,.035);background:linear-gradient(145deg,#fff,#f8faff)}
+#vendorDashboard .pickup-item .btn,#riderDashboard .assignment-item .btn{margin-top:8px}
+#riderDashboard .wallet-box{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.15);background:radial-gradient(circle at 92% 5%,rgba(255,255,255,.17),transparent 34%),linear-gradient(130deg,#071f4a,#0b438d 72%,#145ba6)}
+#riderDashboard .wallet-stats .stat-box{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.1)}
+#riderDashboard #secureRiderPhoto,#riderDashboard #secureRiderPhotoPlaceholder{box-shadow:0 0 0 4px #fff,0 0 0 6px rgba(255,121,0,.5)}
+#riderDashboard .history-item{gap:12px;align-items:flex-start}
+#riderDashboard .history-item>*{min-width:0;overflow-wrap:anywhere}
+#riderConnectPanel .connect-inbox-filters button{border:1px solid #e0e8f3;border-radius:10px;background:#f7faff;color:#24466e}
+#riderConnectPanel .connect-inbox-filters button.active{background:#082b68;border-color:#082b68;color:#fff}
+#riderConnectPanel .msg-box{max-width:min(88%,560px);padding:10px 13px;border-radius:14px;box-shadow:0 2px 7px rgba(8,43,104,.04)}
+.kl-mobile-bottom-nav{padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));border-top:1px solid #e1e9f3;background:rgba(255,255,255,.96);box-shadow:0 -8px 24px rgba(8,43,104,.08);backdrop-filter:blur(14px)}
+.kl-mobile-bottom-nav .kl-mobile-nav-btn{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 3px;border-radius:12px;color:#687b95;font-size:.69rem;font-weight:750;text-decoration:none}
+.kl-mobile-bottom-nav .kl-mobile-nav-btn.active{background:#fff2e8;color:#d95f00}
+.kl-mobile-bottom-nav .kl-mobile-nav-icon{width:22px;height:22px;display:grid;place-items:center}
+.kl-mobile-bottom-nav .kl-mobile-nav-btn:focus-visible{outline:3px solid rgba(255,121,0,.35);outline-offset:2px}
+@media(max-width:650px){
+ #vendorDashboard>.card,#riderDashboard>.card{padding:14px}
+ #vendorDashboard .section,#riderDashboard .section{padding:13px;border-radius:14px}
+ #vendorDashboard .grid-2,#riderDashboard .grid-2{grid-template-columns:minmax(0,1fr)}
+ #vendorDashboard .btn,#riderDashboard .btn{min-height:44px}
+ #riderDashboard .wallet-box{padding:17px}
+ #riderDashboard .wallet-box .balance{font-size:1.85rem}
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #riderDashboard .rider-card{align-items:flex-start;gap:12px}
+ #riderDashboard .rider-card img{width:54px;height:54px}
+ .kl-mobile-bottom-nav{gap:2px}
+ .kl-mobile-bottom-nav .kl-mobile-nav-btn{min-height:54px}
+}
+@media(max-width:360px){
+ .kl-mobile-bottom-nav .kl-mobile-nav-btn{font-size:.62rem}
+ #riderDashboard .wallet-stats{gap:7px}
+ #riderDashboard .stat-box{padding:9px 7px}
+}
+</style>
 </head>
 <body>
   <div class="container">
