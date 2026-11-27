@@ -410,3 +410,12 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - The mobile bar is limited to narrow screens, keeps touch targets readable, respects reduced-motion preferences, and reserves page-bottom space so it does not cover portal content or controls.
 - Corrected the legacy footer's outdated contact number so all public contact placements consistently use the approved business numbers: 024 226 7974 and 059 111 4638.
 - This is a front-end presentation/contact consistency update only; no authentication, payment, wallet, assignment, or refund logic was changed.
+
+
+### Administrator command-centre responsive completion — 27 November 2026
+- Added a coordinated desktop/mobile presentation pass for the administrator login, command-centre hero, quick navigation, section search, commission reporting, notification controls, review panels and dense financial tables.
+- Mobile quick navigation remains horizontally scrollable and sticky beneath the header. Search and logout controls reflow to full-width rows on very narrow screens; commission report controls and summary metrics adapt to small viewports.
+- Dense tables preserve all columns and use horizontal scrolling instead of hiding financial or operational information. Keyboard focus states and reduced-motion preferences are supported.
+- Improved secure administrator entry form spacing, touch sizing, focus visibility and narrow-screen resilience.
+- CSS-only presentation update. No administrator authorization, session, API, payment, wallet, refund, commission, rider approval, or vendor/rider account logic has been changed.
+- Visual QA still requires actual browser/device inspection; source-level checks alone do not establish rendered appearance.

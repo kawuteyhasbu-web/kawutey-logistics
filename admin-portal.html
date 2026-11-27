@@ -546,6 +546,24 @@ body{min-height:100vh;min-height:100dvh;padding:clamp(12px,2.5vw,30px);backgroun
 }
 </style>
 
+
+<style id="kl-admin-entry-form-ergonomics-2026-11-27">
+/* Administrator access forms: consistent keyboard, phone and feedback states */
+.auth-side form{display:grid;gap:12px}
+.auth-side form input,.auth-side form select{width:100%;min-height:48px;min-width:0}
+.auth-side form label{display:block;line-height:1.5}
+.auth-side .tabs button{min-height:44px}
+.auth-side .notice[role=status],.auth-side .notice[role=alert]{overflow-wrap:anywhere;line-height:1.6}
+.auth-side button:focus-visible,.auth-side a:focus-visible,.auth-side input:focus-visible{outline:3px solid rgba(255,121,0,.42);outline-offset:3px}
+.auth-side form button.primary{width:100%}
+@media(max-width:420px){
+ .auth-side{padding:clamp(14px,5vw,22px)}
+ .auth-side form{gap:10px}
+ .auth-side .tabs{display:grid;grid-template-columns:1fr 1fr}
+ .auth-side .tabs button{min-width:0;padding-inline:8px}
+}
+</style>
+
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
