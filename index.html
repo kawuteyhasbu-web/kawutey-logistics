@@ -2997,6 +2997,41 @@ button:focus-visible,.btn:focus-visible,a:focus-visible{outline:3px solid rgba(2
 @media(max-width:620px){.kl-home{gap:20px}.kl-home .kl-hero{padding:25px 20px;border-radius:19px;gap:10px}.kl-home .kl-hero-art{min-height:190px}.kl-home .kl-trust-strip{grid-template-columns:1fr;padding:12px}.kl-home .kl-trust-strip>div{padding:12px 7px}.kl-home .kl-trust-strip>div+div{border-left:0;border-top:1px solid #e3eaf3}.kl-home .kl-audience-grid{grid-template-columns:1fr;gap:13px}.kl-home .kl-audience-card{padding:21px;border-radius:18px}.kl-home .kl-bottom-cta{align-items:stretch;flex-direction:column;border-radius:18px}.kl-home .kl-bottom-cta>div:last-child{display:grid;grid-template-columns:1fr 1fr}.kl-home .kl-bottom-cta .btn{width:100%;padding-inline:9px;font-size:.86rem}}
 
 </style>
+
+<!-- KL-PORTAL-DETAILS-AND-PAYMENT-UX-2026-11-27 -->
+<style>
+/* KL operational portal finishing system — actual dashboard components */
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard>.card,#riderDashboard>.card{border:1px solid #dfe8f2;border-radius:19px;box-shadow:0 12px 28px rgba(9,46,104,.055)}
+#vendorDashboard h3,#riderDashboard h2,#riderDashboard h3{letter-spacing:-.035em}
+#vendorDashboard .btn,#riderDashboard .btn{min-height:43px;border-radius:12px;font-weight:750}
+#vendorDashboard .card,#riderDashboard .card{min-width:0}
+#vendorDashboard .card>h3,#riderDashboard .card>h3{margin-bottom:13px}
+#vendorDashboard .pickup-item,#vendorDashboard .history-item,#riderDashboard .assignment-item,#riderDashboard .history-item{border:1px solid #e1e9f2;border-radius:14px;background:#fff;padding:13px;overflow-wrap:anywhere}
+#vendorDashboard .pickup-item+ .pickup-item,#riderDashboard .assignment-item+ .assignment-item{margin-top:9px}
+#vendorDashboard input:not([type=checkbox]),#vendorDashboard select,#vendorDashboard textarea,#riderDashboard input:not([type=checkbox]),#riderDashboard select,#riderDashboard textarea{box-sizing:border-box;width:100%;max-width:100%;min-height:45px;border:1px solid #d7e2ee;border-radius:11px;padding:10px 12px;background:#fff;font-size:16px}
+#vendorDashboard textarea,#riderDashboard textarea{min-height:90px;resize:vertical}
+#vendorDashboard label,#riderDashboard label{display:block;margin-bottom:6px;color:#294665;font-size:.86rem;font-weight:750}
+#vendorDashboard .form-group,#riderDashboard .form-group{min-width:0;margin-bottom:13px}
+#riderDashboard .wallet-box{border:1px solid rgba(255,255,255,.17);border-radius:20px;box-shadow:0 14px 28px rgba(9,46,104,.12)}
+#riderDashboard .wallet-box h3{font-size:clamp(1.1rem,2.4vw,1.5rem)}
+#riderDashboard .wallet-box strong{font-variant-numeric:tabular-nums}
+#riderDashboard .status{padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:800}
+#riderConnectPanel{min-width:0;border:1px solid #dfe8f2;border-radius:19px;background:#fff;box-shadow:0 10px 25px rgba(9,46,104,.045)}
+#riderConnectPanel .connect-start{padding:14px;border:1px solid #e4ebf3;border-radius:14px;background:#f8faff}
+#riderConnectPanel .connect-start-row{display:flex;gap:9px;align-items:center}
+#riderConnectPanel .connect-start-row select{flex:1;min-width:0}
+#riderConnectPanel .connect-start-row button{min-height:43px;white-space:nowrap}
+#riderConnectPanel .connect-thread-button{display:block;width:100%;padding:12px;border:1px solid #e4ebf3;border-radius:12px;background:#fff;text-align:left;overflow-wrap:anywhere}
+#riderConnectPanel .connect-thread-button:hover{border-color:#ffbd85;background:#fff8f2}
+#riderConnectPanel .connect-chat-header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-bottom:1px solid #e6edf5}
+#riderConnectPanel .connect-compose{display:flex;align-items:end;gap:9px}
+#riderConnectPanel .connect-compose textarea{flex:1;min-width:0;min-height:45px;max-height:120px}
+#riderConnectPanel .connect-compose button{min-height:45px}
+@media(max-width:700px){#vendorDashboard>.card,#riderDashboard>.card{border-radius:16px;padding:14px!important}#riderConnectPanel .connect-start-row{align-items:stretch;flex-direction:column}#riderConnectPanel .connect-start-row button{width:100%}#riderConnectPanel .connect-compose{display:grid;grid-template-columns:minmax(0,1fr) auto}#riderConnectPanel .connect-compose textarea{grid-column:1/-1;width:100%}#riderConnectPanel .connect-compose button{min-width:82px}#riderDashboard .wallet-box{padding:17px!important}}
+@media(max-width:390px){#vendorDashboard .btn,#riderDashboard .btn{max-width:100%;white-space:normal}#riderConnectPanel .connect-compose{grid-template-columns:1fr}#riderConnectPanel .connect-compose textarea{grid-column:auto}#riderConnectPanel .connect-compose button{width:100%}}
+
+</style>
 </head>
 <body>
   <div class="container">
