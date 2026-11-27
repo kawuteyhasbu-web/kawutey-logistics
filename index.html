@@ -3814,6 +3814,48 @@ button,a,input,select,textarea{touch-action:manipulation}
 }
 </style>
 
+
+<style id="kl-vendor-rider-workspace-polish-2026-11-27">
+/* Vendor and Rider workspace finish: styles bind to existing operational components */
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard :where(.card),#riderDashboard :where(.card){min-width:0;overflow-wrap:anywhere}
+#vendorDashboard :where(.pickup-item){position:relative;border:1px solid #e2eaf3;border-radius:16px;background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);padding:16px;margin:12px 0;box-shadow:0 5px 18px rgba(15,48,89,.045)}
+#vendorDashboard :where(.pickup-item-heading){display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#vendorDashboard :where(.pickup-item-details){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;margin-top:12px}
+#vendorDashboard :where(.pickup-status){display:inline-flex;align-items:center;justify-content:center;min-height:27px;padding:5px 10px;border-radius:999px;font-size:.78rem;font-weight:750;line-height:1.25}
+#vendorDashboard :where(.cancel-pickup-button,.delete-pickup-button){min-height:40px}
+#riderDashboard :where(.wallet-box){border-radius:18px;overflow:hidden}
+#riderDashboard :where(.wallet-stats){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#riderDashboard :where(.stat-box){min-width:0;border:1px solid #e4ebf3;border-radius:14px;padding:13px;background:#fff}
+#riderDashboard :where(.assignment-item){border:1px solid #e2eaf3;border-radius:16px;padding:15px;margin:11px 0;background:#fff;box-shadow:0 5px 18px rgba(15,48,89,.045);overflow-wrap:anywhere}
+#riderDashboard :where(.rider-connect-panel){min-width:0;overflow:hidden}
+#riderDashboard :where(.connect-layout){display:grid;grid-template-columns:minmax(210px,.8fr) minmax(0,1.5fr);gap:14px;min-width:0}
+#riderDashboard :where(.connect-threads,.connect-chat,.connect-compose){min-width:0}
+#riderDashboard :where(.connect-thread){overflow-wrap:anywhere}
+#riderDashboard :where(.msg-box){max-width:min(88%,620px);overflow-wrap:anywhere;white-space:pre-wrap}
+#vendorDashboard :where(input,select,textarea),#riderDashboard :where(input,select,textarea){min-width:0;max-width:100%;font-size:16px}
+#vendorDashboard :where(button,a),#riderDashboard :where(button,a){touch-action:manipulation}
+@media(max-width:760px){
+ #vendorDashboard :where(.pickup-item){padding:13px;border-radius:14px}
+ #vendorDashboard :where(.pickup-item-details){grid-template-columns:minmax(0,1fr)}
+ #riderDashboard :where(.connect-layout){grid-template-columns:minmax(0,1fr)}
+ #riderDashboard :where(.connect-threads){max-height:300px;overflow:auto}
+ #riderDashboard :where(.connect-chat){min-height:280px}
+ #riderDashboard :where(.wallet-stats){gap:8px}
+ #riderDashboard :where(.stat-box){padding:11px}
+ #riderDashboard :where(.assignment-item){padding:13px}
+ #vendorDashboard :where(.btn),#riderDashboard :where(.btn){min-height:45px}
+}
+@media(max-width:360px){
+ #riderDashboard :where(.wallet-stats){grid-template-columns:minmax(0,1fr)}
+ #vendorDashboard :where(.pickup-item-heading){display:block}
+ #vendorDashboard :where(.pickup-status){margin-top:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ #vendorDashboard *,#riderDashboard *{scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+
 </head>
 <body>
   <div class="container">
