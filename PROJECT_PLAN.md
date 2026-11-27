@@ -485,3 +485,11 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - These additions use existing document structure and form controls; no portal routing, authentication, session, API, wallet, commission, refund, assignment, pickup or approval behavior was changed.
 - All three Render services were confirmed live on the preceding Administrator operational clarity commit before this new source update.
 - Browser-based visual inspection and end-to-end workflow regression remain outstanding; source-level CSS checks are not a substitute for rendered QA.
+
+
+### Administrator command-centre responsive finish — 27 November 2026
+- Refined the existing Administrator dashboard action bar, quick-navigation links, section search and card surfaces for faster scanning and reliable keyboard focus.
+- Made the quick-navigation controls adapt to a two-column mobile layout and a single-column narrow-phone layout; retained the existing destinations, search/filter behavior and admin actions.
+- Added overflow and status-message safeguards for long operational values and feedback.
+- CSS-only presentation update using existing IDs and classes. No authentication, authorization, notification, payment, wallet, commission, refund, account approval or operational action logic was changed.
+- Render deployment and browser/device visual verification are pending for this commit.

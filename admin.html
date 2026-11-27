@@ -2599,6 +2599,43 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(prefers-reduced-motion:reduce){.admin-section *{scroll-behavior:auto!important;transition:none!important}}
 </style>
 
+
+<style id="kl-admin-command-centre-finish-2026-11-27">
+/* Administrator command-centre: scan-friendly controls and robust responsive surfaces */
+#dashboard{min-width:0}
+#dashboardActions{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;margin:0 0 16px;border:1px solid #dce6f2;border-radius:15px;background:rgba(255,255,255,.96);box-shadow:0 8px 24px rgba(8,43,104,.07);backdrop-filter:blur(12px)}
+#dashboardActions :where(button,a){min-height:42px}
+#adminQuickNav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+#adminQuickNav a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:1px solid #dce6f2;border-radius:999px;background:#f7faff;color:#173e72;font-size:.82rem;font-weight:750;text-decoration:none;transition:background .16s,border-color .16s,color .16s}
+#adminQuickNav a:hover,#adminQuickNav a[aria-current="location"]{background:#fff1e5;border-color:#f5bd8e;color:#9b4c0b}
+#adminSectionSearch{width:min(100%,420px);font-size:16px}
+#dashboard .card,#dashboard .admin-section{min-width:0}
+#dashboard .card{overflow-wrap:anywhere}
+#dashboard .card :where(h2,h3,h4){line-height:1.3;overflow-wrap:anywhere}
+#dashboard .card :where(button,a){max-width:100%;overflow-wrap:anywhere}
+#dashboard :where(.status,.alert,[role="status"],[role="alert"]){overflow-wrap:anywhere;line-height:1.5}
+#dashboard :where(input,select,textarea){max-width:100%;min-width:0}
+#dashboard :where(button,a,input,select,textarea):focus-visible{outline:3px solid rgba(240,120,22,.32);outline-offset:2px}
+#dashboard .admin-section[hidden],#dashboard .card[hidden]{display:none!important}
+@media(max-width:760px){
+ #dashboardActions{position:relative;top:auto;padding:10px;gap:8px}
+ #adminQuickNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+ #adminQuickNav a{width:100%;min-width:0;text-align:center;white-space:normal}
+ #adminSectionSearch{width:100%;max-width:none}
+ #dashboardActions :where(button,a){min-height:44px}
+ #dashboard .card{border-radius:15px}
+}
+@media(max-width:380px){
+ #adminQuickNav{grid-template-columns:minmax(0,1fr)}
+ #dashboardActions{border-radius:12px}
+ #dashboard .card{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ #adminQuickNav a{transition:none}
+ #dashboard *{scroll-behavior:auto!important}
+}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
