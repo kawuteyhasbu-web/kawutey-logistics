@@ -2706,6 +2706,33 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
+<style id="kl-admin-finance-mobile-readability-pass-2026-11-27">
+/* Admin finance and review surfaces — readable amounts, references and responsive actions */
+#walletReconciliationCard,#walletTransactions,#depositRequests,#commissionReportHistory,#cancellationRequestsStatus{min-width:0}
+#walletReconciliationCard .reconciliation-metric{min-width:0;overflow-wrap:anywhere}
+#walletReconciliationCard .reconciliation-metric strong{font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+#walletReconciliationCard .reconciliation-row{display:grid;gap:6px;line-height:1.5}
+#dashboard .refund-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+#dashboard .refund-controls select,#dashboard .refund-controls textarea{width:100%;min-width:0}
+#dashboard .refund-controls button{justify-self:start}
+#dashboard .report-row{align-items:flex-start;flex-wrap:wrap}
+#dashboard .report-row strong,#dashboard .report-row span{overflow-wrap:anywhere}
+#dashboard #walletTransactions .item,#dashboard #depositRequests .item{min-width:0;overflow-wrap:anywhere}
+#dashboard #walletTransactions .meta,#dashboard #depositRequests .meta{line-height:1.55}
+#dashboard #walletTransactions button,#dashboard #depositRequests button{white-space:normal}
+@media(max-width:700px){
+ #walletReconciliationCard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #walletReconciliationCard .reconciliation-metric{padding:11px}
+ #walletReconciliationCard .reconciliation-metric strong{font-size:1.12rem}
+ #dashboard .refund-controls button{width:100%;min-height:45px}
+ #dashboard .report-row{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
+ #dashboard #walletTransactions .item,#dashboard #depositRequests .item{padding:13px}
+}
+@media(max-width:390px){
+ #walletReconciliationCard .reconciliation-summary{grid-template-columns:minmax(0,1fr)}
+ #walletReconciliationCard .reconciliation-metric strong{font-size:1.25rem}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>

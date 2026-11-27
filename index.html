@@ -3893,6 +3893,46 @@ button:focus-visible,a:focus-visible,.btn:focus-visible,.tab-btn:focus-visible{o
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
+<style id="kl-mobile-operational-detail-pass-2026-11-27">
+/* Mobile operational detail pass — Vendor pickup, Rider wallet and Rider Connect */
+#pickupFormArea,#pickupForm,#pickupHistory,#transactionHistoryArea,#depositHistory,#secureDepositHistory,#secureWalletTransactionHistory,#riderConnectPanel{min-width:0}
+#pickupFormArea .form-group{min-width:0}
+#pickupFormArea .package-row{align-items:flex-end}
+#pickupFormArea .package-row input{min-height:46px}
+#pickupHistory .pickup-item{display:flex;flex-direction:column;gap:10px}
+#pickupHistory .pickup-item-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#pickupHistory .pickup-item-details p{overflow-wrap:anywhere}
+#transactionHistoryArea .history-item,#secureWalletTransactionHistory .history-item,#depositHistory .history-item,#secureDepositHistory .history-item{align-items:flex-start;border-bottom:1px solid #e7edf5;padding:13px 2px}
+#transactionHistoryArea .history-item:last-child,#secureWalletTransactionHistory .history-item:last-child{border-bottom:0}
+#riderConnectPanel .connect-chat-header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#riderConnectPanel .connect-thread{overscroll-behavior:contain;scrollbar-gutter:stable}
+#riderConnectPanel .msg-box{line-height:1.55;overflow-wrap:anywhere}
+#riderConnectPanel .connect-compose{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:9px}
+#riderConnectPanel .connect-compose textarea{min-height:48px;max-height:140px;resize:vertical}
+#riderConnectPanel .connect-compose button{min-width:92px}
+@media(max-width:650px){
+ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+ .kl-mobile-bottom-nav{padding-top:7px}
+ .kl-mobile-bottom-nav .kl-mobile-nav-btn{min-height:56px}
+ #pickupFormArea .package-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,.7fr);gap:8px}
+ #pickupFormArea .package-row label{min-width:0}
+ #pickupFormArea .package-row input{max-width:none;width:100%}
+ #pickupFormArea #pickupForm button[type=submit],#pickupForm button[type=submit]{width:100%;min-height:48px}
+ #pickupHistory .pickup-item{padding:14px}
+ #transactionHistoryArea .history-item,#secureWalletTransactionHistory .history-item{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
+ #riderConnectPanel .connect-layout{gap:10px}
+ #riderConnectPanel .connect-threads{max-height:260px}
+ #riderConnectPanel .connect-chat{padding:10px}
+ #riderConnectPanel .connect-thread{max-height:340px;min-height:220px}
+ #riderConnectPanel .connect-compose{grid-template-columns:minmax(0,1fr)}
+ #riderConnectPanel .connect-compose button{width:100%;min-height:46px}
+}
+@media(max-width:360px){
+ #pickupFormArea .package-row{grid-template-columns:minmax(0,1fr)}
+ #riderConnectPanel .connect-start-row{grid-template-columns:minmax(0,1fr)}
+ #riderConnectPanel .connect-start-row button{width:100%}
+}
+</style>
 </head>
 <body>
   <div class="container">
