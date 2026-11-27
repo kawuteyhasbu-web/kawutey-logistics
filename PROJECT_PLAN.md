@@ -445,3 +445,11 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Dense dynamic result areas now have consistent spacing, overflow handling and image constraints. The payment settings form adapts to phone widths without hiding its controls.
 - Presentation-only CSS. Existing admin authentication, permission checks, refund eligibility and duplicate protection, commission calculations, wallet reconciliation, deposit verification, rider approval and account status APIs are unchanged.
 - Source-level implementation only; visual appearance and interaction still require browser testing at desktop and phone breakpoints before release promotion.
+
+
+### Public homepage and portal-discovery visual pass — 27 November 2026
+- Refined the homepage hero into a responsive two-column desktop and stacked mobile experience, including brand hierarchy, slogan, primary Vendor/Rider calls to action and the existing delivery-team illustration.
+- Reworked service-highlight strip and Vendor/Rider discovery cards for consistent typography, clearer reading order and stronger action placement.
+- Main website navigation is horizontally scrollable on narrow screens rather than wrapping into crowded rows; mobile sticky positioning, keyboard focus indicators and touch-sized tabs are included.
+- All CTA buttons continue to use existing data-section navigation targets. No new portal route, account flow, service claim, or business rule was introduced.
+- CSS-only presentation pass; rendered browser/device QA remains required.
