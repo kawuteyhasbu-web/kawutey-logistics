@@ -477,3 +477,11 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - Kept wide tables horizontally scrollable on small screens so financial and operational columns are not silently removed.
 - CSS-only update using existing element IDs and classes. No API, authentication, authorization, commission, wallet, deposit, refund, payment, approval, cancellation or notification logic was changed.
 - Actual browser/device visual inspection and workflow regression tests remain outstanding.
+
+
+### Cross-portal responsive finish and secure-entry resilience — 27 November 2026
+- Added a shared finishing layer to the public/Vendor/Rider experience for keyboard focus visibility, safe horizontal overflow, mobile form sizing, readable cards and reduced-motion preferences.
+- Added a final responsive safeguard layer to the restricted Administrator entry screen for narrow devices, flexible authentication inputs, invitation/password visibility controls and accessible feedback.
+- These additions use existing document structure and form controls; no portal routing, authentication, session, API, wallet, commission, refund, assignment, pickup or approval behavior was changed.
+- All three Render services were confirmed live on the preceding Administrator operational clarity commit before this new source update.
+- Browser-based visual inspection and end-to-end workflow regression remain outstanding; source-level CSS checks are not a substitute for rendered QA.
