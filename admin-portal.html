@@ -296,6 +296,31 @@ button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 10px 22px rg
 @media(max-width:390px){.visual{min-height:260px}.feature-grid{grid-template-columns:1fr}.feature span{font-size:12px}}
 
 </style>
+
+<!-- KL-CROSS-PORTAL-WORKSPACE-REDESIGN-2026-11-27 -->
+<style>
+/* KL secure administrator entry — finish desktop and mobile hierarchy */
+.shell{overflow:hidden;isolation:isolate;background:#fff;border:1px solid rgba(8,43,104,.1);box-shadow:0 34px 100px rgba(4,24,59,.23)}
+.visual{position:relative;isolation:isolate;overflow:hidden}
+.visual:before{content:"";position:absolute;z-index:-1;width:390px;height:390px;right:-145px;top:-130px;border:1px solid rgba(255,255,255,.17);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.035),0 0 0 62px rgba(255,255,255,.025)}
+.visual:after{content:"";position:absolute;z-index:-1;width:240px;height:240px;left:-120px;bottom:-125px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 22px rgba(255,255,255,.025)}
+.visual-foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:10px;letter-spacing:.13em}
+.auth-side{display:flex;flex-direction:column;justify-content:center}
+.auth-side h2{letter-spacing:-.04em}
+.auth-side .intro{max-width:440px;line-height:1.75;color:#64758c}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.tabs button{font-weight:750}
+#signInForm,#signUpForm{display:grid;gap:11px}
+#signInForm h2,#signUpForm h2{margin:12px 0 3px}
+#signInForm label,#signUpForm label{margin-top:5px;color:#294362;font-weight:700}
+#signInForm input,#signUpForm input{width:100%;min-width:0;background:#fbfcfe}
+#signInForm .primary,#signUpForm .primary{width:100%;margin-top:8px;font-weight:800;letter-spacing:.01em}
+#message{border-radius:13px;line-height:1.55}
+@media(min-width:1000px){.shell{grid-template-columns:1.06fr .94fr;min-height:min(820px,calc(100vh - 64px))}.visual{padding:clamp(45px,5vw,72px)}.auth-side{padding:clamp(38px,5vw,70px)}}
+@media(max-width:760px){.shell{display:grid;grid-template-columns:1fr;min-height:calc(100vh - 24px);border-radius:23px}.visual{padding:23px 21px 18px;min-height:unset}.visual .hero{margin:24px 0 20px}.visual .hero h1{font-size:clamp(2rem,9vw,2.7rem);line-height:1.04}.visual .hero p{font-size:14px;line-height:1.65}.feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.feature{padding:12px}.visual-foot{font-size:9px}.auth-side{padding:25px 21px 30px}.auth-top{margin-bottom:20px}.auth-side>h2{font-size:1.65rem}}
+@media(max-width:380px){.visual{padding:19px 16px 15px}.feature-grid{grid-template-columns:1fr}.feature{padding:10px}.auth-side{padding:21px 16px 25px}}
+
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
