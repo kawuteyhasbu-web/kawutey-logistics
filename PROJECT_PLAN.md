@@ -428,3 +428,12 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - The rider profile/status header and vendor dashboard welcome area receive clearer visual hierarchy. All dynamic data continues to come from the existing application logic.
 - CSS-only changes. No pickup deletion rules, assignment acceptance rules, rider identity checks, wallet balance calculations, GH₵5 commission, deposit processing, refunds, or messaging APIs were changed.
 - Actual rendered browser/device QA and financial/workflow regression testing remain required before release promotion.
+
+
+### Public information and support page design pass — 27 November 2026
+- Completed a responsive presentation pass across About, How It Works, Contact, Vendor Support and Rider Support pages.
+- Introduced a consistent editorial hero, reading hierarchy, step cards, contact cards, calls to action and responsive footer layout.
+- Contact actions continue to use the established business phone numbers, email and social accounts. No new contact details or claims were introduced.
+- Mobile layouts progressively collapse to one column and retain full contact details without clipping; reduced-motion preferences are respected.
+- CSS-only update. Existing portal navigation, registration, authentication, contact destinations and business logic remain unchanged.
+- Rendered visual QA on physical devices and workflow regression tests remain outstanding.
