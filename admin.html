@@ -2017,6 +2017,36 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(max-width:700px){#dashboard{gap:12px}#dashboard>.card{padding:15px;border-radius:16px}#commissionSummaryCard .commission-toolbar{display:grid;grid-template-columns:1fr;padding:11px}#commissionSummaryCard .commission-toolbar label{min-width:0}#paymentSettingsForm{grid-template-columns:1fr}#paymentSettingsForm>*{grid-column:1!important}#dashboardActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#dashboardActions button{width:100%;min-width:0}#notifications>*{padding:12px}#depositRequests>*,#approvedRiders>*,#pendingRiders>*,#walletTransactions>*,#cancellationRequests>*{padding:12px}}
 
 </style>
+
+<!-- KL-MAJOR-PORTAL-IA-AND-WORKFLOW-2026-11-27 -->
+<style>
+/* KL admin information architecture and high-density operations */
+#kl-admin-quicknav{position:sticky;top:10px;z-index:18;display:flex;flex-wrap:wrap;gap:8px;padding:12px;border:1px solid #e0e8f2;border-radius:17px;background:rgba(255,255,255,.96);box-shadow:0 9px 25px rgba(8,43,104,.07);backdrop-filter:blur(14px)}
+#kl-admin-quicknav a,#kl-admin-quicknav button{min-height:40px;border-radius:11px;font-size:.84rem;font-weight:750}
+#dashboardActions{padding:12px;border:1px solid #e1e9f3;border-radius:16px;background:#f8faff}
+#adminSectionSearchCount{font-size:.8rem;font-weight:800;color:#637895}
+.admin-section{scroll-margin-top:95px}
+.admin-section>summary{list-style:none;cursor:pointer;position:relative;padding-right:44px!important}
+.admin-section>summary::-webkit-details-marker{display:none}
+.admin-section>summary:after{content:"＋";position:absolute;right:17px;top:50%;transform:translateY(-50%);width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:#edf3fa;color:#16437e;font-weight:850}
+.admin-section[open]>summary:after{content:"−";background:#fff0e5;color:#c65b00}
+.admin-section .section-card{border-top:1px solid #e7edf5}
+#commissionReportEntries>*:hover,#commissionReportHistory>*:hover,#depositRequests>*:hover,#pendingRiders>*:hover,#approvedRiders>*:hover{border-color:#cbd9e9;box-shadow:0 8px 18px rgba(8,43,104,.06)}
+#notifications>*{display:grid;gap:5px;position:relative}
+#notifications>*:focus-within{outline:2px solid rgba(255,121,0,.3)}
+#paymentSettingsForm button,#commissionSummaryCard button,#walletReconciliationCard button{font-weight:750}
+#paymentSettingsForm input:focus,#adminSectionSearch:focus{outline:3px solid rgba(255,121,0,.2);border-color:#ff7900}
+#depositRequests,#pendingRiders,#approvedRiders,#walletTransactions,#cancellationRequests{min-width:0}
+#depositRequests>*,#pendingRiders>*,#approvedRiders>*,#walletTransactions>*,#cancellationRequests>*{overflow-wrap:anywhere}
+#loginCard{max-width:480px;margin:clamp(18px,6vh,70px) auto}
+#loginForm{display:grid;gap:12px}
+#loginForm input{width:100%;min-width:0}
+#loginButton{width:100%;min-height:49px;border-radius:13px;font-weight:800}
+@media(min-width:1100px){#kl-admin-quicknav{top:12px}#dashboard>.admin-section{min-width:0}}
+@media(max-width:700px){#kl-admin-quicknav{position:relative;top:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:9px;gap:7px}#kl-admin-quicknav a,#kl-admin-quicknav button{width:100%;min-width:0;padding:9px 6px;font-size:.78rem}.admin-section{scroll-margin-top:12px}.admin-section>summary{padding:14px 42px 14px 14px!important;line-height:1.4}#dashboardActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:9px}#dashboardActions>*{min-width:0;width:100%;font-size:.8rem}#loginCard{margin:22px auto;padding:18px}}
+@media(max-width:380px){#kl-admin-quicknav{grid-template-columns:1fr}#dashboardActions{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
