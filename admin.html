@@ -2047,6 +2047,34 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(max-width:380px){#kl-admin-quicknav{grid-template-columns:1fr}#dashboardActions{grid-template-columns:1fr}}
 
 </style>
+
+<!-- KL-PUBLIC-ADMIN-EXPERIENCE-FINISHING-2026-11-27 -->
+<style>
+/* KL administrator experience: overview, queues and responsive action hierarchy */
+.admin-hero{position:relative;isolation:isolate;overflow:hidden}
+.admin-hero:after{content:"";position:absolute;z-index:-1;width:310px;height:310px;right:-95px;bottom:-190px;border:1px solid rgba(255,255,255,.15);border-radius:50%;box-shadow:0 0 0 25px rgba(255,255,255,.035),0 0 0 55px rgba(255,255,255,.025)}
+.admin-hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.09);font-size:.75rem;font-weight:850;letter-spacing:.12em}
+.admin-hero-pills span{display:inline-flex;align-items:center;min-height:33px;padding:7px 12px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.08);font-size:.8rem;font-weight:700}
+#kl-admin-quicknav a{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid #e0e8f2;background:#fff;color:#24466f;text-decoration:none;transition:background .16s,border-color .16s,color .16s}
+#kl-admin-quicknav a:hover,#kl-admin-quicknav a:focus-visible{border-color:#ffb16b;background:#fff5ec;color:#9b4800;outline:none}
+#dashboardActions .admin-search-label{display:grid;gap:7px;width:min(100%,560px);font-weight:750;color:#28476e}
+#dashboardActions .admin-search-label input{min-height:45px;border:1px solid #dce5ef;border-radius:11px;padding:10px 13px;background:#fff}
+#dashboardActions .admin-search-label input:focus{outline:3px solid rgba(255,121,0,.18);border-color:#ff7900}
+#commissionSummaryCard .commission-metric{display:flex;flex-direction:column;gap:8px;min-height:112px;justify-content:center}
+#commissionSummaryCard .commission-metric span{color:#657994;font-size:.86rem;line-height:1.4}
+#commissionSummaryCard .commission-total span{color:#37664a}
+#notifications:empty:before{content:"No notifications to display.";display:block;padding:18px;border:1px dashed #d6e1ed;border-radius:13px;color:#71839a;text-align:center;background:#fafcff}
+#walletReconciliationResults:empty:before{content:"Reconciliation results will appear here after you run a check.";display:block;padding:18px;border:1px dashed #d6e1ed;border-radius:13px;color:#71839a;text-align:center;background:#fafcff}
+#paymentSettingsForm label{font-size:.87rem;font-weight:750;color:#294665}
+#paymentSettingsForm input:not([type=checkbox]),#paymentSettingsForm select{min-height:45px;border:1px solid #dce5ef;border-radius:11px;padding:10px 12px;background:#fff}
+#paymentSettingsForm button{min-height:45px;border-radius:12px;padding:10px 17px}
+#depositRequests>*,#pendingRiders>*,#approvedRiders>*,#walletTransactions>*,#cancellationRequests>*{line-height:1.55}
+#dashboard .admin-section>summary:hover{background:#f4f8fd}
+#dashboard .admin-section[open]>summary{border-bottom:1px solid #e4ebf4}
+@media(min-width:1050px){#dashboard>.admin-hero{min-height:270px}#dashboard>.admin-section{align-self:start}}
+@media(max-width:700px){.admin-hero-pills{display:flex;flex-wrap:wrap}.admin-hero-pills span{font-size:.74rem}#commissionSummaryCard .commission-metric{min-height:92px}#commissionSummaryCard .commission-metric span{font-size:.79rem}#paymentSettingsForm input:not([type=checkbox]),#paymentSettingsForm select{font-size:16px}#dashboard .admin-section>summary:hover{background:#fff}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
