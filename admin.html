@@ -2104,6 +2104,43 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 @media(max-width:390px){#dashboard .commission-grid{grid-template-columns:1fr}#dashboard .commission-grid>*{min-height:unset}}
 
 </style>
+
+<!-- KL-OPERATIONS-AND-CONVERSION-EXPERIENCE-2026-11-27 -->
+<style>
+/* KL admin daily finance and action workspaces */
+#commissionSummaryCard{position:relative;overflow:hidden;border:1px solid #dfe8f2;border-radius:20px;background:linear-gradient(150deg,#fff 35%,#f6f9fe);box-shadow:0 13px 30px rgba(8,43,104,.055)}
+#commissionSummaryCard>h2{font-size:clamp(1.15rem,2vw,1.5rem)}
+#commissionSummaryCard>.meta{max-width:920px;line-height:1.65}
+#commissionSummaryCard .commission-grid{margin:19px 0}
+#commissionSummaryCard .commission-metric{position:relative;overflow:hidden;min-height:112px;padding:17px;border:1px solid #e2eaf3;border-radius:16px;background:#fff}
+#commissionSummaryCard .commission-total{border-color:#cbdcf0;background:linear-gradient(135deg,#edf5ff,#fff)}
+#commissionSummaryCard .commission-total strong{color:#0b3979}
+#commissionSummaryCard .commission-metric strong{font-size:clamp(1.35rem,2.7vw,2rem);font-variant-numeric:tabular-nums;letter-spacing:-.045em}
+#commissionSummaryCard .commission-toolbar{display:flex;align-items:end;gap:10px;flex-wrap:wrap;padding:13px;border:1px solid #e3eaf3;border-radius:14px;background:#f7f9fc}
+#commissionSummaryCard .commission-toolbar label{display:grid;gap:6px;color:#385575;font-size:.83rem;font-weight:800}
+#commissionSummaryCard .commission-toolbar input{min-height:42px;padding:8px 11px}
+#commissionSummaryCard .commission-toolbar button{min-height:42px}
+#commissionReportEntries{display:grid;gap:9px}
+#commissionReportEntries>*{min-width:0;padding:13px 15px;border:1px solid #e3eaf3;border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#commissionReportHistory{display:grid;gap:8px}
+#commissionReportHistory>*{padding:11px 13px;border:1px solid #e5ebf3;border-radius:12px;background:#fafcff;overflow-wrap:anywhere}
+#dashboard> .card{border:1px solid #e1e9f2;border-radius:18px;box-shadow:0 8px 22px rgba(8,43,104,.04)}
+#dashboard> .card>h2{font-size:1.16rem;letter-spacing:-.025em}
+#dashboard> .card>p{max-width:1000px;color:#647b96;line-height:1.68}
+#dashboard .notification-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px;border:1px solid #e5ebf3;border-radius:13px;background:#f8faff}
+#dashboard .notification-filter{display:inline-flex;align-items:center;gap:7px;margin-right:auto;color:#435d7b;font-size:.85rem;font-weight:700}
+#dashboard .notification-filter input{width:17px;height:17px;accent-color:#f47713}
+#notifications{display:grid;gap:9px;margin-top:13px}
+#notifications>*{padding:14px;border:1px solid #e2eaf3;border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#cancellationRequests{display:grid;gap:10px;margin-top:12px}
+#cancellationRequests>*{padding:14px;border:1px solid #e2eaf3;border-radius:13px;background:#fff;overflow-wrap:anywhere}
+#paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:end}
+#paymentSettingsForm label{display:grid;gap:6px;min-width:0}
+#paymentSettingsForm button{width:fit-content;min-width:150px}
+@media(max-width:700px){#commissionSummaryCard .commission-grid{gap:8px}#commissionSummaryCard .commission-metric{min-height:96px;padding:12px}#commissionSummaryCard .commission-toolbar{display:grid;grid-template-columns:1fr 1fr}#commissionSummaryCard .commission-toolbar label{grid-column:1/-1}#commissionSummaryCard .commission-toolbar button{width:100%;padding:9px 7px;font-size:.8rem}#dashboard .notification-toolbar{align-items:stretch}#dashboard .notification-toolbar>button{flex:1 1 42%;min-width:0}#dashboard .notification-filter{flex:1 1 100%;margin:0}#paymentSettingsForm{grid-template-columns:1fr}#paymentSettingsForm button{width:100%}}
+@media(max-width:390px){#commissionSummaryCard .commission-grid{grid-template-columns:1fr}#commissionSummaryCard .commission-metric{min-height:80px}}
+
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
