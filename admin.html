@@ -2554,6 +2554,51 @@ td,th{padding:12px 14px;border-bottom:1px solid #e8eef5}
 }
 </style>
 
+
+<style id="kl-admin-operations-clarity-pass-2026-11-27">
+/* Administrator operational clarity: keep data and controls intact */
+.admin-section{border:1px solid #dce5f0!important;border-radius:16px!important;background:#fff!important;box-shadow:0 7px 22px rgba(8,43,104,.045)!important;overflow:clip}
+.admin-section>summary{display:flex;align-items:center;gap:12px;min-height:58px;padding:15px 18px!important;color:#0b326d!important;font-weight:850!important;line-height:1.35;cursor:pointer}
+.admin-section>summary::marker{color:#e97818}
+.admin-section[open]>summary{border-bottom:1px solid #e5ebf3;background:linear-gradient(100deg,#f7faff,#fff)}
+.admin-section>summary:focus-visible{outline:3px solid rgba(240,120,22,.3);outline-offset:3px;border-radius:10px}
+.admin-section>*:not(summary){min-width:0}
+#adminSectionSearch{min-height:46px;border:1px solid #d8e2ef;border-radius:12px;padding:11px 13px;background:#fff}
+#adminSectionSearch:focus-visible,#commissionReportDate:focus-visible,#paymentSettingsForm input:focus-visible{outline:3px solid rgba(240,120,22,.2);border-color:#ef7817}
+#commissionSummaryCard,#walletReconciliationCard,#adminAccountCountCard{border:1px solid #dce6f2;border-radius:17px;background:linear-gradient(145deg,#fff,#f7faff);box-shadow:0 8px 22px rgba(8,43,104,.05)}
+#commissionSummaryCard strong,#todayCommissionTotal,#todayCommissionCount{font-variant-numeric:tabular-nums}
+#commissionReportEntries,#commissionReportHistory,#walletReconciliationResults,#walletTransactions,#depositRequests,#approvedRiders,#pendingRiders,#cancellationRequests,#notifications,#paymentModeAudit{min-width:0}
+#commissionReportEntries>*,#commissionReportHistory>*,#walletReconciliationResults>*,#walletTransactions>*,#depositRequests>*,#approvedRiders>*,#pendingRiders>*,#cancellationRequests>*,#notifications>*,#paymentModeAudit>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#commissionReportStatus,#cancellationRequestsStatus,#paymentModeStatus,#paymentSettingsMessage,#walletReconciliationStatus,#walletTransactionsStatus,#depositStatus,#approvedRidersStatus,#riderStatus{padding:9px 12px;border-radius:10px;line-height:1.5}
+#paymentSettingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:end}
+#paymentSettingsForm .form-group{min-width:0}
+#paymentSettingsForm input{width:100%;min-height:45px;border:1px solid #d9e3ef;border-radius:11px;padding:10px 12px}
+#paymentSettingsForm button{min-height:45px}
+#commissionReportDate{min-height:43px;border:1px solid #d9e3ef;border-radius:10px;padding:9px 11px}
+#loadCommissionReportButton,#downloadCommissionReportButton,#refreshWalletReconciliationButton,#refreshWalletTransactionsButton,#refreshDepositsButton,#refreshApprovedRidersButton,#refreshRidersButton,#refreshCancellationRequestsButton,#markAllNotificationsReadButton,#savePaymentSettingsButton{min-height:42px}
+.admin-section table{width:100%;border-collapse:separate;border-spacing:0;white-space:normal}
+.admin-section table th{position:sticky;top:0;z-index:1;background:#f3f7fc;color:#25476f;font-size:.78rem;font-weight:850;letter-spacing:.025em}
+.admin-section table td,.admin-section table th{padding:11px 12px;border-bottom:1px solid #e7edf4;vertical-align:top}
+.admin-section table td{overflow-wrap:anywhere}
+.admin-section table tr:last-child td{border-bottom:0}
+.admin-section button{touch-action:manipulation}
+@media(max-width:760px){
+ .admin-section>summary{min-height:54px;padding:13px 14px!important}
+ #paymentSettingsForm{grid-template-columns:minmax(0,1fr)}
+ #commissionReportDate{width:100%;max-width:100%}
+ #loadCommissionReportButton,#downloadCommissionReportButton{width:100%;margin:5px 0}
+ .admin-section .table-responsive,.admin-section .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .admin-section table{min-width:640px}
+}
+@media(max-width:420px){
+ #adminSectionSearch{width:100%;font-size:16px}
+ #adminSectionSearchCount{display:block;margin-top:6px}
+ #clearAdminSectionSearch{min-height:42px}
+ .admin-section>summary{font-size:.94rem}
+}
+@media(prefers-reduced-motion:reduce){.admin-section *{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>

@@ -470,3 +470,10 @@ The approved visual direction is a unified, premium Kawutey Logistics experience
 - All visual changes use existing IDs and current portal sections. Existing order deletion restrictions, assignment acceptance, commission deduction, wallet deposits/refunds, messaging, profile-photo access and location-sharing logic were not intentionally changed.
 - The most recent secure administrator access commit was confirmed live on all three Render services before this new change.
 - CSS-only source update; browser-level responsive inspection and financial/workflow regression tests remain outstanding.
+
+### Administrator operational clarity and dense-data presentation pass — 27 November 2026
+- Added a presentation layer for the existing Administrator disclosure sections, search controls, commission report, payment settings, wallet reconciliation, wallet transactions, deposit queues, rider/vendor review queues, cancellation requests and notification areas.
+- Improved section hierarchy, focus visibility, numeric readability, action sizing, status-message wrapping and mobile form stacking.
+- Kept wide tables horizontally scrollable on small screens so financial and operational columns are not silently removed.
+- CSS-only update using existing element IDs and classes. No API, authentication, authorization, commission, wallet, deposit, refund, payment, approval, cancellation or notification logic was changed.
+- Actual browser/device visual inspection and workflow regression tests remain outstanding.
