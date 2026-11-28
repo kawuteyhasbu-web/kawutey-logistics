@@ -3271,6 +3271,38 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  #dashboard .reconciliation-metric{display:flex;align-items:center;justify-content:space-between;gap:8px}
  #dashboard .reconciliation-metric strong{text-align:right}
 }
+
+/* Administrator navigation refinement — searchable workspace hierarchy */
+#dashboardActions{border-color:#d7e3f1;border-radius:15px;box-shadow:0 8px 22px rgba(8,43,104,.075)}
+#adminQuickNav{flex:1 1 100%;padding-bottom:2px}
+#adminQuickNav a{min-height:37px;border-radius:10px;background:#f6f9fe}
+#adminQuickNav a[aria-current="location"]{background:#fff0e4;border-color:#ffbd87;color:#9b4c0b;box-shadow:inset 0 0 0 1px rgba(255,121,0,.08)}
+#dashboardActions .admin-search-label{color:#25466f;font-size:.83rem;font-weight:850}
+#dashboardActions #adminSectionSearch{min-height:45px;padding:10px 13px;border:1px solid #cbd9ea;border-radius:11px;background:#fbfdff}
+#dashboardActions #adminSectionSearch:focus{border-color:#2875c7;box-shadow:0 0 0 3px rgba(40,117,199,.11)}
+#clearAdminSectionSearch{min-height:42px;border-radius:10px;font-weight:800}
+#adminSectionSearchCount{display:block;margin-top:5px;color:#75869d;font-size:.75rem;font-weight:650}
+#dashboard>.admin-hero{border:1px solid rgba(255,255,255,.16);box-shadow:0 14px 32px rgba(7,31,74,.16)}
+#dashboard>.admin-hero .admin-hero-pills span{border:1px solid rgba(255,255,255,.2)}
+#dashboard>.admin-section[hidden],#dashboard>.card[hidden],#adminQuickNav a[hidden]{display:none!important}
+#dashboard .admin-section>summary{transition:background .16s ease,color .16s ease}
+#dashboard .admin-section>summary:hover{background:#fff5ed;color:#9b4c0b}
+#dashboard .admin-section[open]>summary{border-left:4px solid #ff7900}
+@media(max-width:700px){
+ #dashboardActions{position:relative;top:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:11px}
+ #adminQuickNav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:0}
+ #adminQuickNav a{min-width:0;min-height:42px;padding:8px 7px;text-align:center;font-size:.75rem;line-height:1.25}
+ #dashboardActions .admin-search-label{min-width:0;width:100%}
+ #dashboardActions #adminSectionSearch{font-size:16px}
+ #dashboardActions #clearAdminSectionSearch{width:100%;margin:0}
+ #dashboardActions #logoutButton{width:100%;margin:0;min-height:43px}
+ #adminSectionSearchCount{font-size:.72rem}
+}
+@media(max-width:380px){
+ #adminQuickNav{grid-template-columns:1fr}
+ #adminQuickNav a{justify-content:flex-start;padding-left:13px}
+}
+
 </style>
 </head>
 <body><main class="wrap">
