@@ -4922,6 +4922,99 @@ table{max-width:100%}
 }
 </style>
 
+
+<style id="kl-session3-rider-experience-20261128">
+/* SESSION 3 — rider portal visual suite; CSS only, existing controls and actions preserved */
+#rider{max-width:1120px;margin:0 auto;padding:clamp(9px,2vw,22px);scroll-margin-top:100px;color:#173252}
+#rider #riderAuthCard{position:relative;isolation:isolate;overflow:hidden;max-width:100%;margin:0 auto;padding:clamp(20px,3.2vw,36px);border:1px solid #dce6f2;border-radius:24px;background:linear-gradient(150deg,#fff,#f7faff);box-shadow:0 18px 44px rgba(8,43,104,.09)}
+#rider #riderAuthCard:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#061b42,#1760a8 58%,#ff7900)}
+#rider #riderAuthCard>h2{margin:3px 0 23px;color:#082b68;font-size:clamp(1.55rem,3vw,2.2rem);line-height:1.14;letter-spacing:-.045em}
+#rider #riderAuthCard>h2:after{content:"";display:block;width:54px;height:4px;margin-top:13px;border-radius:8px;background:#ff7900}
+#rider #riderRegSection,#rider #riderLoginSection{max-width:790px;margin:0 auto;padding:clamp(17px,2.7vw,27px);border:1px solid #e1e9f3;border-radius:18px;background:#fff;box-shadow:0 8px 23px rgba(8,43,104,.045)}
+#rider #riderRegSection>h3,#rider #riderLoginSection>h3{margin:0 0 14px;color:#123b70;font-size:1.22rem;letter-spacing:-.025em}
+#rider #riderRegSection>.alert{padding:13px 15px;border:1px solid #f4d8bf;border-radius:12px;background:#fff6ed;color:#86501f;line-height:1.55}
+#rider #riderRegForm,#rider #riderLoginForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+#rider #riderRegForm .form-group,#rider #riderLoginForm .form-group{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0}
+#rider #riderRegForm label,#rider #riderLoginForm label{color:#314967;font-size:.84rem;font-weight:800}
+#rider #riderRegForm input:not([type=file]),#rider #riderLoginForm input{width:100%;min-width:0;min-height:48px;box-sizing:border-box;padding:11px 13px;border:1px solid #d7e2ef;border-radius:11px;background:#fbfdff;color:#142b4d;font-size:16px}
+#rider #riderRegForm input:focus,#rider #riderLoginForm input:focus{border-color:#ff7900;outline:3px solid rgba(255,121,0,.13)}
+#rider #riderRegForm input[type=file]{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px dashed #c7d7e9;border-radius:11px;background:#f8fbff;color:#536a85;font-size:.82rem}
+#rider #riderRegForm .form-group:has(#r-location),#rider #riderRegForm .form-group:has(#r-photo),#rider #riderRegForm #riderRegBtn,#rider #riderRegForm #riderRegSuccess,#rider #riderLoginForm>button[type=submit]{grid-column:1/-1}
+#rider #riderRegForm .kl-field-hint{color:#75869c;font-size:.75rem;line-height:1.45}
+#rider #riderRegForm .password-wrapper,#rider #riderLoginForm .password-wrapper{display:flex;gap:8px;min-width:0}
+#rider #riderRegForm .password-wrapper input,#rider #riderLoginForm .password-wrapper input{flex:1}
+#rider #riderRegForm .toggle-password,#rider #riderLoginForm .toggle-password{min-width:65px;border:1px solid #d8e3f0;border-radius:10px;background:#f3f7fc;color:#244d7d;font-size:.8rem;font-weight:800}
+#rider #photoPreview{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#rider #photoPreview img{width:92px;height:92px;max-width:92px;max-height:92px;object-fit:cover;border:3px solid #fff;border-radius:50%;box-shadow:0 5px 17px rgba(8,43,104,.16)}
+#rider #riderRegBtn,#rider #riderLoginForm>button[type=submit]{min-height:50px;margin-top:4px;border-radius:12px;font-weight:900;box-shadow:0 8px 18px rgba(8,43,104,.14)}
+#rider #riderRegSection>p,#rider #riderLoginSection>p{margin:17px 0 0!important;color:#718198;font-size:.87rem}
+#rider #riderRegSection>p a,#rider #riderLoginSection>p a{color:#e66e0b!important;font-weight:850!important;text-decoration:none}
+#rider #riderDashboard{min-width:0}
+#rider #riderDashboard>.card:first-child{position:relative;overflow:hidden;margin:0 0 16px;padding:24px;border:1px solid #153e78;border-radius:18px;background:radial-gradient(circle at 94% 0,rgba(255,121,0,.2),transparent 24%),linear-gradient(120deg,#061b42,#0c3976 75%,#15508e);box-shadow:0 15px 32px rgba(6,27,66,.16);color:#fff}
+#rider #riderDashboard>.card:first-child h2{margin:0 0 8px;color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);letter-spacing:-.04em}
+#rider #riderDashboard>.card:first-child p{color:rgba(255,255,255,.82);line-height:1.6}
+#rider #riderDashboard #riderNameDisplay{color:#ffad65}
+#rider #riderDashboard #riderStatus{padding:5px 11px;border:1px solid rgba(255,255,255,.25);border-radius:999px;font-weight:850}
+#rider #riderDashboard>.card:first-child>button{min-height:42px;margin-top:8px;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:rgba(255,255,255,.1);color:#fff;font-weight:800}
+#rider #riderDashboard>.wallet-box{position:relative;overflow:hidden;margin:0 0 17px;padding:clamp(20px,3vw,29px);border:1px solid #153e78;border-radius:19px;background:radial-gradient(circle at 95% 5%,rgba(255,121,0,.22),transparent 27%),linear-gradient(125deg,#061b42,#0b3978 68%,#15508e);box-shadow:0 15px 34px rgba(6,27,66,.16)}
+#rider #riderDashboard>.wallet-box h3{margin:0 0 10px;color:rgba(255,255,255,.88);font-size:1rem;font-weight:800}
+#rider #riderDashboard>.wallet-box .balance{margin:5px 0 17px;color:#fff;font-size:clamp(2rem,5vw,2.8rem);font-weight:950;letter-spacing:-.05em;line-height:1.1}
+#rider #riderDashboard>.wallet-box .wallet-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:15px 0 18px}
+#rider #riderDashboard>.wallet-box .stat-box{min-width:0;padding:13px 9px;border:1px solid rgba(255,255,255,.17);border-radius:13px;background:rgba(255,255,255,.1);text-align:left}
+#rider #riderDashboard>.wallet-box .stat-box .value{color:#fff;font-size:clamp(1rem,2vw,1.35rem);overflow-wrap:anywhere}
+#rider #riderDashboard>.wallet-box .stat-box .label{margin-top:5px;color:rgba(255,255,255,.74);font-size:.72rem;line-height:1.35}
+#rider #riderDashboard>.wallet-box>div:last-child{display:flex;flex-wrap:wrap;gap:9px}
+#rider #riderDashboard>.wallet-box button{min-height:44px;margin:0;padding:10px 15px;border:1px solid rgba(255,255,255,.25);border-radius:10px;font-weight:850}
+#rider #riderDashboard>.wallet-box button[data-action="showDepositForm"]{border-color:#ff8c2c;background:linear-gradient(110deg,#ff7900,#ff9b43);color:#fff;box-shadow:0 7px 16px rgba(255,121,0,.2)}
+#rider #riderDashboard>.wallet-box button[data-action="showTransactionHistory"]{background:#fff;color:#123b70}
+#rider #riderDashboard>.dashboard-panel{margin-bottom:15px;border:1px solid #dce6f2;border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(8,43,104,.05)}
+#rider #riderDashboard>.dashboard-panel>.dashboard-panel-toggle{min-height:59px;padding:15px 18px;background:linear-gradient(110deg,#f5f8fd,#fff);color:#123b70;font-weight:900}
+#rider #riderDashboard>.dashboard-panel>.dashboard-panel-content{padding:17px}
+#rider #riderDashboard .dashboard-panel-content h3{margin:0 0 13px;color:#123b70;font-size:1.05rem}
+#rider #depositFormArea .alert{padding:13px 15px;border:1px solid #d9e7f8;border-radius:12px;background:#f1f7ff;color:#31577f;line-height:1.6}
+#rider #depositFormArea .ref-code{padding:13px 15px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:linear-gradient(110deg,#061b42,#0c3976)!important;color:#fff!important;line-height:1.6;overflow-wrap:anywhere}
+#rider #depositFormArea .form-group{display:flex;flex-direction:column;gap:7px;max-width:620px;margin:0 0 13px}
+#rider #depositFormArea label,#rider #messageTo~label{color:#314967;font-size:.84rem;font-weight:800}
+#rider #depositFormArea input,#rider #depositFormArea select,#rider #riderDashboard #messageTo,#rider #riderDashboard #messageText{width:100%;min-width:0;min-height:47px;box-sizing:border-box;padding:11px 13px;border:1px solid #d7e2ef;border-radius:11px;background:#fbfdff;color:#142b4d;font-size:16px}
+#rider #depositFormArea button[data-action="submitDeposit"],#rider #riderDashboard button[data-action="sendMessage"]{min-height:46px;padding:11px 17px;border-radius:11px;font-weight:900}
+#rider #depositHistory .history-item{align-items:center;gap:10px;padding:13px 4px;border-bottom:1px solid #e8eef6;color:#526780;overflow-wrap:anywhere}
+#rider #availableAssignments,#rider #acceptedAssignments,#rider #depositHistory,#rider #ridersList,#rider #messagesArea{min-width:0;overflow-wrap:anywhere}
+#rider #availableAssignments>*,#rider #acceptedAssignments>*,#rider #ridersList>*{max-width:100%;min-width:0}
+#rider #riderDashboard .dashboard-panel-content button{max-width:100%;min-height:42px;border-radius:10px;font-weight:800}
+#rider #riderDashboard .dashboard-panel-content button[data-secure-accept],#rider #riderDashboard .dashboard-panel-content button[data-secure-deliver]{background:linear-gradient(110deg,#ff7900,#ff9638);color:#fff;border:0}
+#rider #riderDashboard .dashboard-panel-content input:focus,#rider #riderDashboard .dashboard-panel-content select:focus,#rider #riderDashboard .dashboard-panel-content textarea:focus{outline:3px solid rgba(255,121,0,.13);border-color:#ff7900}
+#rider #riderDashboard #messageText{min-height:105px;resize:vertical;line-height:1.55}
+#rider #riderDashboard #messagesArea .msg-box{padding:14px;border:1px solid #dfe8f3;border-radius:13px;background:#f8faff;overflow-wrap:anywhere}
+@media(max-width:760px){
+ #rider{padding:8px}
+ #rider #riderAuthCard{padding:19px 13px;border-radius:18px}
+ #rider #riderAuthCard>h2{font-size:1.5rem;margin-bottom:18px}
+ #rider #riderRegSection,#rider #riderLoginSection{padding:15px 12px;border-radius:14px}
+ #rider #riderRegForm,#rider #riderLoginForm{grid-template-columns:minmax(0,1fr);gap:12px}
+ #rider #riderRegForm .form-group:has(#r-location),#rider #riderRegForm .form-group:has(#r-photo),#rider #riderRegForm #riderRegBtn,#rider #riderRegForm #riderRegSuccess,#rider #riderLoginForm>button[type=submit]{grid-column:auto}
+ #rider #riderRegBtn,#rider #riderLoginForm>button[type=submit]{width:100%}
+ #rider #riderDashboard>.card:first-child{padding:19px 16px;border-radius:15px}
+ #rider #riderDashboard>.card:first-child>button{width:100%}
+ #rider #riderDashboard>.wallet-box{padding:19px 15px;border-radius:16px}
+ #rider #riderDashboard>.wallet-box .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #rider #riderDashboard>.wallet-box .stat-box{padding:12px 10px}
+ #rider #riderDashboard>.wallet-box>div:last-child{display:grid;grid-template-columns:1fr;gap:8px}
+ #rider #riderDashboard>.wallet-box button{width:100%;min-height:46px}
+ #rider #riderDashboard>.dashboard-panel>.dashboard-panel-toggle{min-height:55px;padding:14px}
+ #rider #riderDashboard>.dashboard-panel>.dashboard-panel-content{padding:13px}
+ #rider #depositFormArea .dashboard-panel-content,#rider #transactionHistoryArea .dashboard-panel-content{padding:13px}
+ #rider #depositFormArea button[data-action="submitDeposit"],#rider #riderDashboard button[data-action="sendMessage"]{width:100%}
+ #rider #riderDashboard .dashboard-panel-content button{width:100%;margin:8px 0 0}
+ #rider #riderDashboard .dashboard-panel-content [data-secure-accept],#rider #riderDashboard .dashboard-panel-content [data-secure-deliver]{width:100%}
+ #rider #riderDashboard .dashboard-panel-content .history-item{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:360px){
+ #rider #riderDashboard>.wallet-box .stat-box .value{font-size:1rem}
+ #rider #riderDashboard>.wallet-box .stat-box .label{font-size:.67rem}
+ #rider #riderDashboard>.dashboard-panel>.dashboard-panel-content{padding:11px}
+}
+</style>
+
 </head>
 <body>
   <div class="container">
