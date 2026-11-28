@@ -3195,6 +3195,40 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  #loginForm .password-toggle{width:100%}
 }
 </style>
+
+<style id="kl-admin-command-centre-mobile-comfort-20261128">
+/* Administrator command centre mobile readability; visual-only */
+@media(max-width:700px){
+ #dashboard{min-width:0;gap:11px}
+ #dashboard .admin-hero{border-radius:17px;overflow:hidden}
+ #dashboard .admin-hero h1{font-size:clamp(1.7rem,7vw,2.25rem);line-height:1.08;max-width:14ch}
+ #dashboard .admin-hero-copy{min-width:0}
+ #dashboard .admin-hero-pills{display:flex;flex-wrap:wrap;gap:7px}
+ #dashboard .admin-hero-pills>*{max-width:100%;font-size:.75rem}
+ #dashboardActions{position:static;grid-template-columns:minmax(0,1fr);gap:8px}
+ #dashboardActions .admin-search-label{grid-column:auto}
+ #dashboardActions button{width:100%;min-height:44px}
+ #dashboard .admin-section>summary{gap:8px;font-size:.94rem}
+ #dashboard .section-card{padding:12px!important;min-width:0}
+ #dashboard .section-card :where(input,select,textarea){width:100%;max-width:100%;box-sizing:border-box;font-size:16px}
+ #dashboard .section-card :where(button){min-height:44px;max-width:100%;white-space:normal}
+ #dashboard .section-card table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ #dashboard .section-card table th,#dashboard .section-card table td{white-space:normal;overflow-wrap:anywhere}
+ #dashboard #commissionSummaryCard .commission-grid{grid-template-columns:minmax(0,1fr)}
+ #dashboard #commissionSummaryCard .commission-metric{display:flex;justify-content:space-between;align-items:center;gap:12px}
+ #dashboard #commissionSummaryCard .commission-metric strong{font-size:1.2rem;text-align:right}
+ #dashboard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard .reconciliation-metric{min-width:0;overflow-wrap:anywhere}
+ #dashboard .reconciliation-metric strong{font-size:1.1rem}
+ #dashboard .refund-controls{grid-template-columns:minmax(0,1fr)}
+ #dashboard .refund-controls :where(button,select,textarea){width:100%}
+}
+@media(max-width:390px){
+ #dashboard .reconciliation-summary{grid-template-columns:minmax(0,1fr)}
+ #dashboard .reconciliation-metric{display:flex;align-items:center;justify-content:space-between;gap:8px}
+ #dashboard .reconciliation-metric strong{text-align:right}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
