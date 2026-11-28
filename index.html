@@ -4489,6 +4489,51 @@ body> .container>header{position:relative;z-index:5;border:1px solid rgba(222,23
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.section{animation:none}button,.btn,.kl-audience-card,.kl-vendor-card,.kl-rider-card{transition:none}}
 </style>
 
+<style id="kl-visual-block-2">
+/* Rider portal: polished cards, wallet, assignments, profile and messaging */
+#riderDashboard{color:#10284b}
+#riderDashboard .card,#riderDashboard .wallet-box,#riderDashboard .rider-connect-panel{border:1px solid #e3eaf3;border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(8,43,104,.065);padding:clamp(16px,2.2vw,24px)}
+#riderDashboard h2,#riderDashboard h3{color:#082b68;letter-spacing:-.025em}
+#riderDashboard label{font-size:.9rem;font-weight:750;color:#344d6e}
+#riderDashboard input,#riderDashboard select,#riderDashboard textarea{min-height:45px;border:1px solid #d7e1ee;border-radius:12px;background:#fbfdff;padding:11px 13px;color:#10284b}
+#riderDashboard input:focus,#riderDashboard select:focus,#riderDashboard textarea:focus{outline:0;border-color:#ff9b43;box-shadow:0 0 0 4px rgba(255,121,0,.1)}
+#riderDashboard button,#riderDashboard .btn{min-height:43px;border-radius:12px;font-weight:750}
+#riderDashboard .assignment-item{border:1px solid #e3eaf3;border-radius:17px;background:linear-gradient(180deg,#fff,#f9fbfe);padding:16px;margin:12px 0;box-shadow:0 7px 20px rgba(8,43,104,.05);overflow-wrap:anywhere}
+#riderDashboard .history-item{border:1px solid #e7edf5;border-radius:14px;padding:13px 15px;margin:9px 0;background:#fff}
+#riderDashboard .wallet-box{background:radial-gradient(circle at 90% 10%,rgba(255,121,0,.22),transparent 28%),linear-gradient(135deg,#082b68,#10509b);color:#fff}
+#riderDashboard .wallet-box h2,#riderDashboard .wallet-box h3,#riderDashboard .wallet-box .value{color:#fff}
+#riderDashboard .wallet-box .label{color:rgba(255,255,255,.78)}
+#riderDashboard .wallet-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+#riderDashboard .stat-box{border:1px solid rgba(255,255,255,.18);border-radius:15px;background:rgba(255,255,255,.1);padding:14px}
+#riderDashboard .value{font-size:clamp(1.15rem,2vw,1.65rem);font-weight:850;letter-spacing:-.035em}
+#riderDashboard .rider-card{border:1px solid #e3eaf3;border-radius:17px;background:#fff;box-shadow:0 8px 22px rgba(8,43,104,.055);padding:15px}
+#riderDashboard .rider-card img,#riderDashboard .secureRiderPhoto{border-radius:16px;object-fit:cover}
+#riderDashboard .rider-connect-panel{padding:0;overflow:hidden}
+#riderDashboard .connect-layout{display:grid;grid-template-columns:minmax(220px,.82fr) minmax(0,1.65fr);gap:14px;padding:14px}
+#riderDashboard .connect-threads,#riderDashboard .connect-chat{min-width:0;border:1px solid #e5ebf3;border-radius:15px;background:#fff;overflow:hidden}
+#riderDashboard .connect-inbox-filters,#riderDashboard .connect-history-tools{display:flex;gap:8px;flex-wrap:wrap;padding:12px;border-bottom:1px solid #e9eef5}
+#riderDashboard .connect-thread{border-bottom:1px solid #edf1f6}
+#riderDashboard .connect-thread-button{width:100%;min-width:0;text-align:left;padding:13px;border-radius:10px;overflow-wrap:anywhere}
+#riderDashboard .connect-thread-button:hover{background:#f4f7fb}
+#riderDashboard .connect-chat-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-bottom:1px solid #e9eef5}
+#riderDashboard .connect-compose{display:flex;align-items:flex-end;gap:9px;padding:12px;border-top:1px solid #edf1f6}
+#riderDashboard .connect-compose textarea{flex:1;min-width:0;min-height:46px;max-height:130px;resize:vertical}
+#riderDashboard .connect-compose button{flex:0 0 auto}
+#riderDashboard .msg-box{max-width:min(82%,560px);padding:11px 14px;border-radius:15px;line-height:1.55;overflow-wrap:anywhere}
+#riderDashboard .alert{border-radius:13px;padding:12px 14px;line-height:1.55}
+@media(max-width:760px){
+ #riderDashboard .card,#riderDashboard .wallet-box,#riderDashboard .rider-connect-panel{border-radius:16px;padding:15px}
+ #riderDashboard .wallet-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #riderDashboard .assignment-item{padding:13px}
+ #riderDashboard .connect-layout{display:flex;flex-direction:column;padding:10px}
+ #riderDashboard .connect-threads{max-height:280px;overflow:auto}
+ #riderDashboard .connect-chat{min-height:300px}
+ #riderDashboard .connect-compose{align-items:stretch;flex-direction:column}
+ #riderDashboard .connect-compose button{width:100%}
+ #riderDashboard .msg-box{max-width:92%}
+}
+@media(prefers-reduced-motion:reduce){#riderDashboard button{transition:none}}
+</style>
 </head>
 <body>
   <div class="container">
