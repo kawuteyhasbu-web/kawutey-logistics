@@ -702,6 +702,49 @@ button:focus-visible,a:focus-visible{outline:3px solid rgba(255,121,0,.5);outlin
 }
 @media(max-width:390px){#dashboardActions{grid-template-columns:1fr}.commission-grid{grid-template-columns:1fr}}
 
+
+/* Coordinated administrator mobile batch — compact navigation and legible review cards */
+@media(max-width:680px){
+ .wrap{padding:9px}
+ .head{gap:10px;padding:13px;border-radius:14px}
+ .head .brand{min-width:0}
+ .head .brand h1{font-size:1.12rem;line-height:1.2}
+ .head .brand small{font-size:.62rem}
+ #loginCard{margin:18px 0;padding:20px 15px;border-radius:16px}
+ #loginCard>h2{font-size:1.42rem}
+ #loginForm{gap:7px;margin-top:15px}
+ #loginForm label{margin-top:5px}
+ #loginForm input{min-height:46px}
+ #loginButton{min-height:47px}
+ #dashboard{gap:11px}
+ #dashboardActions{gap:7px;padding:9px;border-radius:12px}
+ #dashboardActions button{min-height:39px;padding:8px 10px;font-size:.82rem}
+ #commissionSummaryCard{padding:15px;border-radius:15px}
+ #commissionSummaryCard>h2{font-size:1.2rem}
+ #commissionSummaryCard .commission-grid{gap:8px;margin:13px 0}
+ #commissionSummaryCard .commission-metric{min-height:82px;padding:11px;border-radius:11px}
+ #commissionSummaryCard .commission-metric strong{font-size:1.22rem}
+ #commissionSummaryCard .commission-metric span{font-size:.74rem;line-height:1.35}
+ #commissionSummaryCard .commission-toolbar{gap:8px;padding:10px}
+ #commissionSummaryCard .commission-toolbar label{min-width:100%;font-size:.8rem}
+ #dashboard>.card:not(#dashboardActions){padding:13px;border-radius:13px}
+ #dashboard>.card:not(#dashboardActions)>h2{font-size:1rem}
+ #dashboard .admin-section{border-radius:12px}
+ #dashboard .admin-section>summary{min-height:49px;padding:13px;font-size:.87rem}
+ #dashboard .admin-section .section-card{padding:12px}
+ #dashboard .item{padding:12px;border-radius:11px}
+ #dashboard .item button{width:100%;margin:7px 0 0}
+ #pendingRiders>.item,#approvedRiders>.item{padding:12px}
+ #dashboard .notice{font-size:.83rem}
+ #dashboard table{min-width:540px}
+ #dashboard .table-wrap{max-width:100%;overflow-x:auto}
+}
+@media(max-width:390px){
+ #commissionSummaryCard .commission-grid{grid-template-columns:1fr}
+ #commissionSummaryCard .commission-metric{min-height:70px}
+ #dashboardActions button{flex-basis:100%}
+}
+
 </style><script src="/admin-password.js" defer></script>
 <style>
 /* KL administrator interface — refined command-centre visual layer */
