@@ -3043,6 +3043,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:760px){#dashboard .commission-grid,#dashboard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard .refund-controls{grid-template-columns:minmax(0,1fr)}#dashboard .commission-toolbar{align-items:stretch}#dashboard .commission-toolbar>*{flex:1 1 130px}}
 @media(max-width:390px){#dashboard .commission-grid,#dashboard .reconciliation-summary{grid-template-columns:minmax(0,1fr)}}
 </style>
+<style id="kl-admin-review-and-finance-visual-suite-20261128">
+/* Admin review, notification and financial oversight */
+#dashboard .commission-metric{position:relative;overflow:hidden}
+#dashboard .commission-metric:after{content:"";position:absolute;right:-20px;bottom:-30px;width:90px;height:90px;border-radius:50%;background:rgba(17,62,119,.045)}
+#dashboard .commission-metric strong{position:relative;z-index:1;font-variant-numeric:tabular-nums}
+#dashboard .commission-metric span{position:relative;z-index:1;display:block;line-height:1.4}
+#walletReconciliationCard .reconciliation-summary{gap:11px}
+#walletReconciliationCard .reconciliation-metric{min-width:0;overflow-wrap:anywhere}
+#walletReconciliationCard .reconciliation-metric strong{font-variant-numeric:tabular-nums}
+#walletReconciliationCard .reconciliation-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px}
+#dashboard .refund-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#dashboard .refund-controls label{display:grid;gap:6px;font-weight:750;color:#345477}
+#dashboard .refund-controls textarea{min-height:90px;line-height:1.5}
+#dashboard .notification-toolbar{padding:10px 12px;border:1px solid #e4ebf3;border-radius:12px;background:#f8fafd}
+#dashboard .notification-filter{cursor:pointer;user-select:none}
+#dashboard .report-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+#dashboard .tag{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:760px){#dashboard .refund-controls{grid-template-columns:minmax(0,1fr)}#walletReconciliationCard .reconciliation-row{grid-template-columns:minmax(0,1fr)}#dashboard .report-row{grid-template-columns:minmax(0,1fr)}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
