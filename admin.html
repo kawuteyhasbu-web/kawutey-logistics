@@ -3026,6 +3026,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #dashboard :where(button,a,input,select,textarea):focus-visible{outline:3px solid rgba(244,119,22,.3);outline-offset:2px}
 @media(max-width:760px){#dashboardActions{grid-template-columns:minmax(0,1fr)}#dashboardActions button{width:100%}#dashboard .admin-section>summary{padding:12px;min-height:50px}#dashboard .section-card{padding:12px}#dashboard .section-card table{display:block;overflow-x:auto;white-space:nowrap}}
 </style>
+<style id="kl-admin-finance-oversight-visual-batch-20261128">
+/* Admin finance and review panels: metrics, refunds and reconciliation */
+#dashboard .commission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#dashboard .commission-metric{min-width:0;padding:16px;border:1px solid #e6edf4;border-radius:14px;background:linear-gradient(145deg,#fff,#f8fafc)}
+#dashboard .commission-metric .commission-total{font-size:clamp(1.2rem,2.3vw,1.8rem);font-weight:850;letter-spacing:-.035em;overflow-wrap:anywhere}
+#dashboard .commission-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#dashboard .commission-toolbar :where(input,button,select){min-height:42px;border-radius:9px}
+#dashboard .reconciliation-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#dashboard .reconciliation-metric{min-width:0;padding:13px;border:1px solid #e7edf4;border-radius:12px;background:#f8fafc}
+#dashboard .reconciliation-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1f5}
+#dashboard .refund-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:13px;border-radius:13px;background:#f8fafc}
+#dashboard .refund-controls :where(input,select,textarea,button){min-width:0;max-width:100%;box-sizing:border-box}
+#dashboard .tag{display:inline-flex;align-items:center;justify-content:center;min-height:25px;padding:4px 9px;border-radius:999px;font-size:.76rem;font-weight:800;white-space:nowrap}
+#dashboard .rider-photo-slot{display:grid;place-items:center;overflow:hidden;border-radius:14px;background:#f1f5f9}
+@media(max-width:760px){#dashboard .commission-grid,#dashboard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard .refund-controls{grid-template-columns:minmax(0,1fr)}#dashboard .commission-toolbar{align-items:stretch}#dashboard .commission-toolbar>*{flex:1 1 130px}}
+@media(max-width:390px){#dashboard .commission-grid,#dashboard .reconciliation-summary{grid-template-columns:minmax(0,1fr)}}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>

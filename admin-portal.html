@@ -902,6 +902,24 @@ button.primary:active{transform:translateY(1px)}
 .visual .feature{border:1px solid rgba(255,255,255,.16);border-radius:14px}
 @media(max-width:760px){.shell{width:calc(100% - 20px);margin:10px auto;border-radius:18px}.visual{padding:24px}.auth-side{padding:22px}.auth-side form{max-width:none}}
 </style>
+<style id="kl-admin-auth-polish-batch-20261128">
+/* Admin access screen: brand-led split layout and form refinement */
+.shell{background:#fff;border:1px solid rgba(218,228,239,.8)}
+.visual{position:relative;isolation:isolate;overflow:hidden}
+.visual:after{content:"";position:absolute;z-index:-1;width:360px;height:360px;right:-170px;bottom:-180px;border:1px solid rgba(255,255,255,.16);border-radius:50%;box-shadow:0 0 0 36px rgba(255,255,255,.025),0 0 0 72px rgba(255,255,255,.02)}
+.visual .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.visual .feature{display:flex;align-items:flex-start;gap:10px;min-height:76px;padding:13px}
+.visual .feature strong{line-height:1.35}
+.auth-side .intro{margin-top:4px;color:#64748b}
+.auth-side .tabs button{transition:background .18s ease,color .18s ease,box-shadow .18s ease}
+.auth-side .tabs button.active{background:#fff;box-shadow:0 2px 8px rgba(15,42,78,.09)}
+.auth-side .input-with-toggle{display:flex;align-items:center;gap:8px}
+.auth-side .input-with-toggle input{min-width:0;flex:1}
+.auth-side .toggle-visibility{min-width:42px;min-height:42px;border-radius:10px}
+.auth-side .notice{border-radius:12px;line-height:1.5}
+@media(max-width:760px){.visual .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.visual .feature{min-height:66px;padding:10px}}
+@media(max-width:380px){.visual .feature-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">
