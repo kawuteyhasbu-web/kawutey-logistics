@@ -4838,6 +4838,90 @@ table{max-width:100%}
 @media(prefers-reduced-motion:reduce){.kl-contact-grid>a{transition:none}}
 </style>
 
+
+<style id="kl-session2-vendor-experience-20261128">
+/* SESSION 2 — vendor portal visual suite; preserve all existing workflow hooks */
+#vendor{max-width:1120px;margin:0 auto;padding:clamp(9px,2vw,22px);scroll-margin-top:100px}
+#vendor #vendorAuthCard{position:relative;isolation:isolate;overflow:hidden;max-width:100%;margin:0 auto;padding:clamp(20px,3.2vw,36px);border:1px solid #dce6f2;border-radius:24px;background:linear-gradient(150deg,#fff 0%,#f8fbff 100%);box-shadow:0 18px 44px rgba(8,43,104,.09)}
+#vendor #vendorAuthCard:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#061b42 0%,#1760a8 58%,#ff7900 100%)}
+#vendor #vendorAuthCard>h2{max-width:24ch;margin:3px 0 24px;color:#082b68;font-size:clamp(1.55rem,3vw,2.25rem);line-height:1.12;letter-spacing:-.045em}
+#vendor #vendorAuthCard>h2:after{content:"";display:block;width:54px;height:4px;margin-top:13px;border-radius:8px;background:#ff7900}
+#vendor #vendorRegSection,#vendor #vendorLoginSection{max-width:780px;margin:0 auto;padding:clamp(17px,2.7vw,27px);border:1px solid #e1e9f3;border-radius:18px;background:#fff;box-shadow:0 8px 23px rgba(8,43,104,.045)}
+#vendor #vendorRegSection>h3,#vendor #vendorLoginSection>h3{margin:0 0 13px;color:#123b70;font-size:1.22rem;letter-spacing:-.025em}
+#vendor #vendorRegSection>.alert{margin-bottom:19px;padding:12px 15px;border:1px solid #d9e7f8;border-radius:12px;background:#f1f7ff;color:#31577f;line-height:1.55}
+#vendor #vendorRegForm,#vendor #vendorLoginForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+#vendor #vendorRegForm .form-group,#vendor #vendorLoginForm .form-group{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0}
+#vendor #vendorRegForm label,#vendor #vendorLoginForm label{color:#314967;font-size:.84rem;font-weight:800}
+#vendor #vendorRegForm input,#vendor #vendorLoginForm input{width:100%;min-width:0;min-height:48px;box-sizing:border-box;padding:11px 13px;border:1px solid #d7e2ef;border-radius:11px;background:#fbfdff;color:#142b4d;font-size:16px}
+#vendor #vendorRegForm input:focus,#vendor #vendorLoginForm input:focus{border-color:#ff7900;outline:3px solid rgba(255,121,0,.13)}
+#vendor #vendorRegForm .form-group:has(#v-location),#vendor #vendorRegForm #vendorRegBtn,#vendor #vendorLoginForm>button[type=submit]{grid-column:1/-1}
+#vendor #vendorRegForm .kl-field-hint{color:#75869c;font-size:.75rem;line-height:1.45}
+#vendor #vendorRegForm .password-wrapper,#vendor #vendorLoginForm .password-wrapper{display:flex;gap:8px;min-width:0}
+#vendor #vendorRegForm .password-wrapper input,#vendor #vendorLoginForm .password-wrapper input{flex:1}
+#vendor #vendorRegForm .toggle-password,#vendor #vendorLoginForm .toggle-password{min-width:65px;border:1px solid #d8e3f0;border-radius:10px;background:#f3f7fc;color:#244d7d;font-size:.8rem;font-weight:800}
+#vendor #vendorRegBtn,#vendor #vendorLoginForm>button[type=submit]{min-height:50px;margin-top:4px;border-radius:12px;font-weight:900;box-shadow:0 8px 18px rgba(8,43,104,.14)}
+#vendor #vendorRegSection>p,#vendor #vendorLoginSection>p{margin:17px 0 0!important;color:#718198;font-size:.87rem}
+#vendor #vendorRegSection>p a,#vendor #vendorLoginSection>p a{color:#e66e0b!important;font-weight:850!important;text-decoration:none}
+#vendor #vendorDashboard{min-width:0}
+#vendor #vendorDashboard>h3{position:relative;margin:0 0 10px;padding:25px 25px 5px;border:1px solid #153e78;border-bottom:0;border-radius:18px 18px 0 0;background:linear-gradient(120deg,#061b42,#0c3976 75%,#15508e);color:#fff;font-size:clamp(1.35rem,2.7vw,1.85rem);letter-spacing:-.035em}
+#vendor #vendorDashboard>h3 #vendorNameDisplay{color:#ffad65}
+#vendor #vendorBusinessDisplay{margin:0!important;padding:0 25px 7px;border:0;background:linear-gradient(120deg,#061b42,#0c3976 75%,#15508e);color:rgba(255,255,255,.8)!important;font-size:.9rem}
+#vendor #vendorDashboard>h3+ p{margin:0!important;padding:0 25px 23px;border:1px solid #153e78;border-top:0;border-radius:0 0 18px 18px;background:linear-gradient(120deg,#061b42,#0c3976 75%,#15508e);color:rgba(255,255,255,.78);line-height:1.55}
+#vendor #vendorDashboard>button{min-height:47px;margin:15px 8px 20px 0;padding:11px 17px;border-radius:11px;font-weight:850}
+#vendor #vendorDashboard>button[data-action="togglePickupForm"]{background:linear-gradient(110deg,#ff7900,#ff9638);box-shadow:0 8px 18px rgba(255,121,0,.2)}
+#vendor #vendorDashboard>button[data-action="logoutVendor"]{border:1px solid #d8e3f0;background:#fff;color:#294d78}
+#vendor #pickupFormArea,#vendor #vendorPickupHistoryPanel{margin:0 0 17px!important;padding:0!important;border:1px solid #dce6f2!important;border-radius:17px;background:#fff;box-shadow:0 9px 24px rgba(8,43,104,.05);overflow:hidden}
+#vendor #pickupFormArea .dashboard-panel-toggle,#vendor #vendorPickupHistoryPanel .dashboard-panel-toggle{min-height:59px;padding:15px 19px;background:linear-gradient(110deg,#f5f8fd,#fff);color:#123b70;font-size:.98rem;font-weight:900}
+#vendor #pickupFormArea .dashboard-panel-content,#vendor #vendorPickupHistoryPanel .dashboard-panel-content{padding:18px}
+#vendor #pickupFormArea h4{margin:0 0 15px;color:#123b70;font-size:1.12rem}
+#vendor #pickupFormArea form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 16px}
+#vendor #pickupFormArea form>.alert,#vendor #pickupFormArea form>[data-action="capturePickupLocation"],#vendor #pickupFormArea form>#pickupLocationStatus,#vendor #pickupFormArea form>.package-row,#vendor #pickupFormArea form>div:has(.package-row),#vendor #pickupFormArea form>button[type=submit]{grid-column:1/-1}
+#vendor #pickupFormArea form>.alert{margin:0;padding:13px 15px;border:1px solid #dbe7f5;border-radius:12px;background:#f3f8ff;color:#3e5d80;line-height:1.55}
+#vendor #pickupFormArea form>[data-action="capturePickupLocation"]{justify-self:start;min-height:43px;padding:10px 14px;border:1px solid #cbdced;border-radius:10px;background:#f6f9fd;color:#194879;font-weight:850}
+#vendor #pickupLocationStatus{padding:10px 12px;border-radius:10px;background:#f7f9fc;color:#657991!important;line-height:1.5}
+#vendor #pickupFormArea .form-group{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0}
+#vendor #pickupFormArea .form-group label,#vendor #pickupFormArea .package-row label{color:#314967;font-size:.84rem;font-weight:800}
+#vendor #pickupFormArea .form-group :where(input,textarea){width:100%;min-width:0;box-sizing:border-box;padding:11px 13px;border:1px solid #d7e2ef;border-radius:11px;background:#fbfdff;color:#142b4d;font-size:16px}
+#vendor #pickupFormArea form>div:has(.package-row){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0!important}
+#vendor #pickupFormArea .package-row{display:flex;flex-direction:column;gap:7px;min-width:0;padding:13px;border:1px solid #e1e9f3;border-radius:12px;background:#f8faff}
+#vendor #pickupFormArea .package-row input{width:100%;min-width:0;min-height:45px;box-sizing:border-box;padding:9px 11px;border:1px solid #d7e2ef;border-radius:10px;background:#fff;font-size:16px}
+#vendor #pickupFormArea form>button[type=submit]{min-height:49px;border-radius:11px;font-weight:900}
+#vendor #pickupHistory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+#vendor #pickupHistory:empty{display:block}
+#vendor #pickupHistory>.pickup-item{min-width:0;padding:17px;border:1px solid #dce6f2;border-radius:15px;background:linear-gradient(155deg,#fff,#f8faff);box-shadow:0 7px 20px rgba(8,43,104,.045)}
+#vendor #pickupHistory .pickup-item-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;padding-bottom:11px;border-bottom:1px solid #e8eef6}
+#vendor #pickupHistory .pickup-item-details{min-width:0;line-height:1.65;color:#526780;overflow-wrap:anywhere}
+#vendor #pickupHistory .pickup-item-details strong{color:#173e70}
+#vendor #pickupHistory .pickup-item a{overflow-wrap:anywhere}
+@media(max-width:720px){
+ #vendor{padding:8px}
+ #vendor #vendorAuthCard{padding:19px 13px;border-radius:18px}
+ #vendor #vendorAuthCard>h2{margin-bottom:18px;font-size:1.5rem}
+ #vendor #vendorRegSection,#vendor #vendorLoginSection{padding:15px 12px;border-radius:14px}
+ #vendor #vendorRegForm,#vendor #vendorLoginForm{grid-template-columns:minmax(0,1fr);gap:12px}
+ #vendor #vendorRegForm .form-group:has(#v-location),#vendor #vendorRegForm #vendorRegBtn,#vendor #vendorLoginForm>button[type=submit]{grid-column:auto}
+ #vendor #vendorRegBtn,#vendor #vendorLoginForm>button[type=submit]{width:100%}
+ #vendor #vendorDashboard>h3{padding:20px 16px 5px;border-radius:14px 14px 0 0}
+ #vendor #vendorBusinessDisplay{padding:0 16px 6px}
+ #vendor #vendorDashboard>h3+p{padding:0 16px 18px;border-radius:0 0 14px 14px}
+ #vendor #vendorDashboard>button{width:100%;margin:10px 0 0}
+ #vendor #pickupFormArea .dashboard-panel-content,#vendor #vendorPickupHistoryPanel .dashboard-panel-content{padding:12px}
+ #vendor #pickupFormArea form{grid-template-columns:minmax(0,1fr);gap:11px}
+ #vendor #pickupFormArea form>.alert,#vendor #pickupFormArea form>[data-action="capturePickupLocation"],#vendor #pickupFormArea form>#pickupLocationStatus,#vendor #pickupFormArea form>div:has(.package-row),#vendor #pickupFormArea form>button[type=submit]{grid-column:auto}
+ #vendor #pickupFormArea form>div:has(.package-row){grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ #vendor #pickupFormArea .package-row{padding:9px 7px}
+ #vendor #pickupFormArea .package-row label{font-size:.72rem}
+ #vendor #pickupFormArea .package-row input{padding:8px 6px}
+ #vendor #pickupFormArea form>button[type=submit],#vendor #pickupFormArea form>[data-action="capturePickupLocation"]{width:100%}
+ #vendor #pickupHistory{grid-template-columns:minmax(0,1fr);gap:10px}
+ #vendor #pickupHistory>.pickup-item{padding:14px;border-radius:13px}
+}
+@media(max-width:360px){
+ #vendor #pickupFormArea form>div:has(.package-row){grid-template-columns:minmax(0,1fr)}
+ #vendor #pickupFormArea .package-row{display:grid;grid-template-columns:1fr 90px;align-items:center}
+}
+</style>
+
 </head>
 <body>
   <div class="container">
