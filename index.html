@@ -4295,6 +4295,33 @@ nav.tabs .tab-btn:hover{transform:translateY(-1px)}
 @media(max-width:700px){.kl-mobile-bottom-nav .kl-mobile-nav-btn{font-size:.7rem;padding-inline:3px}#vendorDashboard .pickup-item,#riderDashboard .assignment-item{padding:13px}#vendorDashboard .pickup-item-heading{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.kl-mobile-bottom-nav *{transition:none!important}}
 </style>
+<style id="kl-public-vendor-rider-visual-bulk-20261128">
+/* Public + Vendor + Rider: consistent component rhythm and mobile polish */
+:root{--kl-card-radius:16px;--kl-card-shadow:0 8px 24px rgba(16,46,84,.055)}
+.kl-footer{display:grid;grid-template-columns:1.1fr 1fr auto;align-items:center;gap:22px;padding:clamp(22px,4vw,38px);border-top:1px solid rgba(255,255,255,.13)}
+.kl-footer-contact{display:grid;gap:9px;min-width:0}
+.kl-footer-contact a,.kl-social a{max-width:100%;overflow-wrap:anywhere;text-underline-offset:3px}
+.kl-social{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard .card,#riderDashboard .card,#riderConnectPanel{border-radius:var(--kl-card-radius);box-shadow:var(--kl-card-shadow)}
+#vendorDashboard .card,#riderDashboard .card{min-width:0}
+#vendorDashboard :where(input,select,textarea),#riderDashboard :where(input,select,textarea),#pickupForm :where(input,select,textarea){box-sizing:border-box;max-width:100%;min-height:44px;font-size:16px;border-radius:10px}
+#pickupFormArea{border-radius:14px;background:#f7f9fc;padding:clamp(12px,2vw,18px)!important}
+#pickupForm :where(button,input[type=submit]){min-height:46px;border-radius:10px}
+#vendorDashboard .pickup-item,#riderDashboard .assignment-item{min-width:0;border:1px solid #e7edf4;border-radius:15px;padding:clamp(13px,2.5vw,18px);background:#fff;box-shadow:0 6px 18px rgba(16,46,84,.045);overflow-wrap:anywhere}
+#vendorDashboard .pickup-item :where(button,a),#riderDashboard .assignment-item :where(button,a){min-height:42px;max-width:100%}
+#riderDashboard .wallet-box{position:relative;overflow:hidden;border-radius:18px;box-shadow:0 14px 32px rgba(13,43,86,.12)}
+#riderDashboard .wallet-stats .stat-box{min-width:0;border-radius:13px;overflow-wrap:anywhere}
+#riderConnectPanel{min-width:0;overflow:hidden;border:1px solid #e7edf4}
+#riderConnectPanel :where(input,select,textarea,button){box-sizing:border-box;max-width:100%;min-height:44px;font-size:16px}
+#riderConnectPanel .connect-start{padding:12px;border-radius:13px;background:#f7f9fc}
+.kl-mobile-bottom-nav{padding:7px max(10px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:rgba(255,255,255,.97);border-top:1px solid #e6ebf1;box-shadow:0 -8px 24px rgba(14,39,75,.07);backdrop-filter:blur(14px)}
+.kl-mobile-bottom-nav .kl-mobile-nav-btn{min-height:54px;min-width:0;border-radius:12px}
+.kl-mobile-bottom-nav .kl-mobile-nav-btn.active{background:#fff2e8;color:#c45b12;font-weight:800}
+#vendorDashboard :where(button,a):focus-visible,#riderDashboard :where(button,a):focus-visible{outline:3px solid rgba(244,119,22,.3);outline-offset:2px}
+@media(max-width:700px){.kl-footer{grid-template-columns:minmax(0,1fr);gap:15px}.kl-social{justify-content:flex-start}#vendorDashboard .pickup-item,#riderDashboard .assignment-item{padding:13px}#vendorDashboard .pickup-item :where(button,a),#riderDashboard .assignment-item :where(button,a){width:100%}#riderConnectPanel .connect-start{display:grid;grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){#vendorDashboard *,#riderDashboard *,.kl-mobile-bottom-nav *{transition:none!important}}
+</style>
 </head>
 <body>
   <div class="container">
