@@ -851,6 +851,23 @@ button.primary:active{transform:translateY(1px)}
 @media(max-width:760px){.shell{width:100%;margin:0;border:0;border-radius:0;box-shadow:none}.visual .brand img{width:42px;height:42px}.auth-side{min-height:55svh}}
 @media(prefers-reduced-motion:reduce){.auth-side .tabs button{transition:none}}
 </style>
+<style id="kl-admin-auth-finish-20261128">
+/* Bulk visual finish: administrator access experience */
+.auth-side{display:flex;flex-direction:column;justify-content:center}
+.auth-side .auth-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.auth-side .auth-label{font-size:.78rem;text-transform:uppercase}
+.auth-side .secure{display:inline-flex;align-items:center;gap:7px;border:1px solid #dce7f2;border-radius:999px;padding:7px 11px;font-size:.76rem;font-weight:750}
+.auth-side form button.primary{width:100%;min-height:50px}
+.auth-side form :where(input,button){box-sizing:border-box}
+.auth-side form input{width:100%;font-size:16px}
+.auth-side .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.auth-side .tabs button{min-width:0}
+.visual .hero{max-width:650px}
+.visual .feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.visual .feature{min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){.auth-side{justify-content:flex-start}.visual .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:360px){.visual .feature-grid{grid-template-columns:minmax(0,1fr)}.auth-side .auth-top{align-items:flex-start;flex-direction:column}}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">

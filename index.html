@@ -4249,6 +4249,30 @@ nav.tabs .tab-btn:hover{transform:translateY(-1px)}
 #riderDashboard .wallet-box .stat-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
 @media(max-width:680px){.kl-content-page{padding:14px;gap:14px}.kl-content-page .kl-content-grid,.kl-content-page .kl-steps-grid,.kl-content-page .kl-contact-grid{grid-template-columns:minmax(0,1fr)}.kl-content-page .kl-page-hero{padding:22px 18px;border-radius:17px}.kl-content-page .kl-page-cta :where(a,button){width:100%;margin:7px 0 0}.kl-content-page .kl-contact-grid strong{font-size:1.05rem}}
 </style>
+<style id="kl-public-vendor-rider-finish-20261128">
+/* Bulk visual finish: public entry, Vendor and Rider workspaces */
+.kl-footer{display:grid;grid-template-columns:1.1fr 1fr auto;align-items:center;gap:20px}
+.kl-footer-contact{display:grid;gap:7px}
+.kl-footer-contact a{overflow-wrap:anywhere}
+.kl-social{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard .card,#riderDashboard .card{min-width:0}
+#vendorDashboard :where(input,select,textarea),#riderDashboard :where(input,select,textarea){box-sizing:border-box;max-width:100%;font-size:16px}
+#vendorDashboard .pickup-item,#riderDashboard .assignment-item{box-shadow:0 5px 18px rgba(8,43,104,.045)}
+#vendorDashboard .pickup-item :where(button,a),#riderDashboard .assignment-item :where(button,a){overflow-wrap:anywhere}
+#riderDashboard .wallet-box{position:relative;overflow:hidden}
+#riderDashboard .wallet-box:after{content:"";position:absolute;right:-50px;top:-75px;width:190px;height:190px;border:1px solid rgba(255,255,255,.14);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.025);pointer-events:none}
+#riderDashboard .wallet-box>*{position:relative;z-index:1}
+#riderConnectPanel .connect-threads,#riderConnectPanel .connect-chat{min-width:0}
+#riderConnectPanel .connect-thread{overflow-wrap:anywhere}
+#pickupFormArea{box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+@media(max-width:700px){
+ .kl-footer{grid-template-columns:minmax(0,1fr);gap:14px}
+ .kl-social{justify-content:flex-start}
+ #vendorDashboard .pickup-item :where(button,a),#riderDashboard .assignment-item :where(button,a){width:100%}
+ #riderDashboard .wallet-box:after{width:130px;height:130px;right:-45px;top:-45px}
+}
+</style>
 </head>
 <body>
   <div class="container">
