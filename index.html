@@ -4534,6 +4534,31 @@ body> .container>header{position:relative;z-index:5;border:1px solid rgba(222,23
 }
 @media(prefers-reduced-motion:reduce){#riderDashboard button{transition:none}}
 </style>
+<style id="kl-visual-block-4-public">
+/* Final visual consistency pass: shared responsive rhythm and accessibility */
+:root{--kl-radius-card:18px;--kl-focus:rgba(255,121,0,.34)}
+img,video,svg{max-width:100%}
+button,a,input,select,textarea{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--kl-focus);outline-offset:2px}
+img{height:auto}
+table{max-width:100%}
+#vendorDashboard,#riderDashboard{min-width:0}
+#vendorDashboard * ,#riderDashboard *{min-width:0}
+#vendorDashboard img,#riderDashboard img{max-width:100%}
+#vendorDashboard .card,#riderDashboard .card{overflow-wrap:anywhere}
+#vendorDashboard .wallet-stats,#riderDashboard .wallet-stats{align-items:stretch}
+#vendorDashboard .stat-box,#riderDashboard .stat-box{min-width:0;overflow-wrap:anywhere}
+#vendorDashboard button,#riderDashboard button{white-space:normal;line-height:1.3}
+#vendorDashboard .table-wrap,#riderDashboard .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:760px){
+ #vendorDashboard,#riderDashboard{width:100%;max-width:100%;overflow-x:clip}
+ #vendorDashboard .row,#riderDashboard .row{flex-wrap:wrap}
+ #vendorDashboard .grid,#riderDashboard .grid{grid-template-columns:minmax(0,1fr)}
+ #vendorDashboard button,#riderDashboard button{max-width:100%}
+ #vendorDashboard input,#vendorDashboard select,#vendorDashboard textarea,#riderDashboard input,#riderDashboard select,#riderDashboard textarea{width:100%;max-width:100%;font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
   <div class="container">
