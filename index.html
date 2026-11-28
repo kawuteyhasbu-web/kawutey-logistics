@@ -4591,6 +4591,33 @@ table{max-width:100%}
  #home .kl-hero h1,#home .kl-hero h2{font-size:clamp(2rem,9vw,2.5rem)}
 }
 </style>
+
+<style id="kl-vendor-rider-mobile-comfort-20261128">
+/* Vendor and Rider mobile portal comfort: retain desktop navy/blue/orange identity */
+@media(max-width:700px){
+ #vendorAuthCard,#riderAuthCard{padding:16px!important;border:1px solid #dfe8f3;border-radius:18px;background:#fff;box-shadow:0 10px 26px rgba(8,43,104,.07)}
+ #vendorAuthCard h2,#riderAuthCard h2,#vendorDashboard h2,#riderDashboard h2{color:#082b68;letter-spacing:-.03em}
+ #vendorAuthCard :where(input,select,textarea),#riderAuthCard :where(input,select,textarea),
+ #vendorDashboard :where(input,select,textarea),#riderDashboard :where(input,select,textarea){
+  width:100%;max-width:100%;min-height:48px;box-sizing:border-box;border:1px solid #d7e2ef;border-radius:11px;background:#fbfdff;color:#10284b;font-size:16px
+ }
+ #vendorAuthCard :where(button),#riderAuthCard :where(button),
+ #vendorDashboard :where(button),#riderDashboard :where(button){min-height:45px;border-radius:11px;font-weight:750}
+ #vendorDashboard .card,#riderDashboard .card{padding:14px!important;border:1px solid #e1e9f3;border-radius:16px;background:#fff;box-shadow:0 8px 22px rgba(8,43,104,.055)}
+ #vendorDashboard .pickup-item,#riderDashboard .assignment-item{border-color:#dfe8f3;background:linear-gradient(145deg,#fff,#f8faff);border-radius:14px}
+ #riderDashboard .wallet-box{background:linear-gradient(135deg,#061b42 0%,#082b68 72%,#16478a 100%);color:#fff}
+ #riderDashboard .wallet-box :where(h2,h3,strong,span,p){color:inherit}
+ #riderDashboard .wallet-stats .stat-box{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1)}
+ #riderConnectPanel{border-color:#dfe8f3;border-radius:16px;background:#fff}
+ #riderConnectPanel .connect-threads,#riderConnectPanel .connect-chat{border-color:#e1e9f3;background:#f8faff}
+ #riderConnectPanel :where(button){min-height:43px;border-radius:10px}
+}
+@media(max-width:390px){
+ #vendorAuthCard,#riderAuthCard{padding:13px!important}
+ #vendorDashboard .card,#riderDashboard .card{padding:12px!important}
+ #vendorDashboard .pickup-item,#riderDashboard .assignment-item{padding:12px}
+}
+</style>
 </head>
 <body>
   <div class="container">
