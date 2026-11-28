@@ -984,6 +984,21 @@ button{white-space:normal;line-height:1.3}
 @media(max-width:420px){body{overflow-x:hidden}form{width:100%}.loginCard,.login-card,.auth-card{width:100%;max-width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>
+<style id="kl-visual-qa-admin-entry-polish">
+/* Small-screen access-page finishing */
+@media(max-width:760px){
+ body{min-height:100svh}
+ .shell{width:100%;max-width:100%;padding:clamp(14px,4vw,26px)}
+ .visual{border-radius:20px;overflow:hidden}
+ .hero{padding:clamp(20px,5vw,34px)}
+ .hero h1{font-size:clamp(2rem,8vw,3.3rem);line-height:1.05;text-wrap:balance}
+ .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+}
+@media(max-width:420px){
+ .feature-grid{grid-template-columns:1fr}
+ .hero p{font-size:.95rem;line-height:1.65}
+}
+</style>
 </head>
 <body><main class="shell">
 <section class="visual" aria-label="Kawutey Logistics administrator introduction">

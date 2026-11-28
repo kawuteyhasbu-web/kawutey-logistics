@@ -3153,6 +3153,48 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
+<style id="kl-visual-qa-admin-polish">
+/* Visual QA refinement: target the administrator page's actual dashboard components */
+#loginCard{width:min(100%,560px);margin:clamp(28px,7vh,76px) auto;padding:clamp(22px,4vw,38px);border:1px solid #e0e8f3;border-radius:23px;background:rgba(255,255,255,.98);box-shadow:0 22px 58px rgba(8,43,104,.12)}
+#loginCard h2{font-size:clamp(1.35rem,3vw,1.8rem);letter-spacing:-.035em;color:#082b68}
+#loginCard p{color:#64748b;line-height:1.65}
+#loginForm{display:grid;gap:10px}
+#loginForm label{font-size:.88rem;font-weight:750;color:#344d6e}
+#loginForm input{width:100%;min-height:48px;border:1px solid #d7e1ee;border-radius:12px;background:#fbfdff;padding:12px 14px;font-size:16px}
+#loginForm input:focus{outline:0;border-color:#ff9b43;box-shadow:0 0 0 4px rgba(255,121,0,.1)}
+#loginButton{min-height:48px;border:0;border-radius:12px;background:linear-gradient(110deg,#ff7900,#f08a20);color:#fff;font-weight:850;box-shadow:0 8px 18px rgba(255,121,0,.2)}
+#loginForm .password-wrap{display:flex;gap:8px;align-items:center}
+#loginForm .password-wrap input{min-width:0;flex:1}
+#loginForm .password-toggle{min-height:46px;border-radius:11px}
+#dashboard .commission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#dashboard .commission-metric{min-width:0;border:1px solid #e3eaf3;border-radius:16px;background:linear-gradient(180deg,#fff,#f7faff);padding:16px}
+#dashboard .commission-metric strong{display:block;font-size:clamp(1.15rem,2.3vw,1.65rem);font-weight:850;letter-spacing:-.035em;color:#082b68;overflow-wrap:anywhere}
+#dashboard .commission-metric span{display:block;margin-top:5px;color:#687b95;font-size:.82rem;line-height:1.4}
+#dashboard .commission-total{border-color:#cfe5d5;background:linear-gradient(145deg,#f3fbf5,#eaf6ee)}
+#dashboard .commission-total strong{color:#176b37}
+#dashboard .reconciliation-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#dashboard .reconciliation-metric{min-width:0;border:1px solid #e1e9f3;border-radius:14px;background:#f7faff;padding:14px}
+#dashboard .reconciliation-metric strong{display:block;font-size:clamp(1.1rem,2vw,1.4rem);font-weight:850;overflow-wrap:anywhere;color:#12396f}
+#dashboard .reconciliation-row{border:1px solid #ead8c8;border-radius:12px;background:#fffaf5;padding:12px;overflow-wrap:anywhere}
+#dashboard .notification-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#dashboard .notification-filter{border:1px solid #e1e9f3;border-radius:11px;background:#f7faff;padding:9px 12px}
+#dashboard .rider-photo-slot{width:64px;height:64px;flex:0 0 64px;overflow:hidden;border:1px solid #dce5f2;border-radius:16px;background:#f1f5fa}
+#dashboard .rider-photo-slot img{width:100%;height:100%;object-fit:cover}
+@media(max-width:760px){
+ #loginCard{margin:22px auto;padding:22px 17px;border-radius:18px}
+ #dashboard .commission-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #dashboard .commission-total{grid-column:1/-1}
+ #dashboard .reconciliation-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard .notification-toolbar{align-items:stretch}
+ #dashboard .notification-toolbar>*{max-width:100%}
+}
+@media(max-width:420px){
+ #dashboard .commission-grid,#dashboard .reconciliation-summary{grid-template-columns:1fr}
+ #dashboard .commission-total{grid-column:auto}
+ #loginForm .password-wrap{align-items:stretch;flex-direction:column}
+ #loginForm .password-toggle{width:100%}
+}
+</style>
 </head>
 <body><main class="wrap">
 <header class="head"><div class="brand"><img src="logo.png" alt="Kawutey Logistics logo" id="adminLogo"><div><h1>Kawutey Logistics</h1><small>ADMINISTRATOR DASHBOARD</small></div></div><a href="index.html">Back to website</a></header>
